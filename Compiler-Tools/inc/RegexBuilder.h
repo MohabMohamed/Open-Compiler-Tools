@@ -125,6 +125,28 @@ namespace CT
 
 		bool Or()
 		{
+			std::vector<Automata::StatePtr<char>> A, B;
+			if(!pop(B) || ! pop(A))
+				return false;
+
+			auto d1 = std::make_shared<Automata::State<char>>();
+			auto d2 = std::make_shared<Automata::State<char>>();
+
+			auto a_start = A.front();
+			auto a_final = A.back();
+
+			auto b_start = B.front();
+			auto b_final = B.back();
+
+			d1->addTransition(Automata::StateToken<char>::EPSILON(), a_start);
+			d1->addTransition(Automata::StateToken<char>::EPSILON(), b_start);
+
+			a_final->addTransition(Automata::StateToken<char>::EPSILON(), d2);
+			b_final->addTransition(Automata::StateToken<char>::EPSILON(), d2);
+
+			std::vector<Automata::StatePtr<char>> unit = {d1, a_start, a_final, b_start, b_final, d2};
+			m_operands.push(unit);
+			
 			return true;
 		}
 
@@ -190,17 +212,20 @@ namespace CT
 				if(c == '\\')
 				{
 					ignore_op = true;
+					last_is_input = false;
 				}
 				//if found an operator
 				else if(isOperator(c))
 				{
+					last_is_input = false;
 					//is preceded with '\' then ignore it as operator and deal with it as char
 					if(ignore_op)
 					{
 						push(c);
 						ignore_op = false;
+						
 					}else{
-
+						
 						if(c == '*')
 						{
 							//check the presedence of the top operator and new operator
@@ -208,6 +233,8 @@ namespace CT
 								if(!Eval())
 									return nullptr;
 							m_operators.push(Operators::Star);
+							//because star work on one operand which is the last one
+							last_is_input = true;
 						}
 						else if(c == '+')
 						{
@@ -216,6 +243,8 @@ namespace CT
 								if(!Eval())
 									return nullptr;
 							m_operators.push(Operators::Plus);
+							//because plus work on one operand which is the last one
+							last_is_input = true;
 						}
 						else if(c == '|')
 						{
@@ -227,6 +256,8 @@ namespace CT
 						}
 						else if(c == '(')
 						{
+							if (!m_operands.empty())
+								m_operators.push(Operators::Concat);
 							m_operators.push(Operators::LeftParan);
 						}
 						else if(c == ')')
@@ -237,6 +268,8 @@ namespace CT
 									return nullptr;
 							//pop left paranthesis
 							m_operators.pop();
+							//because star work on one operand which is the last one
+							last_is_input = true;
 						}
 					}
 				}

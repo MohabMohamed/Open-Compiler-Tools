@@ -1,4 +1,11 @@
 bin
 build
+Compiler-Tools/obj/
 *.sublime-project
 *.sublime-workspace
+*.vcxproj
+*.vcxproj.filters
+*.tlog
+*.obj
+*.pdb
+*.log
