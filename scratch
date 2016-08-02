@@ -1,0 +1,76 @@
+Regex Builder
+
+- meta chars: {(, ), *, +, |, \, concat}
+- input chars: {any char possible}
+- ignore char: \ just ignore the next meta char behind it
+
+building algorithm:
+
+recommend_concat = false
+
+if meta char:
+	if ignore char:
+		getnextchar
+		push(char)
+		if recommend_concat:
+			push concat
+		recommend_concat = true
+	else:
+		if char = *:
+			eval if presendence
+			push *
+			recommend_concat = true
+		else if char = +:
+			eval if presendence
+			push +
+			recommend_concat = true
+		else if char = |:
+			eval if presendence
+			push |
+			if recommend_concat:
+				recommend_concat = false
+		else if char = (:
+			push (
+			if recommend_concat:
+				push concat
+		else if char = ):
+			eval if presendence
+			pop (
+			recommend_concat = true
+else:
+	push(char)
+	if recommend_concat:
+		push concat
+	recommend_concat = true
+
+while operators is not empty:
+	eval
+
+set last state to final state
+return nfa
+
+
+testing:
+- abc
+- a|b
+- a|bc
+- a*c
+- a*|b
+- a*c+
+- (a*|b)(b*|a)
+- (abc)
+- (a|b|c)+(b|a)*
+
+concat inspection:
+- a!b!c
+- a|b
+- a|b!c
+- a*!c
+- a*|b
+- a*!c+
+- (a*|b)!(b*|a)
+- (a!b!c)
+- (a|b|c)+!(b|a)*
+
+concat rule:
+if found a char or a single structure such as *, +, (), and the next thing is note | then add concat

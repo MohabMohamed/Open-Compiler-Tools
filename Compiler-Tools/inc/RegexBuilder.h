@@ -212,20 +212,26 @@ namespace CT
 				if(c == '\\')
 				{
 					ignore_op = true;
-					last_is_input = false;
 				}
 				//if found an operator
 				else if(isOperator(c))
 				{
-					last_is_input = false;
 					//is preceded with '\' then ignore it as operator and deal with it as char
 					if(ignore_op)
 					{
+						if (last_is_input) {
+							while (!m_operators.empty() && presendence(Operators::Concat, m_operators.top()))
+								if (!Eval())
+									return nullptr;
+							m_operators.push(Operators::Concat);
+						}
+
 						push(c);
 						ignore_op = false;
+						last_is_input = true;
 						
 					}else{
-						
+						last_is_input = false;
 						if(c == '*')
 						{
 							//check the presedence of the top operator and new operator
