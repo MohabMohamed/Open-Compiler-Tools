@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <set>
 
 namespace CT
 {
@@ -47,6 +48,19 @@ namespace CT
 		template<typename tokenType>
 		class State
 		{
+		private:
+			void epsilonTransitAux(std::vector<std::shared_ptr<State<tokenType>>>& result, std::set<State<tokenType>*>& visited) 
+			{
+				auto c = StateToken<tokenType>::EPSILON();
+				visited.insert(this);
+				for (auto it = m_transitions.lower_bound(c); it != m_transitions.upper_bound(c); it++) {
+					if(visited.find(it->second.get()) == visited.end())
+					{
+						result.push_back(it->second);
+						it->second->epsilonTransitAux(result, visited);
+					}
+				}
+			}
 		public:
 			State()
 			:m_final(false)
@@ -85,16 +99,14 @@ namespace CT
 				return found;
 			}
 
-			void epsilonTransit(std::vector<std::shared_ptr<State<tokenType>>>& result) 
+			void epsilonTransit(std::vector<std::shared_ptr<State<tokenType>>>& result)
 			{
-				auto c = StateToken<tokenType>::EPSILON();
-				for (auto it = m_transitions.lower_bound(c); it != m_transitions.upper_bound(c); it++) {
-					result.push_back(it->second);
-					it->second->epsilonTransit(result);
-				}
+				std::set<State<tokenType>*> visited_set;
+				epsilonTransitAux(result, visited_set);
 			}
 
-			std::multimap<StateToken<tokenType>, std::shared_ptr<State<tokenType>>> getTransitions() const
+			std::multimap<StateToken<tokenType>, std::shared_ptr<State<tokenType>>, StateTokenComparator<tokenType>>
+			getTransitions() const
 			{
 				return m_transitions;
 			}

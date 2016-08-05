@@ -94,7 +94,10 @@ namespace CT
 			d1->addTransition(Automata::StateToken<char>::EPSILON(), d2);
 			final->addTransition(Automata::StateToken<char>::EPSILON(), d2);
 
-			std::vector<Automata::StatePtr<char>> unit = {d1,start,final,d2};
+			std::vector<Automata::StatePtr<char>> unit; /*= {d1,start,final,d2};*/
+			unit.push_back(d1);
+			appendUnit(unit, A);
+			unit.push_back(d2);
 			m_operands.push(unit);
 			return true;
 		}
@@ -113,13 +116,46 @@ namespace CT
 
 			a_final->addTransition(Automata::StateToken<char>::EPSILON(), b_start);
 
-			std::vector<Automata::StatePtr<char>> unit = {a_start,a_final,b_start,b_final};
+			std::vector<Automata::StatePtr<char>> unit; /*= {a_start,a_final,b_start,b_final};*/
+			appendUnit(unit, A);
+			appendUnit(unit, B);
 			m_operands.push(unit);
 			return true;
 		}
 
 		bool Plus()
 		{
+			std::vector<Automata::StatePtr<char>> A, clonedA;
+			if(!pop(A))
+				return false;
+
+			cloneUnit(A, clonedA);
+
+			auto start = A.front();
+			auto final = A.back();
+			auto clone_start = clonedA.front();
+			auto clone_final = clonedA.back();
+
+			auto d1 = std::make_shared<Automata::State<char>>();
+			auto d4 = std::make_shared<Automata::State<char>>();
+
+			final->addTransition(Automata::StateToken<char>::EPSILON(), d1);
+
+			//d1 transitions
+			d1->addTransition(Automata::StateToken<char>::EPSILON(), d4);
+			d1->addTransition(Automata::StateToken<char>::EPSILON(), clone_start);
+
+			//clone final transitions
+			clone_final->addTransition(Automata::StateToken<char>::EPSILON(), clone_start);
+			clone_final->addTransition(Automata::StateToken<char>::EPSILON(), d4);
+
+			std::vector<Automata::StatePtr<char>> unit;/* = {start, final, d1, clone_start, clone_final, d4};*/
+			appendUnit(unit, A);
+			unit.push_back(d1);
+			appendUnit(unit, clonedA);
+			unit.push_back(d4);
+
+			m_operands.push(unit);
 			return true;
 		}
 
@@ -144,7 +180,11 @@ namespace CT
 			a_final->addTransition(Automata::StateToken<char>::EPSILON(), d2);
 			b_final->addTransition(Automata::StateToken<char>::EPSILON(), d2);
 
-			std::vector<Automata::StatePtr<char>> unit = {d1, a_start, a_final, b_start, b_final, d2};
+			std::vector<Automata::StatePtr<char>> unit; /*= { d1, a_start, a_final, b_start, b_final, d2 };*/
+			unit.push_back(d1);
+			appendUnit(unit, A);
+			appendUnit(unit, B);
+			unit.push_back(d2);
 			m_operands.push(unit);
 			
 			return true;
@@ -199,101 +239,125 @@ namespace CT
 
 		}
 
+		bool isMetaChar(char c)
+		{
+			return c == ')' || c == '(' || c == '*' || c == '+' || c == '|' || c == '\\';
+		}
+
+		bool getChar(std::string exp, std::size_t& char_it, char& outChar)
+		{
+			if(exp.size() <= char_it)
+				return false;
+			outChar = exp[char_it++];
+			return true;
+		}
+
+		bool addConcat() 
+		{
+			while (!m_operators.empty() && presendence(Operators::Concat, m_operators.top()))
+				if (!Eval())
+					return false;
+			m_operators.push(Operators::Concat);
+			return true;
+		}
+
+		void appendUnit(std::vector<Automata::StatePtr<char>>& original, const std::vector<Automata::StatePtr<char>>& appended) 
+		{
+			original.insert(original.end(), appended.begin(), appended.end());
+		}
+
+		void cloneUnit(const std::vector<Automata::StatePtr<char>>& original, std::vector<Automata::StatePtr<char>>& cloned)
+		{
+			std::map<Automata::StatePtr<char>, Automata::StatePtr<char>> phonebook;
+			for(auto state: original)
+			{
+				auto cloned_state = std::make_shared<Automata::State<char>>();
+				phonebook[state] = cloned_state;
+				cloned.push_back(cloned_state);
+			}
+
+			for(int i=0; i<original.size(); i++)
+			{
+				for(auto transition: original[i]->getTransitions())
+				{
+					cloned[i]->addTransition(transition.first, phonebook[transition.second]);
+				}
+			}
+		}
+
 	public:
 		Automata::NFA<char> Create(std::string exp)
 		{
 			clear();
 
-			bool ignore_op = false;
-			bool last_is_input = false;
-			for(auto c: exp)
-			{
-				//if forward slash then ignore the next op and treat it as normal char
-				if(c == '\\')
-				{
-					ignore_op = true;
-				}
-				//if found an operator
-				else if(isOperator(c))
-				{
-					//is preceded with '\' then ignore it as operator and deal with it as char
-					if(ignore_op)
-					{
-						if (last_is_input) {
-							while (!m_operators.empty() && presendence(Operators::Concat, m_operators.top()))
-								if (!Eval())
-									return nullptr;
-							m_operators.push(Operators::Concat);
-						}
+			bool recommend_concat = false;
+			std::size_t char_it = 0;
+			char c;
 
-						push(c);
-						ignore_op = false;
-						last_is_input = true;
-						
+			while(getChar(exp, char_it, c)){
+				if(isMetaChar(c))
+				{
+					if(c == '\\')
+					{
+						if(getChar(exp, char_it, c))
+						{
+							push(c);
+							if (recommend_concat){
+								if (!addConcat())
+									return nullptr;
+								recommend_concat = false;
+							}
+							recommend_concat = true;
+						}
 					}else{
-						last_is_input = false;
 						if(c == '*')
 						{
-							//check the presedence of the top operator and new operator
-							while(!m_operators.empty() && presendence(Operators::Star, m_operators.top()))
-								if(!Eval())
+							while (!m_operators.empty() && presendence(Operators::Star, m_operators.top()))
+								if (!Eval())
 									return nullptr;
 							m_operators.push(Operators::Star);
-							//because star work on one operand which is the last one
-							last_is_input = true;
-						}
-						else if(c == '+')
+							recommend_concat = true;
+						}else if(c == '+')
 						{
-							//check the presedence of the top operator and new operator
-							while(!m_operators.empty() && presendence(Operators::Plus, m_operators.top()))
-								if(!Eval())
+							while (!m_operators.empty() && presendence(Operators::Plus, m_operators.top()))
+								if (!Eval())
 									return nullptr;
 							m_operators.push(Operators::Plus);
-							//because plus work on one operand which is the last one
-							last_is_input = true;
-						}
-						else if(c == '|')
+							recommend_concat = true;
+						}else if(c == '|')
 						{
-							//check the presedence of the top operator and new operator
-							while(!m_operators.empty() && presendence(Operators::Or, m_operators.top()))
-								if(!Eval())
+							while (!m_operators.empty() && presendence(Operators::Or, m_operators.top()))
+								if (!Eval())
 									return nullptr;
 							m_operators.push(Operators::Or);
-						}
-						else if(c == '(')
+							if(recommend_concat)
+								recommend_concat = false;
+						}else if(c == '(')
 						{
-							if (!m_operands.empty())
-								m_operators.push(Operators::Concat);
+							if (recommend_concat){
+								if (!addConcat())
+									return nullptr;
+								recommend_concat = false;
+							}
 							m_operators.push(Operators::LeftParan);
-						}
-						else if(c == ')')
+						}else if(c == ')')
 						{
-							//if we found a right paranthesis then evaluate the expression inside the paranthesis
 							while(m_operators.top() != Operators::LeftParan)
 								if(!Eval())
 									return nullptr;
-							//pop left paranthesis
 							m_operators.pop();
-							//because star work on one operand which is the last one
-							last_is_input = true;
+							recommend_concat = true;
 						}
 					}
-				}
-				else
+				}else
 				{
-					if(last_is_input){
-						//check the presedence of the top operator and new operator
-						while(!m_operators.empty() && presendence(Operators::Concat, m_operators.top()))
-							if(!Eval())
-								return nullptr;
-						m_operators.push(Operators::Concat);
-						push(c);
-						last_is_input = true;
-					}else{
-						last_is_input = true;
-						push(c);
+					if (recommend_concat){
+						if (!addConcat())
+							return nullptr;
+						recommend_concat = false;
 					}
-
+					push(c);
+					recommend_concat = true;
 				}
 			}
 

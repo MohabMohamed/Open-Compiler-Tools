@@ -23,10 +23,9 @@ int main(){
 	// {
 	// 	std::cout<< (int)nfa2.consume(CT::Automata::StateToken<char>(c)) << std::endl;
 	// }
-
 	cout << "new nfa" << endl;
-	auto nfa2 = builder.Create("a\\+b");
-	std::string str = "a+b";
+	auto nfa2 = builder.Create("a+b*");
+	std::string str = "aaaaaaaaaabbbbbbbbbbbb";
 	for (auto c : str)
 	{
 		std::cout << (int)nfa2.consume(CT::Automata::StateToken<char>(c)) << std::endl;
