@@ -74,3 +74,5 @@ concat inspection:
 
 concat rule:
 if found a char or a single structure such as *, +, (), and the next thing is note | then add concat
+
+Input Handler is a string wrapper to handle charachter sequences

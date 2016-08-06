@@ -1,5 +1,12 @@
 bin
 build
+**/obj
+**/*.vcxproj
+**/*.vcxproj.filters
+**/*.obj
+**/*.pdb
+**/*.log
+**/*.tlog
 *.sublime-project
 *.sublime-workspace
 *.vcxproj

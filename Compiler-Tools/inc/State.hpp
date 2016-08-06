@@ -10,18 +10,18 @@ namespace CT
 	namespace Automata
 	{
 		//token of transitions for the state class
-		template<typename tokenType>
+		template<typename letterType>
 		struct StateToken
 		{
 			bool isEpsilon;
-			tokenType token;
+			letterType token;
 
-			operator tokenType()
+			operator letterType()
 			{
 				return token;
 			}
 
-			StateToken(tokenType c)
+			StateToken(letterType c)
 			:token(c), isEpsilon(false)
 			{}
 
@@ -29,29 +29,29 @@ namespace CT
 			:isEpsilon(false)
 			{}
 
-			static StateToken<tokenType> EPSILON()
+			static StateToken<letterType> EPSILON()
 			{
-				StateToken<tokenType> result;
+				StateToken<letterType> result;
 				result.isEpsilon = true;
 				return result;
 			}
 		};
 
-		template<typename tokenType>
+		template<typename letterType>
 		struct StateTokenComparator{
-			bool operator()(const StateToken<tokenType>& a, const StateToken<tokenType>& b) const
+			bool operator()(const StateToken<letterType>& a, const StateToken<letterType>& b) const
 			{
 				return a.token < b.token;
 			}
 		};
 
-		template<typename tokenType>
+		template<typename letterType>
 		class State
 		{
 		private:
-			void epsilonTransitAux(std::vector<std::shared_ptr<State<tokenType>>>& result, std::set<State<tokenType>*>& visited) 
+			void epsilonTransitAux(std::vector<std::shared_ptr<State<letterType>>>& result, std::set<State<letterType>*>& visited) 
 			{
-				auto c = StateToken<tokenType>::EPSILON();
+				auto c = StateToken<letterType>::EPSILON();
 				visited.insert(this);
 				for (auto it = m_transitions.lower_bound(c); it != m_transitions.upper_bound(c); it++) {
 					if(visited.find(it->second.get()) == visited.end())
@@ -79,7 +79,7 @@ namespace CT
 				m_transitions.clear();
 			}
 
-			bool addTransition(StateToken<tokenType> c, std::shared_ptr<State<tokenType>> state)
+			bool addTransition(StateToken<letterType> c, std::shared_ptr<State<letterType>> state)
 			{
 				/*
 				 * insert returns a pair of <iterator, bool> 
@@ -89,7 +89,7 @@ namespace CT
 				return m_transitions.insert(std::make_pair(c,state)) != m_transitions.end();
 			}
 
-			bool transit(StateToken<tokenType> c, std::vector<std::shared_ptr<State<tokenType>>>& result)
+			bool transit(StateToken<letterType> c, std::vector<std::shared_ptr<State<letterType>>>& result)
 			{
 				bool found = false;
 				for (auto it = m_transitions.lower_bound(c); it != m_transitions.upper_bound(c); it++) {
@@ -99,13 +99,13 @@ namespace CT
 				return found;
 			}
 
-			void epsilonTransit(std::vector<std::shared_ptr<State<tokenType>>>& result)
+			void epsilonTransit(std::vector<std::shared_ptr<State<letterType>>>& result)
 			{
-				std::set<State<tokenType>*> visited_set;
+				std::set<State<letterType>*> visited_set;
 				epsilonTransitAux(result, visited_set);
 			}
 
-			std::multimap<StateToken<tokenType>, std::shared_ptr<State<tokenType>>, StateTokenComparator<tokenType>>
+			std::multimap<StateToken<letterType>, std::shared_ptr<State<letterType>>, StateTokenComparator<letterType>>
 			getTransitions() const
 			{
 				return m_transitions;
@@ -121,11 +121,11 @@ namespace CT
 				m_final = val;
 			}
 		private:
-			std::multimap<StateToken<tokenType>, std::shared_ptr<State<tokenType>>, StateTokenComparator<tokenType>> m_transitions;
+			std::multimap<StateToken<letterType>, std::shared_ptr<State<letterType>>, StateTokenComparator<letterType>> m_transitions;
 			bool m_final;
 		};
 
-		template<typename tokenType>
-		using StatePtr = std::shared_ptr<State<tokenType>>;
+		template<typename letterType>
+		using StatePtr = std::shared_ptr<State<letterType>>;
 	}
 }
