@@ -1,7 +1,7 @@
 #pragma once
 
 #include "State.hpp"
-#include "InputStream.hpp"
+#include "InputStream.h"
 #include "Position.h"
 #include "NFA.hpp"
-#include "RegexBuilder.hpp"
+#include "RegexBuilder.h"
