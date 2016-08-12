@@ -6,6 +6,7 @@
 #include <string>
 #include <stack>
 #include <vector>
+#include <memory>
 
 namespace CT
 {
@@ -61,6 +62,6 @@ namespace CT
 
 	public:
 		//creates an nfa that represents this expression
-		Automata::NFA<char> create(const std::string& string_exp);
+		std::shared_ptr<Automata::NFA<char>> create(const std::string& string_exp);
 	};
 }

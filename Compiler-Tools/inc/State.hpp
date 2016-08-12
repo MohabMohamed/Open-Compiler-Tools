@@ -11,37 +11,37 @@ namespace CT
 	{
 		//token of transitions for the state class
 		template<typename letterType>
-		struct StateToken
+		struct StateInput
 		{
 			bool isEpsilon;
-			letterType token;
+			letterType letter;
 
 			operator letterType()
 			{
-				return token;
+				return letter;
 			}
 
-			StateToken(letterType c)
-			:token(c), isEpsilon(false)
+			StateInput(letterType c)
+			:letter(c), isEpsilon(false)
 			{}
 
-			StateToken()
+			StateInput()
 			:isEpsilon(false)
 			{}
 
-			static StateToken<letterType> EPSILON()
+			static StateInput<letterType> EPSILON()
 			{
-				StateToken<letterType> result;
+				StateInput<letterType> result;
 				result.isEpsilon = true;
 				return result;
 			}
 		};
 
 		template<typename letterType>
-		struct StateTokenComparator{
-			bool operator()(const StateToken<letterType>& a, const StateToken<letterType>& b) const
+		struct StateInputComparator{
+			bool operator()(const StateInput<letterType>& a, const StateInput<letterType>& b) const
 			{
-				return a.token < b.token;
+				return a.letter < b.letter;
 			}
 		};
 
@@ -51,7 +51,7 @@ namespace CT
 		private:
 			void epsilonTransitAux(std::vector<std::shared_ptr<State<letterType>>>& result, std::set<State<letterType>*>& visited) 
 			{
-				auto c = StateToken<letterType>::EPSILON();
+				auto c = StateInput<letterType>::EPSILON();
 				visited.insert(this);
 				for (auto it = m_transitions.lower_bound(c); it != m_transitions.upper_bound(c); it++) {
 					if(visited.find(it->second.get()) == visited.end())
@@ -79,7 +79,7 @@ namespace CT
 				m_transitions.clear();
 			}
 
-			bool addTransition(StateToken<letterType> c, std::shared_ptr<State<letterType>> state)
+			bool addTransition(StateInput<letterType> c, std::shared_ptr<State<letterType>> state)
 			{
 				/*
 				 * insert returns a pair of <iterator, bool> 
@@ -89,7 +89,7 @@ namespace CT
 				return m_transitions.insert(std::make_pair(c,state)) != m_transitions.end();
 			}
 
-			bool transit(StateToken<letterType> c, std::vector<std::shared_ptr<State<letterType>>>& result)
+			bool transit(StateInput<letterType> c, std::vector<std::shared_ptr<State<letterType>>>& result)
 			{
 				bool found = false;
 				for (auto it = m_transitions.lower_bound(c); it != m_transitions.upper_bound(c); it++) {
@@ -105,7 +105,7 @@ namespace CT
 				epsilonTransitAux(result, visited_set);
 			}
 
-			std::multimap<StateToken<letterType>, std::shared_ptr<State<letterType>>, StateTokenComparator<letterType>>
+			std::multimap<StateInput<letterType>, std::shared_ptr<State<letterType>>, StateInputComparator<letterType>>
 			getTransitions() const
 			{
 				return m_transitions;
@@ -121,7 +121,7 @@ namespace CT
 				m_final = val;
 			}
 		private:
-			std::multimap<StateToken<letterType>, std::shared_ptr<State<letterType>>, StateTokenComparator<letterType>> m_transitions;
+			std::multimap<StateInput<letterType>, std::shared_ptr<State<letterType>>, StateInputComparator<letterType>> m_transitions;
 			bool m_final;
 		};
 

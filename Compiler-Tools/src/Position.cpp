@@ -1,4 +1,12 @@
 #include "Position.h"
 using namespace CT;
 
-// constexpr Position Position::Invalid = {-1, -1};
+const Position Position::Invalid = Position(false);
+
+Position::Position(bool valid)
+:isValid(valid)
+{}
+
+Position::Position(u64 Row, u64 Col)
+:row(Row), col(Col), isValid(true)
+{}

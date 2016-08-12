@@ -35,7 +35,7 @@ void RegexBuilder::pushOperand(char c)
 	Automata::StatePtr<char> A = std::make_shared<Automata::State<char>>();
 	Automata::StatePtr<char> B = std::make_shared<Automata::State<char>>();
 
-	A->addTransition(Automata::StateToken<char>(c), B);
+	A->addTransition(Automata::StateInput<char>(c), B);
 
 	unit.push_back(A);
 	unit.push_back(B);
@@ -68,15 +68,15 @@ bool RegexBuilder::Star()
 	auto final = A.back();
 
 	//connect the start and final with a epsilon transition for looping
-	final->addTransition(Automata::StateToken<char>::EPSILON(), start);
+	final->addTransition(Automata::StateInput<char>::EPSILON(), start);
 
 	//new start and final dummy states fro skipping the start closure entirely 
 	auto d1 = std::make_shared<Automata::State<char>>();
 	auto d2 = std::make_shared<Automata::State<char>>();
 
-	d1->addTransition(Automata::StateToken<char>::EPSILON(), start);
-	d1->addTransition(Automata::StateToken<char>::EPSILON(), d2);
-	final->addTransition(Automata::StateToken<char>::EPSILON(), d2);
+	d1->addTransition(Automata::StateInput<char>::EPSILON(), start);
+	d1->addTransition(Automata::StateInput<char>::EPSILON(), d2);
+	final->addTransition(Automata::StateInput<char>::EPSILON(), d2);
 
 	//creates the new unit that contain this nfa
 	std::vector<Automata::StatePtr<char>> unit; /*= {d1,start,final,d2};*/
@@ -100,7 +100,7 @@ bool RegexBuilder::Concat()
 	auto b_start = B.front();
 	auto b_final = B.back();
 
-	a_final->addTransition(Automata::StateToken<char>::EPSILON(), b_start);
+	a_final->addTransition(Automata::StateInput<char>::EPSILON(), b_start);
 
 	std::vector<Automata::StatePtr<char>> unit; /*= {a_start,a_final,b_start,b_final};*/
 	appendUnit(unit, A);
@@ -127,15 +127,15 @@ bool RegexBuilder::Plus()
 	auto d1 = std::make_shared<Automata::State<char>>();
 	auto d4 = std::make_shared<Automata::State<char>>();
 
-	final->addTransition(Automata::StateToken<char>::EPSILON(), d1);
+	final->addTransition(Automata::StateInput<char>::EPSILON(), d1);
 
 	//d1 transitions
-	d1->addTransition(Automata::StateToken<char>::EPSILON(), d4);
-	d1->addTransition(Automata::StateToken<char>::EPSILON(), clone_start);
+	d1->addTransition(Automata::StateInput<char>::EPSILON(), d4);
+	d1->addTransition(Automata::StateInput<char>::EPSILON(), clone_start);
 
 	//clone final transitions
-	clone_final->addTransition(Automata::StateToken<char>::EPSILON(), clone_start);
-	clone_final->addTransition(Automata::StateToken<char>::EPSILON(), d4);
+	clone_final->addTransition(Automata::StateInput<char>::EPSILON(), clone_start);
+	clone_final->addTransition(Automata::StateInput<char>::EPSILON(), d4);
 
 	//creating the unit
 	std::vector<Automata::StatePtr<char>> unit;/* = {start, final, d1, clone_start, clone_final, d4};*/
@@ -164,11 +164,11 @@ bool RegexBuilder::Or()
 	auto b_start = B.front();
 	auto b_final = B.back();
 
-	d1->addTransition(Automata::StateToken<char>::EPSILON(), a_start);
-	d1->addTransition(Automata::StateToken<char>::EPSILON(), b_start);
+	d1->addTransition(Automata::StateInput<char>::EPSILON(), a_start);
+	d1->addTransition(Automata::StateInput<char>::EPSILON(), b_start);
 
-	a_final->addTransition(Automata::StateToken<char>::EPSILON(), d2);
-	b_final->addTransition(Automata::StateToken<char>::EPSILON(), d2);
+	a_final->addTransition(Automata::StateInput<char>::EPSILON(), d2);
+	b_final->addTransition(Automata::StateInput<char>::EPSILON(), d2);
 
 	//create the unit 
 	std::vector<Automata::StatePtr<char>> unit; /*= { d1, a_start, a_final, b_start, b_final, d2 };*/
@@ -263,7 +263,7 @@ void RegexBuilder::cloneUnit(const std::vector<Automata::StatePtr<char>>& origin
 	}
 }
 
-Automata::NFA<char> RegexBuilder::create(const std::string& string_exp)
+std::shared_ptr<Automata::NFA<char>> RegexBuilder::create(const std::string& string_exp)
 {
 	InputStream exp(string_exp);
 	clearStacks();
@@ -348,5 +348,5 @@ Automata::NFA<char> RegexBuilder::create(const std::string& string_exp)
 			return nullptr;
 
 	m_operands.top().back()->setIsFinal(true);
-	return Automata::NFA<char>(m_operands.top().front());
+	return std::make_shared<Automata::NFA<char>>(m_operands.top().front());
 }

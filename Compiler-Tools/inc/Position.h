@@ -7,8 +7,11 @@ namespace CT
 	//repesents a position in the code
 	struct API Position
 	{
-		s64 row, col;
-	};
+		u64 row, col;
+		bool isValid;
 
-	constexpr Position INVALID_POSITION = Position{ -1, -1 };
+		Position(bool);
+		Position(u64, u64);
+		static const Position Invalid;
+	};
 }

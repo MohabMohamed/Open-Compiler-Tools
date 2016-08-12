@@ -1,38 +1,26 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <CompilerTools.h>
 
 using namespace std;
-
-int foo(int& x)
-{
-	return ++x;
-}
 int main(){
-	int x = 1;
-	cout << x << foo(x);
 	cout<<"Hello, World!"<<endl;
-	CT::Position c;
+	CT::Position c = CT::Position::Invalid;
 	CT::Automata::State<char> s(false);
 	CT::RegexBuilder builder;
-	// auto nfa = builder.Create("a*b");
-	// std::string str = "aaab";
-	// for (auto c : str)
-	// {
-	// 	std::cout << (int) nfa.consume(CT::Automata::StateToken<char>(c)) << std::endl;
-	// }
-	// cout << "new nfa" << endl;
-	// auto nfa2 = builder.Create("aba");
-	// for(auto c : str)
-	// {
-	// 	std::cout<< (int)nfa2.consume(CT::Automata::StateToken<char>(c)) << std::endl;
-	// }
-	cout << "new nfa" << endl;
-	auto nfa2 = builder.create("(mostafa)+");
-	std::string str = "mostafamostafa";
+	auto nfa = builder.create("a+b");
+	std::string str = "ab";
 	for (auto c : str)
 	{
-		std::cout << (int)nfa2.consume(CT::Automata::StateToken<char>(c)) << std::endl;
+		std::cout << (int)nfa->consume(c) << std::endl;
 	}
+	nfa.reset();
+	CT::Lexer::Scanner scanner;
+	scanner.registerToken(builder.create("a+b"), CT::Lexer::make_token("ab"));
+	std::stringstream ss;
+	ss << "abaaaaaaaab";
+	auto token = scanner.scan(ss);
+	token = scanner.scan(ss);
 	return 0;
 }

@@ -33,7 +33,7 @@ namespace CT
 				m_startState->epsilonTransit(m_currentStates);
 			}
 
-			FSMState consume(StateToken<tokenType> c)
+			FSMState consume(StateInput<tokenType> c)
 			{
 				std::vector<StatePtr<tokenType>> result_transitions, epsilon_transitions;
 				//get transitions from the current states
