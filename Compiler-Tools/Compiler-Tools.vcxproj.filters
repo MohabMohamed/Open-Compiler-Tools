@@ -9,7 +9,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\CompilerTools.h">
+      <Filter>inc</Filter>
+    </ClInclude>
     <ClInclude Include="inc\Defines.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\InputStream.h">
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="inc\NFA.hpp">
@@ -18,15 +24,30 @@
     <ClInclude Include="inc\Position.h">
       <Filter>inc</Filter>
     </ClInclude>
-    <ClInclude Include="inc\RegexBuilder.h">
+    <ClInclude Include="inc\Scanner.h">
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="inc\State.hpp">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="inc\Token.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\regexbuilder.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Position.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RegexBuilder.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scanner.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Token.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

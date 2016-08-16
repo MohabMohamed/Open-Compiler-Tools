@@ -1,4 +1,6 @@
 #include "Scanner.h"
+#include "Log.h"
+using namespace CT;
 using namespace CT::Lexer;
 using namespace CT::Automata;
 
@@ -52,7 +54,8 @@ Token Scanner::scan(std::istream& input)
 		if(m_scheduledForDeletion.size() == m_currentMachines.size())
 		{
 			//error scanning report and return nullptr
-			return Token();
+			Log::log(LOG_LEVEL::ERROR, "unable to recognize string='"+literal+c+"'", Position(0,0));
+			return Token::invalid;
 		}
 		else
 		{
@@ -66,7 +69,7 @@ Token Scanner::scan(std::istream& input)
 		literal += c;
 		input.get();
 	}
-	return Token();
+	return Token::eof;
 }
 
 void Scanner::registerToken(std::shared_ptr<NFA<char>> regexMachine, const Token& token)

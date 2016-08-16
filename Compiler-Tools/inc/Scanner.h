@@ -3,8 +3,10 @@
 #include "Defines.h"
 #include "Token.h"
 #include "NFA.hpp"
+#include "Position.h"
 #include <istream>
 #include <vector>
+#include <memory>
 
 namespace CT
 {
@@ -19,6 +21,7 @@ namespace CT
 			virtual Token scan(std::istream& input) = 0;
 			virtual void registerToken(std::shared_ptr<Automata::NFA<char>> regexMachine,const Token& token) = 0;
 		};
+		using IScannerPtr = std::shared_ptr<IScanner>;
 
 		class API Scanner: public IScanner
 		{

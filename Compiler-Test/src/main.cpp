@@ -6,7 +6,7 @@
 using namespace std;
 int main(){
 	cout<<"Hello, World!"<<endl;
-	CT::Position c = CT::Position::Invalid;
+	CT::Position c = CT::Position::invalid;
 	CT::Automata::State<char> s(false);
 	CT::RegexBuilder builder;
 	auto nfa = builder.create("a+b");
@@ -20,7 +20,13 @@ int main(){
 	scanner.registerToken(builder.create("a+b"), CT::Lexer::make_token("ab"));
 	std::stringstream ss;
 	ss << "abaaaaaaaab";
-	auto token = scanner.scan(ss);
-	token = scanner.scan(ss);
+	while (true)
+	{
+		auto token = scanner.scan(ss);
+		if (token == CT::Lexer::Token::eof || token == CT::Lexer::Token::invalid)
+			break;
+		cout << token.tag << endl;
+	}
+	std::cout<<CT::Log::getLogText()<<std::endl;
 	return 0;
 }

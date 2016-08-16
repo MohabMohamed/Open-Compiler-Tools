@@ -7,3 +7,4 @@
 #include "RegexBuilder.h"
 #include "Token.h"
 #include "Scanner.h"
+#include "Log.h"

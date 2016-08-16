@@ -12,6 +12,7 @@ namespace CT
 
 		Position(bool);
 		Position(u64, u64);
-		static const Position Invalid;
+		Position();
+		static const Position invalid;
 	};
 }

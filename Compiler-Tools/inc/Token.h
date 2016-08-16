@@ -11,13 +11,25 @@ namespace CT
 	{
 		struct API Token
 		{
+		private:
+			bool isEOF;
+			bool isInvalid;
 		public:
 			std::string tag;
 			std::string literal;
 
 			std::function<bool(std::istream&)> event;
-		};
 
-		API Token make_token(std::string tagName, std::function<bool(std::istream&)> eventFunction = nullptr);
+			static const Token eof;
+			static const Token invalid;
+
+			Token();
+
+			friend API Token make_token(std::string, std::function<bool(std::istream&)> = nullptr);
+			friend API Token eof_token();
+			friend API Token invalid_token();
+			friend API bool operator==(const Token& a, const Token& b);
+			friend API bool operator!=(const Token& a, const Token& b);
+		};
 	}
 }
