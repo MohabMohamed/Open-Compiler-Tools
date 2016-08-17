@@ -1,44 +1,36 @@
 #pragma once
 #include "Defines.h"
+#include "Position.h"
 #include <string>
+#include <memory>
 
 namespace CT
 {
-	class InputStream
+	class API InputStream
 	{
 	private:
 		std::string m_input;
 		std::size_t m_index;
+		Position m_position;
+		u64 m_lastLineCount;
 	public:
-		InputStream(std::string input)
-		:m_input(input), m_index(0)
-		{
+		InputStream(const std::string& input);
 
-		}
+		std::string getString() const;
 
-		std::string getString() const
-		{
-			return m_input;
-		}
+		char popLetter();
 
-		char popLetter()
-		{
-			if(m_index >= m_input.size())
-				return '\0';
-			return m_input[m_index++];
-		}
+		void rewindLetter();
 
-		void rewindLetter(){
-			if(m_index > 0)
-				m_index--;
-		}
+		void reset();
 
-		void reset(){
-			m_index=0;
-		}
+		bool eof();
 
-		bool eof(){
-			return m_index >= m_input.size();
-		}
+		void append(const std::string& str);
+
+		Position getPosition() const;
 	};
+	using InputStreamPtr = std::shared_ptr<InputStream>;
+
+	API InputStreamPtr open_file(const std::string& filename);
 }

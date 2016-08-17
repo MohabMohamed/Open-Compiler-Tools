@@ -19,7 +19,7 @@ int main(){
 	CT::Lexer::Scanner scanner;
 	scanner.registerToken(builder.create("a+b"), CT::Lexer::make_token("ab"));
 	std::stringstream ss;
-	ss << "abaaaaaaaab";
+	ss << "abaaaaaaaabc";
 	while (true)
 	{
 		auto token = scanner.scan(ss);

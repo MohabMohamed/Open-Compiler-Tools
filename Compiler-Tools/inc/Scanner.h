@@ -4,6 +4,7 @@
 #include "Token.h"
 #include "NFA.hpp"
 #include "Position.h"
+#include "InputStream.h"
 #include <istream>
 #include <vector>
 #include <memory>

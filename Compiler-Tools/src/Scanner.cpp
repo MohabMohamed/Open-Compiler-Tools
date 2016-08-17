@@ -15,7 +15,7 @@ Token Scanner::scan(std::istream& input)
 	reset();
 	std::string literal = "";
 	//process input
-	while(!input.eof())
+	while(input.peek() != EOF)
 	{
 		//peek the next char
 		char c = input.peek();
