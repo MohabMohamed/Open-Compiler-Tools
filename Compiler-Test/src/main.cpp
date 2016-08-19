@@ -2,9 +2,12 @@
 #include <string>
 #include <sstream>
 #include <CompilerTools.h>
+#include <CPPScanner.h>
 
 using namespace std;
-int main(){
+int main() {
+	/*int x = 0;
+	x |= 1;
 	cout<<"Hello, World!"<<endl;
 	CT::Position c = CT::Position::invalid;
 	CT::Automata::State<char> s(false);
@@ -18,8 +21,7 @@ int main(){
 	nfa.reset();
 	CT::Lexer::Scanner scanner;
 	scanner.registerToken(builder.create("a+b"), CT::Lexer::make_token("ab"));
-	std::stringstream ss;
-	ss << "abaaaaaaaabc";
+	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("ab aaaaaaaabc");
 	while (true)
 	{
 		auto token = scanner.scan(ss);
@@ -28,5 +30,16 @@ int main(){
 		cout << token.tag << endl;
 	}
 	std::cout<<CT::Log::getLogText()<<std::endl;
+	auto in_stream = CT::read_stream(std::cin);
+	std::cout << in_stream->getString() << std::endl;*/
+
+	CT::Lexer::CPPScanner scanner;
+	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("int x = 1;");
+	while (true) {
+		auto token = scanner.scan(ss);
+		if (token == CT::Lexer::Token::eof || token == CT::Lexer::Token::invalid)
+			break;
+		cout << token.tag << endl;
+	}
 	return 0;
 }

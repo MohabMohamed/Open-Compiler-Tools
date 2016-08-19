@@ -12,6 +12,6 @@ Position::Position(u64 Row, u64 Col)
 {}
 
 Position::Position()
-:row(0), col(0), isValid(false)
+:row(0), col(0), isValid(true)
 {
 }

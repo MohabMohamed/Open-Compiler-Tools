@@ -25,6 +25,13 @@ char InputStream::popLetter()
 	return m_input[m_index++];
 }
 
+char InputStream::peek()
+{
+	if(m_index >= m_input.size())
+		return '\0';
+	return m_input[m_index];
+}
+
 void InputStream::rewindLetter(){
 	if(m_index > 0){
 		if(m_input[m_index] == '\n')
@@ -67,4 +74,22 @@ API InputStreamPtr CT::open_file(const std::string& filename)
 	file.read(&str[0], size);
 	file.close();
 	return std::make_shared<InputStream>(str);
+}
+
+API InputStreamPtr CT::read_stream(std::istream& stream)
+{
+	auto result = std::make_shared<InputStream>("");
+	std::string line(1024, '\0');
+	bool addNewLine = false;
+	while(std::getline(stream, line))
+	{
+		if (addNewLine)
+			result->append("\n" + line);
+		else
+		{
+			result->append(line);
+			addNewLine = true;
+		}
+	}
+	return result;
 }

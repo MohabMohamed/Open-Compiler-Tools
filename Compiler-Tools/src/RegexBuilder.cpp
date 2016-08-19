@@ -281,7 +281,7 @@ std::shared_ptr<Automata::NFA<char>> RegexBuilder::create(const std::string& str
 			if(c == '\\')
 			{
 				c = exp.popLetter();
-				if(c == '\0')
+				if(c != '\0')
 				{
 					pushOperand(c);
 					if (recommend_concat){

@@ -19,14 +19,15 @@ namespace CT
 			virtual ~IScanner()
 			{
 			}
-			virtual Token scan(std::istream& input) = 0;
+			virtual Token scan(InputStreamPtr input) = 0;
 			virtual void registerToken(std::shared_ptr<Automata::NFA<char>> regexMachine,const Token& token) = 0;
+			virtual bool isIgnoreChar(char c) = 0;
 		};
 		using IScannerPtr = std::shared_ptr<IScanner>;
 
 		class API Scanner: public IScanner
 		{
-		private:
+		protected:
 			std::vector<std::pair<std::shared_ptr<Automata::NFA<char>>, Token>> m_scanningMachines;
 			std::vector<std::pair<std::shared_ptr<Automata::NFA<char>>, Token>> m_currentMachines;
 
@@ -34,8 +35,9 @@ namespace CT
 		public:
 			~Scanner();
 
-			Token scan(std::istream& input) override;
+			Token scan(InputStreamPtr input) override;
 			void registerToken(std::shared_ptr<Automata::NFA<char>>  regexMachine, const Token& token) override;
+			bool isIgnoreChar(char c) override;
 		};
 	}
 }

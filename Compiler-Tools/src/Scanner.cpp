@@ -9,39 +9,49 @@ Scanner::~Scanner()
 	m_scanningMachines.clear();
 }
 
-Token Scanner::scan(std::istream& input)
+Token Scanner::scan(InputStreamPtr input)
 {
 	//reset the current scanning machines;
 	reset();
 	std::string literal = "";
 	//process input
-	while(input.peek() != EOF)
+	while(!input->eof())
 	{
-		//peek the next char
-		char c = input.peek();
+		//get the next char
+		char c = input->peek();
+		if(isIgnoreChar(c))
+		{
+			input->popLetter();
+			continue;
+		}
 		int i=0;
 		std::vector<int> m_scheduledForDeletion;
+		//check if other scan machine is doing ok then don't reutrn as you find final state
+		bool isOk = false;
 		//go through machines providing input and check states
 		for(auto machineTagPair : m_currentMachines)
 		{
 			Automata::FSMState state = machineTagPair.first->consume(StateInput<char>(c));
 			if(state == FSMState::FINAL)
 			{
-				//create token and return
-				Lexer::Token result;
-				result.tag = machineTagPair.second.tag;
-				result.event = machineTagPair.second.event;
-				result.literal = literal+c;
-				//consume the char
-				input.get();
-				//invoke the event function
-				if(machineTagPair.second.event != nullptr)
-					machineTagPair.second.event(input);
+				if (!isOk) {
+					//create token and return
+					Lexer::Token result;
+					result.tag = machineTagPair.second.tag;
+					result.event = machineTagPair.second.event;
+					result.literal = literal + c;
+					//consume the char
+					input->popLetter();
+					//invoke the event function
+					if (machineTagPair.second.event != nullptr)
+						machineTagPair.second.event(input);
 
-				return result;
+					return result;
+				}
 			}else if(state == FSMState::OK)
 			{
 				//continue scanning
+				isOk = true;
 
 			}else if(state == FSMState::DEADEND)
 			{
@@ -54,20 +64,27 @@ Token Scanner::scan(std::istream& input)
 		if(m_scheduledForDeletion.size() == m_currentMachines.size())
 		{
 			//error scanning report and return nullptr
-			Log::log(LOG_LEVEL::ERROR, "unable to recognize string='"+literal+c+"'", Position(0,0));
+			Log::log(LOG_LEVEL::ERROR, "unable to recognize string='"+literal+c+"'", input->getPosition());
 			return Token::invalid;
 		}
 		else
 		{
-			//delete the machine
-			for(auto index: m_scheduledForDeletion)
+			std::vector<std::pair<std::shared_ptr<Automata::NFA<char>>, Token>> newCurrent;
+			//delete the dead machines
+
+			for (int i = 0; i < m_currentMachines.size(); i++)
 			{
-				m_currentMachines.erase(m_currentMachines.begin() + index);
+				if (std::find(m_scheduledForDeletion.begin(), m_scheduledForDeletion.end(), i) == m_scheduledForDeletion.end())
+				{
+					newCurrent.push_back(m_currentMachines[i]);
+				}
 			}
+
+			m_currentMachines = newCurrent;
 		}
 
 		literal += c;
-		input.get();
+		input->popLetter();
 	}
 	return Token::eof;
 }
@@ -85,4 +102,9 @@ void Scanner::reset()
 		machine.first->reset();
 	}
 	m_currentMachines.insert(m_currentMachines.end(), m_scanningMachines.begin(), m_scanningMachines.end());
+}
+
+bool Scanner::isIgnoreChar(char c)
+{
+	return c == '\n' || c == ' ' || c == '\t' || c == '\r' || c == '\f' || c == '\v';
 }

@@ -20,6 +20,8 @@ namespace CT
 
 		char popLetter();
 
+		char peek();
+
 		void rewindLetter();
 
 		void reset();
@@ -33,4 +35,5 @@ namespace CT
 	using InputStreamPtr = std::shared_ptr<InputStream>;
 
 	API InputStreamPtr open_file(const std::string& filename);
+	API InputStreamPtr read_stream(std::istream& stream);
 }

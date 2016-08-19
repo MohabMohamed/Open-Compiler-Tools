@@ -27,7 +27,7 @@ std::string Log::getLogText()
 			{
 				stream << "[Log";
 				if (entry.position.isValid)
-					stream << ", " << entry.position.col << ", " << entry.position.row;
+					stream << ", " << entry.position.row << ", " << entry.position.col;
 				stream << "]: ";
 				stream << entry.message << std::endl;
 			}
@@ -37,7 +37,7 @@ std::string Log::getLogText()
 			{
 				stream << "[Error";
 				if (entry.position.isValid)
-					stream << ", " << entry.position.col << ", " << entry.position.row;
+					stream << ", " << entry.position.row << ", " << entry.position.col;
 				stream << "]: ";
 				stream << entry.message << std::endl;
 			}
