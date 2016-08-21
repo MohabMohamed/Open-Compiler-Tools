@@ -1,4 +1,5 @@
 #include "RegexBuilder.h"
+#include <sstream>
 using namespace CT;
 
 bool RegexBuilder::Eval()
@@ -337,6 +338,26 @@ std::shared_ptr<Automata::NFA<char>> RegexBuilder::create(const std::string& str
 				if (!addConcat())
 					return nullptr;
 				recommend_concat = false;
+			}
+			//just macros here not real operators
+			auto dash = exp.popLetter();
+			auto end_point = exp.popLetter();
+			if(dash == '-' && end_point != '\0')
+			{
+				std::stringstream unfold;
+				for(char char_it = c+1; char_it <= end_point; char_it++)
+				{
+					unfold << "|" << char_it;
+
+				}
+				auto unfold_str = unfold.str();
+				exp.push(unfold_str);
+			}
+			else {
+				if(dash != '\0')
+					exp.rewindLetter();
+				if(end_point != '\0')
+					exp.rewindLetter();
 			}
 			pushOperand(c);
 			recommend_concat = true;

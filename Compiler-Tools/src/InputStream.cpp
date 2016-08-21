@@ -60,6 +60,11 @@ void InputStream::append(const std::string& str)
 	m_input += str;
 }
 
+void InputStream::push(const std::string& str)
+{
+	m_input.insert(m_index,str);
+}
+
 Position InputStream::getPosition() const{
 	return m_position;
 }

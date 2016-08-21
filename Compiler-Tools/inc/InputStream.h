@@ -30,6 +30,8 @@ namespace CT
 
 		void append(const std::string& str);
 
+		void push(const std::string& str);
+
 		Position getPosition() const;
 	};
 	using InputStreamPtr = std::shared_ptr<InputStream>;
