@@ -34,12 +34,13 @@ int main() {
 	std::cout << in_stream->getString() << std::endl;*/
 
 	CT::Lexer::CPPScanner scanner;
-	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("int x = 1;");
+	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("int x = 1.0L;");
 	while (true) {
 		auto token = scanner.scan(ss);
 		if (token == CT::Lexer::Token::eof || token == CT::Lexer::Token::invalid)
 			break;
 		cout << token.tag << endl;
 	}
+	std::cout << CT::Log::getLogText() << std::endl;
 	return 0;
 }

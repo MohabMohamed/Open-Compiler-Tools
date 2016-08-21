@@ -1,5 +1,6 @@
 #include "Scanner.h"
 #include "Log.h"
+#include <stack>
 using namespace CT;
 using namespace CT::Lexer;
 using namespace CT::Automata;
@@ -14,6 +15,7 @@ Token Scanner::scan(InputStreamPtr input)
 	//reset the current scanning machines;
 	reset();
 	std::string literal = "";
+	std::stack<Lexer::Token> token_stack;
 	//process input
 	while(!input->eof())
 	{
@@ -26,7 +28,6 @@ Token Scanner::scan(InputStreamPtr input)
 		}
 		int i=0;
 		std::vector<int> m_scheduledForDeletion;
-		//check if other scan machine is doing ok then don't reutrn as you find final state
 		bool isOk = false;
 		//go through machines providing input and check states
 		for(auto machineTagPair : m_currentMachines)
@@ -34,12 +35,14 @@ Token Scanner::scan(InputStreamPtr input)
 			Automata::FSMState state = machineTagPair.first->consume(StateInput<char>(c));
 			if(state == FSMState::FINAL)
 			{
-				if (!isOk) {
+				if (!isOk)
+				{
 					//create token and return
 					Lexer::Token result;
 					result.tag = machineTagPair.second.tag;
 					result.event = machineTagPair.second.event;
 					result.literal = literal + c;
+
 					//consume the char
 					input->popLetter();
 					//invoke the event function
@@ -48,6 +51,15 @@ Token Scanner::scan(InputStreamPtr input)
 
 					return result;
 				}
+				else {
+					//create token and return
+					Lexer::Token result;
+					result.tag = machineTagPair.second.tag;
+					result.event = machineTagPair.second.event;
+					result.literal = literal + c;
+					token_stack.push(result);
+				}
+	
 			}else if(state == FSMState::OK)
 			{
 				//continue scanning
@@ -63,6 +75,13 @@ Token Scanner::scan(InputStreamPtr input)
 
 		if(m_scheduledForDeletion.size() == m_currentMachines.size())
 		{
+			if (!token_stack.empty())
+			{
+				auto token = token_stack.top();
+				if (token.event != nullptr)
+					token.event(input);
+				return token;
+			}
 			//error scanning report and return nullptr
 			Log::log(LOG_LEVEL::ERROR, "unable to recognize string='"+literal+c+"'", input->getPosition());
 			return Token::invalid;

@@ -15,7 +15,7 @@ namespace CT
 	private:
 
 		//operators enum
-		enum class Operators : u8 {Star, Concat, Plus, Or, LeftParan, RightParan};
+		enum class Operators : u8 {Star, Concat, Plus, Or, Range, LeftParan, RightParan};
 		
 		//build stacks
 		std::stack<Operators> m_operators;

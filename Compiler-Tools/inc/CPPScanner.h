@@ -68,6 +68,7 @@ namespace CT
 				registerToken(builder.create("="), make_token("assign"));
 				
 				registerToken(builder.create(";"), make_token("semicolon"));
+				registerToken(builder.create("::"), make_token("access"));
 				registerToken(builder.create(":"), make_token("colon"));
 				registerToken(builder.create(","), make_token("comma"));
 				registerToken(builder.create("."), make_token("dot"));
@@ -77,6 +78,10 @@ namespace CT
 				registerToken(builder.create("}"), make_token("close_bracket"));
 				registerToken(builder.create("["), make_token("open_sbracket"));
 				registerToken(builder.create("]"), make_token("close_sbracket"));
+				registerToken(builder.create("(0|1|2|3|4|5|6|7|8|9)*.(0|1|2|3|4|5|6|7|8|9)+f"), make_token("float"));
+				registerToken(builder.create("(0|1|2|3|4|5|6|7|8|9)*.(0|1|2|3|4|5|6|7|8|9)+"), make_token("real"));
+				registerToken(builder.create("(0|1|2|3|4|5|6|7|8|9)+L"), make_token("long"));
+				registerToken(builder.create("(0|1|2|3|4|5|6|7|8|9)+"), make_token("integer"));
 				registerToken(builder.create("(a|b|c|d|e|f|g|h|i|k|l|m|n|o|b|q|r|s|t|u|v|w|x|y|z|_)(a|b|c|d|e|f|g|h|i|k|l|m|n|o|b|q|r|s|t|u|v|w|x|y|z|_|0|1|2|3|4|5|6|7|8|9)*"), make_token("id"));
 			}
 		public:
