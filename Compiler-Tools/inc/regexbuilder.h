@@ -15,7 +15,7 @@ namespace CT
 	private:
 
 		//operators enum
-		enum class Operators : u8 {Star, Concat, Plus, Or, Range, LeftParan, RightParan};
+		enum class Operators : u8 {Star, Concat, Plus, Or, Optional, LeftParan, RightParan};
 		
 		//build stacks
 		std::stack<Operators> m_operators;
@@ -40,6 +40,8 @@ namespace CT
 		bool Plus();
 
 		bool Or();
+
+		bool Optional();
 
 		//checks whether a <= b
 		// Star > Concat > Or

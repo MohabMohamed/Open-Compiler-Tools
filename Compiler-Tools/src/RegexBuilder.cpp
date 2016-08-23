@@ -24,6 +24,9 @@ bool RegexBuilder::Eval()
 			case Operators::Or:
 				return Or();
 				break;
+			case Operators::Optional:
+				return Optional();
+				break;
 		}
 	}
 	return false;
@@ -182,12 +185,33 @@ bool RegexBuilder::Or()
 	return true;
 }
 
+bool RegexBuilder::Optional()
+{
+	std::vector<Automata::StatePtr<char>> A;
+	if(!popOperand(A))
+		return false;
+
+	auto a_start = A.front();
+	auto a_final = A.back();
+
+	//add optional epsilon transition
+	a_start->addTransition(Automata::StateInput<char>::EPSILON(), a_final);
+
+	m_operands.push(A);
+	return true;
+}
+
 //checks whether a <= b
-// Star > Concat > Or
+// Star > Concat > Or > Optional
 bool RegexBuilder::precedence(Operators a, Operators b)
 {
 	//if the same operator
 	if(a == b)
+		return true;
+
+	if (a == Operators::Optional)
+		return false;
+	if (b == Operators::Optional)
 		return true;
 
 	//if a is star then it's always bigger than any other operator
@@ -228,7 +252,7 @@ void RegexBuilder::clearStacks()
 
 bool RegexBuilder::isMetaChar(char c)
 {
-	return c == ')' || c == '(' || c == '*' || c == '+' || c == '|' || c == '\\';
+	return c == ')' || c == '(' || c == '*' || c == '+' || c == '|' || c == '\\' || c == '?';
 }
 
 bool RegexBuilder::addConcat() 
@@ -315,6 +339,13 @@ std::shared_ptr<Automata::NFA<char>> RegexBuilder::create(const std::string& str
 					m_operators.push(Operators::Or);
 					if(recommend_concat)
 						recommend_concat = false;
+				}else if(c == '?')
+				{
+					while (!m_operators.empty() && precedence(Operators::Optional, m_operators.top()))
+						if (!Eval())
+							return nullptr;
+					m_operators.push(Operators::Optional);
+					recommend_concat = true;
 				}else if(c == '(')
 				{
 					if (recommend_concat){
@@ -339,7 +370,9 @@ std::shared_ptr<Automata::NFA<char>> RegexBuilder::create(const std::string& str
 					return nullptr;
 				recommend_concat = false;
 			}
+			
 			//just macros here not real operators
+			//start range macro like a-z
 			auto dash = exp.popLetter();
 			auto end_point = exp.popLetter();
 			if(dash == '-' && end_point != '\0')
@@ -359,6 +392,8 @@ std::shared_ptr<Automata::NFA<char>> RegexBuilder::create(const std::string& str
 				if(end_point != '\0')
 					exp.rewindLetter();
 			}
+			//end range macro
+
 			pushOperand(c);
 			recommend_concat = true;
 		}

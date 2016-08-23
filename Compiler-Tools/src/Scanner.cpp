@@ -30,12 +30,13 @@ Token Scanner::scan(InputStreamPtr input)
 		std::vector<int> m_scheduledForDeletion;
 		bool isOk = false;
 		//go through machines providing input and check states
-		for(auto machineTagPair : m_currentMachines)
+		for(int ix=0;ix<m_currentMachines.size();ix++)
 		{
+			auto machineTagPair = m_currentMachines[ix];
 			Automata::FSMState state = machineTagPair.first->consume(StateInput<char>(c));
 			if(state == FSMState::FINAL)
 			{
-				if (!isOk)
+				if (!isOk && !machineTagPair.first->hasFurtherTransitions())
 				{
 					//create token and return
 					Lexer::Token result;

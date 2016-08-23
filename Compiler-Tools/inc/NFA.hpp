@@ -66,6 +66,16 @@ namespace CT
 			{
 				return m_currentStates;
 			}
+
+			bool hasFurtherTransitions() const
+			{
+				for(auto state: m_currentStates)
+				{
+					if(!state->getTransitions().empty())
+						return true;
+				}
+				return false;
+			}
 		private:
 			std::vector<StatePtr<tokenType>> m_currentStates;
 			StatePtr<tokenType> m_startState;
