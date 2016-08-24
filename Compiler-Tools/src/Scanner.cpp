@@ -1,6 +1,7 @@
 #include "Scanner.h"
 #include "Log.h"
 #include <stack>
+#include <iostream>
 using namespace CT;
 using namespace CT::Lexer;
 using namespace CT::Automata;
@@ -21,6 +22,7 @@ Token Scanner::scan(InputStreamPtr input)
 	{
 		//get the next char
 		char c = input->peek();
+		std::cout << c << std::endl;
 		if(isIgnoreChar(c))
 		{
 			input->popLetter();
@@ -30,10 +32,11 @@ Token Scanner::scan(InputStreamPtr input)
 		std::vector<int> m_scheduledForDeletion;
 		bool isOk = false;
 		//go through machines providing input and check states
-		for(int ix=0;ix<m_currentMachines.size();ix++)
+		for(auto& machineTagPair: m_currentMachines)
 		{
-			auto machineTagPair = m_currentMachines[ix];
+			std::cout << std::endl;
 			Automata::FSMState state = machineTagPair.first->consume(StateInput<char>(c));
+			std::cout << (int)state << machineTagPair.second.tag << std::endl;
 			if(state == FSMState::FINAL)
 			{
 				if (!isOk && !machineTagPair.first->hasFurtherTransitions())

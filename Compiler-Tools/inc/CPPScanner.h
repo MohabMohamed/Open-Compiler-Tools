@@ -32,6 +32,7 @@ namespace CT
 				registerToken(builder.create("for"), make_token("for"));
 				registerToken(builder.create("goto"), make_token("goto"));
 				registerToken(builder.create("if"), make_token("if"));
+				registerToken(builder.create("include"), make_token("include"));
 				registerToken(builder.create("inline"), make_token("inline"));
 				registerToken(builder.create("int"), make_token("int"));
 				registerToken(builder.create("long"), make_token("long"));
@@ -62,8 +63,13 @@ namespace CT
 				registerToken(builder.create("_Static_assert"), make_token("_Static_assert"));
 				registerToken(builder.create("_Thread_local"), make_token("_Thread_local"));
 				registerToken(builder.create("__func__"), make_token("__func__"));
+				registerToken(builder.create("#"), make_token("hash"));
+				//registerToken(builder.create("include"), make_token("include"));
+				registerToken(builder.create("'"), make_token("SINGLE_QUOTE"));
+				registerToken(builder.create("\""), make_token("DOUBLE_QUOTE"));
 
-				registerToken(builder.create("(_|a-z)(_|a-z|0-9)+"), make_token("identifier"));
+
+				registerToken(builder.create("(_|a-z|A-Z)(_|a-z|A-Z|0-9)*"), make_token("identifier"));
 
 				registerToken(builder.create("(0(x|X))?(0-9|A-F|a-f)+(((u|U)(l|L|ll|LL)?)|((l|L|ll|LL)(u|U)?))?"), make_token("integer_constant"));
 				registerToken(builder.create("(1-9)(0-9)*(((u|U)(l|L|ll|LL)?)|((l|L|ll|LL)(u|U)?))?"), make_token("integer_constant"));

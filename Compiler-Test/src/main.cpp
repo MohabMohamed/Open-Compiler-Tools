@@ -34,7 +34,8 @@ int main() {
 	std::cout << in_stream->getString() << std::endl;*/
 
 	CT::Lexer::CPPScanner scanner;
-	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("int x = 0;");
+	//CT::InputStreamPtr ss = CT::open_file("E:\\Projects\\Compiler-Tools-v1.0\\Compiler-Tools\\src\\Log.cpp");
+	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("int");
 	while (true) {
 		auto token = scanner.scan(ss);
 		if (token == CT::Lexer::Token::eof || token == CT::Lexer::Token::invalid)
