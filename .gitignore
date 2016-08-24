@@ -50,3 +50,9 @@ build/
 **/*.pdb
 **/*.lastbuildstate
 **/*.cache
+*.sublime-project
+*.vcxproj
+*.tlog
+*.pdb
+*.idb
+*.obj
