@@ -1,9 +1,11 @@
 #pragma once
 #include "Defines.h"
+#include "Utilities.h"
 #include <map>
 #include <memory>
 #include <vector>
 #include <set>
+#include <ostream>
 
 namespace CT
 {
@@ -33,9 +35,23 @@ namespace CT
 			{
 				StateInput<letterType> result;
 				result.isEpsilon = true;
+				result.letter = '\0';
 				return result;
 			}
+
+			template<typename letterType>
+			friend std::ostream& operator<<(std::ostream& out, const StateInput<letterType>& input);
 		};
+
+		template<typename letterType>
+		std::ostream& operator<<(std::ostream& out, const StateInput<letterType>& input)
+		{
+			if (input.isEpsilon)
+				out << "StateInput{epsilon}" << std::endl;
+			else
+				out << "StateInput{letter: " << input.letter << "}" << std::endl;
+			return out;
+		}
 
 		template<typename letterType>
 		struct StateInputComparator{
@@ -49,12 +65,12 @@ namespace CT
 		class State
 		{
 		private:
-			void epsilonTransitAux(std::vector<std::shared_ptr<State<letterType>>>& result, std::set<State<letterType>*>& visited) 
+			void epsilonTransitAux(std::vector<std::shared_ptr<State<letterType>>>& result, std::set<u64>& visited) 
 			{
 				auto c = StateInput<letterType>::EPSILON();
-				visited.insert(this);
+				visited.insert(getID());
 				for (auto it = m_transitions.lower_bound(c); it != m_transitions.upper_bound(c); it++) {
-					if(visited.find(it->second.get()) == visited.end())
+					if(visited.find(it->second->getID()) == visited.end())
 					{
 						result.push_back(it->second);
 						it->second->epsilonTransitAux(result, visited);
@@ -63,13 +79,13 @@ namespace CT
 			}
 		public:
 			State()
-			:m_final(false)
+			:m_final(false), m_id(IDGenerator::generateID())
 			{
 
 			}
 			
 			explicit State(bool isFinal)
-			:m_final(isFinal)
+			:m_final(isFinal), m_id(IDGenerator::generateID())
 			{
 
 			}
@@ -101,7 +117,7 @@ namespace CT
 
 			void epsilonTransit(std::vector<std::shared_ptr<State<letterType>>>& result)
 			{
-				std::set<State<letterType>*> visited_set;
+				std::set<u64> visited_set;
 				epsilonTransitAux(result, visited_set);
 			}
 
@@ -120,12 +136,39 @@ namespace CT
 			{
 				m_final = val;
 			}
+
+			u64 getID()
+			{
+				return m_id;
+			}
 		private:
 			std::multimap<StateInput<letterType>, std::shared_ptr<State<letterType>>, StateInputComparator<letterType>> m_transitions;
 			bool m_final;
+			u64 m_id;
+
+			template<typename letterType>
+			friend std::ostream& operator<<(std::ostream& out, const State<letterType>& state);
 		};
 
 		template<typename letterType>
 		using StatePtr = std::shared_ptr<State<letterType>>;
+
+		template<typename letterType>
+		std::ostream& operator<<(std::ostream& out, const State<letterType>& state)
+		{
+			out << "state{";
+			out << "id: " << state.m_id;
+			out << ", transitions: {";
+			int i = 0;
+			for (auto transition : state.m_transitions)
+			{
+				if (i>0)
+					out << ", ";
+				out << "[" << transition.first << transition.second->getID() << "]";
+				i++;
+			}
+			out << "}" << std::endl;
+			return out;
+		}
 	}
 }

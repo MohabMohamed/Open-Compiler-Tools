@@ -34,14 +34,14 @@ int main() {
 	std::cout << in_stream->getString() << std::endl;*/
 
 	CT::Lexer::CPPScanner scanner;
-	//CT::InputStreamPtr ss = CT::open_file("E:\\Projects\\Compiler-Tools-v1.0\\Compiler-Tools\\src\\Log.cpp");
-	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("int");
+	CT::InputStreamPtr ss = CT::open_file("E:\\Projects\\Compiler-Tools-v1.0\\Compiler-Tools\\src\\Log.cpp");
+	//CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("int");
 	while (true) {
 		auto token = scanner.scan(ss);
 		if (token == CT::Lexer::Token::eof || token == CT::Lexer::Token::invalid)
 			break;
 		cout << token.tag << endl;
 	}
-	std::cout << CT::Log::getLogText() << std::endl;
+	CT::Log::dumpLogEntriesToFile("log.txt");
 	return 0;
 }

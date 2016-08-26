@@ -2,6 +2,8 @@
 #include "Log.h"
 #include <stack>
 #include <iostream>
+#include <sstream>
+
 using namespace CT;
 using namespace CT::Lexer;
 using namespace CT::Automata;
@@ -22,8 +24,10 @@ Token Scanner::scan(InputStreamPtr input)
 	{
 		//get the next char
 		char c = input->peek();
-		std::cout << c << std::endl;
-		if(isIgnoreChar(c))
+		if (c == '\0')
+		{
+			return Token::eof;
+		}else if(isIgnoreChar(c))
 		{
 			input->popLetter();
 			continue;
@@ -34,9 +38,7 @@ Token Scanner::scan(InputStreamPtr input)
 		//go through machines providing input and check states
 		for(auto& machineTagPair: m_currentMachines)
 		{
-			std::cout << std::endl;
 			Automata::FSMState state = machineTagPair.first->consume(StateInput<char>(c));
-			std::cout << (int)state << machineTagPair.second.tag << std::endl;
 			if(state == FSMState::FINAL)
 			{
 				if (!isOk && !machineTagPair.first->hasFurtherTransitions())
@@ -114,6 +116,9 @@ Token Scanner::scan(InputStreamPtr input)
 
 void Scanner::registerToken(std::shared_ptr<NFA<char>> regexMachine, const Token& token)
 {
+	std::stringstream stream;
+	stream << *regexMachine;
+	Log::log(CT::LOG_LEVEL::LDEBUG, stream.str(), CT::Position::invalid);
 	m_scanningMachines.push_back(std::make_pair(regexMachine, token));
 }
 

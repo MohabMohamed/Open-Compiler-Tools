@@ -38,6 +38,4 @@ namespace CT{
 
 	using real32 = float;
 	using real64 = double;
-
-
 }

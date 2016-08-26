@@ -76,9 +76,29 @@ namespace CT
 				}
 				return false;
 			}
+
 		private:
 			std::vector<StatePtr<tokenType>> m_currentStates;
 			StatePtr<tokenType> m_startState;
+
+			template<typename tokenType>
+			friend std::ostream& operator<<(std::ostream& out, const NFA<tokenType>& nfa);
 		};
+
+		template<typename tokenType>
+		std::ostream& operator<<(std::ostream& out,const NFA<tokenType>& nfa)
+		{
+			out << "NFA{ m_startState:" << *nfa.m_startState << ", m_currentStates:[";
+			int i = 0;
+			for (auto state : nfa.m_currentStates)
+			{
+				if (i > 0)
+					out << ", ";
+				out << *state;
+				i++;
+			}
+			out << "]" << std::endl;
+			return out;
+		}
 	}
 }

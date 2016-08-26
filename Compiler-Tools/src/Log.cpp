@@ -42,6 +42,16 @@ std::string Log::getLogText()
 				stream << entry.message << std::endl;
 			}
 			break;
+		case LOG_LEVEL::LDEBUG:
+			for (auto entry : item.second)
+			{
+				stream << "[Debug";
+				if (entry.position.isValid)
+					stream << ", " << entry.position.row << ", " << entry.position.col;
+				stream << "]: ";
+				stream << entry.message << std::endl;
+			}
+			break;
 		default: 
 		break;
 		}

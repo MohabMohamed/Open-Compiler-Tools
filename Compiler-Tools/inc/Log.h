@@ -7,7 +7,7 @@
 
 namespace CT
 {
-	enum class LOG_LEVEL: u8 {COUT, LOG, ERROR};
+	enum class LOG_LEVEL: u8 {COUT, LOG, ERROR, LDEBUG};
 
 	struct API LogEntry
 	{
