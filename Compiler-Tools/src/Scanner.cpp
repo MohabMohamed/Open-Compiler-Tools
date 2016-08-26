@@ -53,7 +53,7 @@ Token Scanner::scan(InputStreamPtr input)
 					input->popLetter();
 					//invoke the event function
 					if (machineTagPair.second.event != nullptr)
-						machineTagPair.second.event(input);
+						machineTagPair.second.event(input, result);
 
 					return result;
 				}
@@ -85,7 +85,7 @@ Token Scanner::scan(InputStreamPtr input)
 			{
 				auto token = token_stack.top();
 				if (token.event != nullptr)
-					token.event(input);
+					token.event(input, token);
 				return token;
 			}
 			//error scanning report and return nullptr

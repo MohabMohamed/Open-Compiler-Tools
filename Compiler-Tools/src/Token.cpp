@@ -9,7 +9,7 @@ Token::Token()
 	:isEOF(false), isInvalid(false)
 {}
 
-API Token CT::Lexer::make_token(std::string tagName, std::function<bool(InputStreamPtr)> eventFunction)
+API Token CT::Lexer::make_token(std::string tagName, std::function<bool(InputStreamPtr, Token&)> eventFunction)
 {
 	Token result;
 	result.tag = tagName;

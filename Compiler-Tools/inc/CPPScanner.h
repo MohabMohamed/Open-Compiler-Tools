@@ -23,6 +23,8 @@ namespace CT
 				registerToken(builder.create("const"), make_token("const"));
 				registerToken(builder.create("continue"), make_token("continue"));
 				registerToken(builder.create("default"), make_token("default"));
+				registerToken(builder.create("using"), make_token("using"));
+				registerToken(builder.create("namespace"), make_token("namespace"));
 				registerToken(builder.create("double"), make_token("double"));
 				registerToken(builder.create("do"), make_token("do"));
 				registerToken(builder.create("else"), make_token("else"));
@@ -63,9 +65,71 @@ namespace CT
 				registerToken(builder.create("_Static_assert"), make_token("_Static_assert"));
 				registerToken(builder.create("_Thread_local"), make_token("_Thread_local"));
 				registerToken(builder.create("__func__"), make_token("__func__"));
-				registerToken(builder.create("#"), make_token("hash"));
-				//registerToken(builder.create("include"), make_token("include"));
+				registerToken(builder.create("#"), make_token("HASH"));
 				registerToken(builder.create("'"), make_token("SINGLE_QUOTE"));
+
+				registerToken(builder.create("\""), make_token("string_literal", [](CT::InputStreamPtr input, CT::Lexer::Token& token) -> bool {
+					token.literal = "";
+					bool ignore = false;
+					while (true)
+					{
+						if (input->peek() == '\\')
+						{
+							ignore = true;
+							//consume the ignore char
+							input->popLetter();
+						}
+
+						if (input->peek() == '"')
+						{
+							if (!ignore)
+							{
+								//on the way out remove the closing "
+								input->popLetter();
+								break;
+							}
+						}
+
+						if (ignore)
+							ignore = false;
+
+						token.literal += input->popLetter();
+					}
+					return true;
+				}));
+
+				registerToken(builder.create("//"), make_token("singleline_comment", [](CT::InputStreamPtr input, CT::Lexer::Token& token) -> bool {
+					token.literal = "";
+					while (input->peek() != '\n')
+					{
+						token.literal += input->popLetter();
+					}
+					return true;
+				}));
+
+				registerToken(builder.create("/\\*"), make_token("multiline_comment", [](CT::InputStreamPtr input, CT::Lexer::Token& token) -> bool {
+					token.literal = "";
+					while (true)
+					{
+						auto mul = input->popLetter();
+						auto slash = input->popLetter();
+						if (mul == '*' && slash == '/')
+						{
+							break;
+						}
+						else
+						{
+							if (mul != '\0')
+								input->rewindLetter();
+							if (slash != '\0')
+								input->rewindLetter();
+						}
+
+						token.literal += input->popLetter();
+					}
+					return true;
+				}));
+
 				registerToken(builder.create("\""), make_token("DOUBLE_QUOTE"));
 
 

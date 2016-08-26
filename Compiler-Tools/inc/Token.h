@@ -19,14 +19,14 @@ namespace CT
 			std::string tag;
 			std::string literal;
 
-			std::function<bool(InputStreamPtr)> event;
+			std::function<bool(InputStreamPtr, Token&)> event;
 
 			static const Token eof;
 			static const Token invalid;
 
 			Token();
 
-			friend API Token make_token(std::string, std::function<bool(InputStreamPtr)> = nullptr);
+			friend API Token make_token(std::string, std::function<bool(InputStreamPtr, Token&)> = nullptr);
 			friend API Token eof_token();
 			friend API Token invalid_token();
 			friend API bool operator==(const Token& a, const Token& b);

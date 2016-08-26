@@ -47,9 +47,9 @@ namespace CT
 		std::ostream& operator<<(std::ostream& out, const StateInput<letterType>& input)
 		{
 			if (input.isEpsilon)
-				out << "StateInput{epsilon}" << std::endl;
+				out << "StateInput{epsilon};" << std::endl;
 			else
-				out << "StateInput{letter: " << input.letter << "}" << std::endl;
+				out << "StateInput{letter:= " << input.letter << "};" << std::endl;
 			return out;
 		}
 
@@ -156,18 +156,14 @@ namespace CT
 		template<typename letterType>
 		std::ostream& operator<<(std::ostream& out, const State<letterType>& state)
 		{
-			out << "state{";
-			out << "id: " << state.m_id;
-			out << ", transitions: {";
-			int i = 0;
+			out << "state{" << std::endl;
+			out << "id:= " << state.m_id << std::endl;
+			out << "transitions:= [";
 			for (auto transition : state.m_transitions)
 			{
-				if (i>0)
-					out << ", ";
 				out << "[" << transition.first << transition.second->getID() << "]";
-				i++;
 			}
-			out << "}" << std::endl;
+			out << "]};" << std::endl;
 			return out;
 		}
 	}

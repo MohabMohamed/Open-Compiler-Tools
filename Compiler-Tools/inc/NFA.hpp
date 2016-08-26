@@ -88,16 +88,12 @@ namespace CT
 		template<typename tokenType>
 		std::ostream& operator<<(std::ostream& out,const NFA<tokenType>& nfa)
 		{
-			out << "NFA{ m_startState:" << *nfa.m_startState << ", m_currentStates:[";
-			int i = 0;
+			out << "NFA{"<< std::endl << "m_startState:=" << *nfa.m_startState << "m_currentStates:=[";
 			for (auto state : nfa.m_currentStates)
 			{
-				if (i > 0)
-					out << ", ";
 				out << *state;
-				i++;
 			}
-			out << "]" << std::endl;
+			out << "]};" << std::endl;
 			return out;
 		}
 	}
