@@ -1,3 +1,8 @@
+Todos
+- file manager
+- improved debug options. ie: scanning steps
+- read about parsing and parse trees
+
 Regex Builder
 
 - meta chars: {(, ), *, +, |, \, concat}

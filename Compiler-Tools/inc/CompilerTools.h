@@ -8,3 +8,4 @@
 #include "Token.h"
 #include "Scanner.h"
 #include "Log.h"
+#include "Parser.h"

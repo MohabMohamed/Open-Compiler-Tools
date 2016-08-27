@@ -66,6 +66,25 @@ namespace CT
 				registerToken(builder.create("_Thread_local"), make_token("_Thread_local"));
 				registerToken(builder.create("__func__"), make_token("__func__"));
 				registerToken(builder.create("#"), make_token("HASH"));
+
+				registerToken(builder.create("'"), make_token("char_literal", [](CT::InputStreamPtr input, CT::Lexer::Token& token) -> bool {
+					token.literal = "";
+					bool ignore = false;
+					auto char_c = input->popLetter();
+					auto end_quote = input->popLetter();
+
+					if (end_quote == '\'')
+					{
+						token.literal += char_c;
+					}
+					else {
+						if (char_c != '\0')
+							input->rewindLetter();
+						if (end_quote != '\0')
+							input->rewindLetter();
+					}
+					return true;
+				}));
 				registerToken(builder.create("'"), make_token("SINGLE_QUOTE"));
 
 				registerToken(builder.create("\""), make_token("string_literal", [](CT::InputStreamPtr input, CT::Lexer::Token& token) -> bool {
