@@ -3,6 +3,7 @@
 #include <sstream>
 #include <CompilerTools.h>
 #include <CPPScanner.h>
+#include <GLexer.h>
 
 using namespace std;
 int main() {
@@ -24,7 +25,6 @@ int main() {
 	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("ab aaaaaaaabc");
 	while (true)
 	{
-		auto token = scanner.scan(ss);
 		if (token == CT::Lexer::Token::eof || token == CT::Lexer::Token::invalid)
 			break;
 		cout << token.tag << endl;
@@ -33,19 +33,19 @@ int main() {
 	auto in_stream = CT::read_stream(std::cin);
 	std::cout << in_stream->getString() << std::endl;*/
 
-	CT::Lexer::IScannerPtr scanner = std::make_shared<CT::Lexer::CPPScanner>();
-	CT::InputStreamPtr ss = CT::open_file("E:\\Projects\\Compiler-Tools-v1.0\\test\\scan-test-01.cpp");
+	CT::Lexer::IScannerPtr scanner = std::make_shared<CT::Lexer::GLexer>();
+	CT::InputStreamPtr ss = CT::open_file("E:\\Projects\\Compiler-Tools-v1.0\\test\\calc-rd-ll1-01.gr");
 	//CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("int");
 	while (true) {
 		auto token = scanner->scan(ss);
 		if (token == CT::Lexer::Token::eof || token == CT::Lexer::Token::invalid)
 			break;
-		cout << token.tag << endl;
+		cout << "<" <<token.tag <<", "<< token.literal << ">" << endl;
 	}
 	CT::Log::dumpLogEntriesToFile("log.txt");
-
-	CT::InputStreamPtr ss2 = std::make_shared<CT::InputStream>("int x;");
+	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
+	/*CT::InputStreamPtr ss2 = std::make_shared<CT::InputStream>("int x;");
 	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GenericParser>();
-	parser->parse(scanner, ss2);
+	parser->parse(scanner, ss2);*/
 	return 0;
 }

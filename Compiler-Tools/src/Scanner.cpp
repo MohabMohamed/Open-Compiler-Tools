@@ -111,6 +111,8 @@ Token Scanner::scan(InputStreamPtr input)
 		literal += c;
 		input->popLetter();
 	}
+	if (!token_stack.empty())
+		return token_stack.top();
 	return Token::eof;
 }
 
@@ -135,4 +137,47 @@ void Scanner::reset()
 bool Scanner::isIgnoreChar(char c)
 {
 	return c == '\n' || c == ' ' || c == '\t' || c == '\r' || c == '\f' || c == '\v';
+}
+
+bool Scanner::isDefinedToken(const std::string& token)
+{
+	for(auto machine: m_scanningMachines)
+	{
+		if(token == machine.second.tag)
+			return true;
+	}
+	return false;
+}
+
+CT::Lexer::CachedScanner::CachedScanner()
+	:m_index(0)
+{
+}
+
+CT::Lexer::CachedScanner::~CachedScanner()
+{
+	m_cache.clear();
+}
+
+Token CT::Lexer::CachedScanner::scan(InputStreamPtr input)
+{
+	if (m_index >= m_cache.size() - 1)
+	{
+		auto token = Scanner::scan(input);
+		m_cache.push_back(token);
+		m_index = m_cache.size() - 1;
+	}
+	else {
+		return m_cache[m_index++];
+	}
+}
+
+Token CT::Lexer::CachedScanner::rewindToken()
+{
+	if (m_index > 0)
+	{
+		m_index--;
+		return m_cache[m_index];
+	}
+	return Token::invalid;
 }

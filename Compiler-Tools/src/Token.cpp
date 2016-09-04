@@ -45,7 +45,7 @@ API bool CT::Lexer::operator==(const Token& a, const Token& b)
 		return false;
 	else if((a.isInvalid & b.isInvalid) && (a.isInvalid | b.isInvalid))
 		return false;
-	else if(a.tag == b.tag && a.literal == b.literal)
+	else if(a.tag == b.tag)
 		return true;
 
 	return false;

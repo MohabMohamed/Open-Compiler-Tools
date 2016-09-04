@@ -77,6 +77,12 @@ namespace CT
 					{
 						token.literal += char_c;
 					}
+					else if (char_c == '\\')
+					{
+						auto new_end_quote = input->popLetter();
+						token.literal += char_c;
+						token.literal += end_quote;
+					}
 					else {
 						if (char_c != '\0')
 							input->rewindLetter();

@@ -9,3 +9,4 @@
 #include "Scanner.h"
 #include "Log.h"
 #include "Parser.h"
+#include "GLexer.h"

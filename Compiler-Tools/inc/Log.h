@@ -26,6 +26,8 @@ namespace CT
 
 		static std::string getLogText();
 
+		static std::string filterLog(LOG_LEVEL level);
+
 		static void dumpLogEntriesToFile(std::string filename);
 
 		static void log(LOG_LEVEL,const std::string& message, Position position);
