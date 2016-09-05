@@ -10,22 +10,27 @@ namespace CT
 {
 	namespace Parser
 	{
+		struct ParseNode{
+			std::vector<std::shared_ptr<ParseNode>> m_children;
+			std::string type;
+		};
+
 		class API IParser
 		{
 		public:
-			virtual void parse(Lexer::IScannerPtr scanner, CT::InputStreamPtr input) = 0;
-			virtual void add_rule(const std::string&,const std::string&) = 0;
+			virtual std::shared_ptr<ParseNode> parse(Lexer::IScannerPtr scanner, CT::InputStreamPtr input) = 0;
 		};
 		using IParserPtr = std::shared_ptr<IParser>;
 
-		class API GenericParser: public IParser
+		class API GParser: public IParser
 		{
-		protected:
-			//<rule_name, rule>
-			std::multimap<std::string, std::vector<std::string>> m_rules;
+		private:
+			std::shared_ptr<ParseNode> parseProgram(std::shared_ptr<CT::Lexer::CachedScanner> scanner, CT::InputStreamPtr input);
+			std::shared_ptr<ParseNode> parseStatement(std::shared_ptr<CT::Lexer::CachedScanner> scanner, CT::InputStreamPtr input);
+			std::shared_ptr<ParseNode> parseNameDirective(std::shared_ptr<CT::Lexer::CachedScanner> scanner, CT::InputStreamPtr input);
+			std::shared_ptr<ParseNode> parseLexRule(std::shared_ptr<CT::Lexer::CachedScanner> scanner, CT::InputStreamPtr input);
 		public:
-			void parse(Lexer::IScannerPtr scanner, CT::InputStreamPtr input) override;
-			void add_rule(const std::string& tmpName,const std::string& rule) override;
+			std::shared_ptr<ParseNode> parse(Lexer::IScannerPtr scanner, CT::InputStreamPtr input) override;
 		};
 	}
 }

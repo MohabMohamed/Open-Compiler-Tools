@@ -35,6 +35,8 @@ int main() {
 
 	CT::Lexer::IScannerPtr scanner = std::make_shared<CT::Lexer::GLexer>();
 	CT::InputStreamPtr ss = CT::open_file("E:\\Projects\\Compiler-Tools-v1.0\\test\\calc-rd-ll1-01.gr");
+	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GParser>();
+	auto program = parser->parse(scanner, ss);
 	//CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("int");
 	while (true) {
 		auto token = scanner->scan(ss);

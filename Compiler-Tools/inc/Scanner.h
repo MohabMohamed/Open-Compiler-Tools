@@ -48,6 +48,8 @@ namespace CT
 		protected:
 			std::vector<Token> m_cache;
 			u64 m_index;
+
+			bool hasCachedTokens();
 		public:
 			CachedScanner();
 			virtual ~CachedScanner();

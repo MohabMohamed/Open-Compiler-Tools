@@ -10,7 +10,7 @@ namespace CT
 {
 	namespace Lexer
 	{
-		class GLexer: public Scanner
+		class GLexer: public CachedScanner
 		{
 		protected:
 			void init()
