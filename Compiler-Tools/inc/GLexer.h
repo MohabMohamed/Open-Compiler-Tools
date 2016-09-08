@@ -16,12 +16,14 @@ namespace CT
 			void init()
 			{
 				CT::RegexBuilder builder;
-
+				registerToken(builder.create(";"), make_token("semicolon"));
 				registerToken(builder.create("#name"), make_token("name_directive", [](CT::InputStreamPtr input, Token& token) -> bool{
 					token.literal = "";
-					while (input->peek() != '\n')
+					char pc = input->peek();
+					while (pc != '\n' && pc != ';')
 					{
 						token.literal += input->popLetter();
+						pc = input->peek();
 					}
 					trim(token.literal);
 					return true;
@@ -66,7 +68,6 @@ namespace CT
 				}));
 
 				registerToken(builder.create("(a-z)+"), make_token("parse_id"));
-				registerToken(builder.create(";"), make_token("semicolon"));
 				registerToken(builder.create("\\|"), make_token("or"));
 			}
 

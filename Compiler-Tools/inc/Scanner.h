@@ -47,7 +47,7 @@ namespace CT
 		class API CachedScanner : public Scanner {
 		protected:
 			std::vector<Token> m_cache;
-			u64 m_index;
+			std::vector<Token>::iterator m_index;
 
 			bool hasCachedTokens();
 		public:

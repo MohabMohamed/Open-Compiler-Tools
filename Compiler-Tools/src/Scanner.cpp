@@ -151,17 +151,13 @@ bool Scanner::isDefinedToken(const std::string& token)
 
 bool CT::Lexer::CachedScanner::hasCachedTokens()
 {
-	if (m_cache.empty())
+	if(m_index == m_cache.end())
 		return false;
-
-	if (m_index >= m_cache.size())
-		return false;
-
 	return true;
 }
 
 CT::Lexer::CachedScanner::CachedScanner()
-	:m_index(0)
+	:m_index(m_cache.end())
 {
 }
 
@@ -176,20 +172,22 @@ Token CT::Lexer::CachedScanner::scan(InputStreamPtr input)
 	{
 		auto token = Scanner::scan(input);
 		m_cache.push_back(token);
-		m_index = m_cache.size() - 1;
+		m_index = m_cache.end();
 		return token;
 	}
 	else {
-		return m_cache[m_index++];
+		auto token = *m_index;
+		m_index++;
+		return token;
 	}
 }
 
 Token CT::Lexer::CachedScanner::rewindToken()
 {
-	if (m_index > 0)
+	if (m_index != m_cache.begin())
 	{
 		m_index--;
-		return m_cache[m_index];
+		return *m_index;
 	}
 	return Token::invalid;
 }
