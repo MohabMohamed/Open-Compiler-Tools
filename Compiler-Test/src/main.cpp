@@ -2,8 +2,6 @@
 #include <string>
 #include <sstream>
 #include <CompilerTools.h>
-#include <CPPScanner.h>
-#include <GLexer.h>
 
 using namespace std;
 int main() {

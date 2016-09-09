@@ -1,9 +1,9 @@
 #include "Scanner.h"
 #include "Log.h"
+#include "State.hpp"
 #include <stack>
 #include <iostream>
 #include <sstream>
-
 using namespace CT;
 using namespace CT::Lexer;
 using namespace CT::Automata;
@@ -147,47 +147,4 @@ bool Scanner::isDefinedToken(const std::string& token)
 			return true;
 	}
 	return false;
-}
-
-bool CT::Lexer::CachedScanner::hasCachedTokens()
-{
-	if(m_index == m_cache.end())
-		return false;
-	return true;
-}
-
-CT::Lexer::CachedScanner::CachedScanner()
-	:m_index(m_cache.end())
-{
-}
-
-CT::Lexer::CachedScanner::~CachedScanner()
-{
-	m_cache.clear();
-}
-
-Token CT::Lexer::CachedScanner::scan(InputStreamPtr input)
-{
-	if (!hasCachedTokens())
-	{
-		auto token = Scanner::scan(input);
-		m_cache.push_back(token);
-		m_index = m_cache.end();
-		return token;
-	}
-	else {
-		auto token = *m_index;
-		m_index++;
-		return token;
-	}
-}
-
-Token CT::Lexer::CachedScanner::rewindToken()
-{
-	if (m_index != m_cache.begin())
-	{
-		m_index--;
-		return *m_index;
-	}
-	return Token::invalid;
 }
