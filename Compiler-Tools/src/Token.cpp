@@ -1,25 +1,49 @@
 #include "Token.h"
-
+#include "Utilities.h"
+using namespace CT;
 using namespace CT::Lexer;
 
 const Token Token::eof = eof_token();
 const Token Token::invalid = invalid_token();
+std::unordered_map<std::string, u64> Token::TOKEN_TAGS;
 
 Token::Token()
 	:isEOF(false), isInvalid(false)
 {}
 
-API Token CT::Lexer::make_token(std::string tagName, std::function<bool(InputStreamPtr, Token&)> eventFunction)
+std::string Lexer::getTokenName(u64 tag)
 {
+	for(auto entry: Token::TOKEN_TAGS)
+	{
+		if (entry.second == tag)
+			return entry.first;
+	}
+	return "";
+}
+
+u64 Lexer::getTokenTag(std::string name)
+{
+	auto tag_it = Token::TOKEN_TAGS.find(name);
+	if(tag_it != Token::TOKEN_TAGS.end())
+	{
+		return tag_it->second;
+	}
+	return IDGenerator::invalid;
+}
+
+Token Lexer::make_token(std::string tagName, std::function<bool(InputStreamPtr, Token&)> eventFunction)
+{
+	auto tag = CT::IDGenerator::generateID();
+	Token::TOKEN_TAGS[tagName] = tag;
 	Token result;
-	result.tag = tagName;
+	result.tag = tag;
 	result.event = eventFunction;
 	result.isEOF = false;
 	result.isInvalid = false;
 	return result;
 }
 
-API Token CT::Lexer::eof_token()
+Token Lexer::eof_token()
 {
 	Token result;
 	result.isEOF = true;
@@ -27,7 +51,7 @@ API Token CT::Lexer::eof_token()
 	return result;
 }
 
-API Token CT::Lexer::invalid_token()
+Token Lexer::invalid_token()
 {
 	Token result;
 	result.isInvalid = true;
@@ -35,7 +59,7 @@ API Token CT::Lexer::invalid_token()
 	return result;
 }
 
-API bool CT::Lexer::operator==(const Token& a, const Token& b)
+bool Lexer::operator==(const Token& a, const Token& b)
 {
 	if(a.isEOF && b.isEOF)
 		return true;
@@ -51,7 +75,7 @@ API bool CT::Lexer::operator==(const Token& a, const Token& b)
 	return false;
 }
 
-API bool CT::Lexer::operator!=(const Token& a, const Token& b)
+bool Lexer::operator!=(const Token& a, const Token& b)
 {
 	return !(a==b);
 }

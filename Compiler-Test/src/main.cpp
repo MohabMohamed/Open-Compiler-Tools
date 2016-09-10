@@ -36,14 +36,16 @@ int main() {
 	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GParser>();
 	auto program = parser->parse(scanner, ss);
 	//CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("int");
+	/*
 	while (true) {
 		auto token = scanner->scan(ss);
 		if (token == CT::Lexer::Token::eof || token == CT::Lexer::Token::invalid)
 			break;
 		cout << "<" <<token.tag <<", "<< token.literal << ">" << endl;
 	}
-	CT::Log::dumpLogEntriesToFile("log.txt");
+	//CT::Log::dumpLogEntriesToFile("log.txt");
 	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
+	*/
 	/*CT::InputStreamPtr ss2 = std::make_shared<CT::InputStream>("int x;");
 	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GenericParser>();
 	parser->parse(scanner, ss2);*/

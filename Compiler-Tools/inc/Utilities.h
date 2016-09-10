@@ -11,6 +11,7 @@ namespace CT
 	{
 	public:
 		static u64 generateID();
+		static const u64 invalid = 0xFFFFFFFFFFFFFFFF;
 	};
 
 	// trim from start

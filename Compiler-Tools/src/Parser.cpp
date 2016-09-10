@@ -1,17 +1,19 @@
 #include "Parser.h"
 #include "InputStream.h"
 #include "Log.h"
+#include "Token.h"
 #include <iostream>
-using namespace CT::Parser;
+using namespace CT;
+using namespace Parser;
 
-GParseNodePtr GParser::parse(CT::Lexer::IScannerPtr scanner, CT::InputStreamPtr input)
+GParseNodePtr GParser::parse(Lexer::IScannerPtr scanner, InputStreamPtr input)
 {
-	auto cachedScanner = std::dynamic_pointer_cast<CT::Lexer::CachedScanner>(scanner);
+	auto cachedScanner = std::dynamic_pointer_cast<Lexer::CachedScanner>(scanner);
 	auto program = parseProgram(cachedScanner, input);
 	return program;
 }
 
-GParseNodePtr GParser::parseProgram(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)
+GParseNodePtr GParser::parseProgram(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	GParseNodePtr program = std::make_shared<GParseNode>(), statement = nullptr;
 	
@@ -20,9 +22,9 @@ GParseNodePtr GParser::parseProgram(CT::Lexer::CachedScannerPtr scanner, CT::Inp
 	{
 		program->children.push_back(statement);
 		auto semicolon = scanner->scan(input);
-		if(semicolon.tag != "semicolon")
+		if(semicolon.tag != Lexer::getTokenTag("semicolon"))
 		{
-			Log::log(LOG_LEVEL::ERROR, "expected a semicolon but found'"+semicolon.tag+"'", input->getPosition());
+			Log::log(LOG_LEVEL::ERROR, "expected a semicolon but found'"+Lexer::getTokenName(semicolon.tag)+"'", input->getPosition());
 			return nullptr;
 		}
 
@@ -36,20 +38,20 @@ GParseNodePtr GParser::parseProgram(CT::Lexer::CachedScannerPtr scanner, CT::Inp
 	return program;
 }
 
-GParseNodePtr GParser::parseStatement(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)
+GParseNodePtr GParser::parseStatement(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	auto token = scanner->scan(input);
-	if(token.tag == "name_directive")
+	if(token.tag == Lexer::getTokenTag("name_directive"))
 	{
 		scanner->rewindToken();
 		auto statement = parseNameDirective(scanner, input);
 		return statement;
-	}else if(token.tag == "lex_id")
+	}else if(token.tag == Lexer::getTokenTag("lex_id"))
 	{
 		scanner->rewindToken();
 		auto statement = parseLexRule(scanner, input);
 		return statement;
-	}else if(token.tag == "parse_id")
+	}else if(token.tag == Lexer::getTokenTag("parse_id"))
 	{
 		scanner->rewindToken();
 		auto statement = parseParseRule(scanner, input);
@@ -59,12 +61,12 @@ GParseNodePtr GParser::parseStatement(CT::Lexer::CachedScannerPtr scanner, CT::I
 	return nullptr;
 }
 
-GParseNodePtr GParser::parseNameDirective(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)
+GParseNodePtr GParser::parseNameDirective(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	std::shared_ptr<GNameDirective> result = std::make_shared<GNameDirective>();
 
 	auto token = scanner->scan(input);
-	if(token.tag == "name_directive")
+	if(token.tag == Lexer::getTokenTag("name_directive"))
 	{
 		result->directiveValue = token.literal;
 		return result;
@@ -73,18 +75,20 @@ GParseNodePtr GParser::parseNameDirective(CT::Lexer::CachedScannerPtr scanner, C
 	return nullptr;
 }
 
-GParseNodePtr GParser::parseLexRule(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)
+GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	std::shared_ptr<GLexRule> result = std::make_shared<GLexRule>();
 
 	auto lex_id_token = scanner->scan(input);
 	auto assign_token = scanner->scan(input);
 	auto regex_token = scanner->scan(input);
-	if(lex_id_token.tag == "lex_id" && assign_token.tag == "assign" && regex_token.tag == "regex")
+	if (lex_id_token.tag == Lexer::getTokenTag("lex_id") &&
+		assign_token.tag == Lexer::getTokenTag("assign") &&
+		regex_token.tag == Lexer::getTokenTag("regex"))
 	{
 		auto action_token = scanner->scan(input);
 		bool foundAction = true;
-		if(action_token.tag != "action")
+		if(action_token.tag != Lexer::getTokenTag("action"))
 		{
 			scanner->rewindToken();
 			foundAction = false;
@@ -102,22 +106,23 @@ GParseNodePtr GParser::parseLexRule(CT::Lexer::CachedScannerPtr scanner, CT::Inp
 	}
 }
 
-GParseNodePtr GParser::parseParseRule(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)
+GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	std::shared_ptr<GParseRule> result = std::make_shared<GParseRule>();
 
 	auto parse_id_token = scanner->scan(input);
 	auto assign_token = scanner->scan(input);
-	if(parse_id_token.tag == "parse_id" && assign_token.tag == "assign")
+	if (parse_id_token.tag == Lexer::getTokenTag("parse_id") &&
+		assign_token.tag == Lexer::getTokenTag("assign"))
 	{
 		result->name = parse_id_token.literal;
-		std::vector<CT::Lexer::Token> rule;
+		std::vector<Lexer::Token> rule;
 		rule.reserve(10);
 		auto rule_token = scanner->scan(input);
 		bool foundOr = false;
 		while(true)
 		{
-			if(rule_token.tag == "semicolon")
+			if(rule_token.tag == Lexer::getTokenTag("semicolon"))
 			{
 				//rewind the semicolon
 				scanner->rewindToken();
@@ -129,14 +134,15 @@ GParseNodePtr GParser::parseParseRule(CT::Lexer::CachedScannerPtr scanner, CT::I
 					result->rules.push_back(rule);
 				break;
 			}
-			if(rule_token.tag == "lex_id" || rule_token.tag == "parse_id")
+			if (rule_token.tag == Lexer::getTokenTag("lex_id") ||
+				rule_token.tag == Lexer::getTokenTag("parse_id"))
 			{
 				rule.push_back(rule_token);
 				foundOr = false;
-			}else if(rule_token.tag == "or")
+			}else if(rule_token.tag == Lexer::getTokenTag("or"))
 			{
 				result->rules.push_back(rule);
-				rule = std::vector<CT::Lexer::Token>();
+				rule = std::vector<Lexer::Token>();
 				rule.reserve(10);
 				foundOr = true;
 			}

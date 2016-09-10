@@ -5,6 +5,7 @@
 #include <functional>
 #include <istream>
 #include <string>
+#include <unordered_map>
 
 namespace CT
 {
@@ -15,8 +16,10 @@ namespace CT
 		private:
 			bool isEOF;
 			bool isInvalid;
+			static std::unordered_map<std::string, u64> TOKEN_TAGS;
+			
 		public:
-			std::string tag;
+			u64 tag;
 			std::string literal;
 
 			std::function<bool(InputStreamPtr, Token&)> event;
@@ -26,6 +29,8 @@ namespace CT
 
 			Token();
 
+			friend API std::string getTokenName(u64 tag);
+			friend API u64 getTokenTag(std::string name);
 			friend API Token make_token(std::string, std::function<bool(InputStreamPtr, Token&)> = nullptr);
 			friend API Token eof_token();
 			friend API Token invalid_token();

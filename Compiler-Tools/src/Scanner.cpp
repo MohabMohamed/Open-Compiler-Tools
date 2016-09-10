@@ -1,6 +1,7 @@
 #include "Scanner.h"
 #include "Log.h"
 #include "State.hpp"
+#include "Token.h"
 #include <stack>
 #include <iostream>
 #include <sstream>
@@ -143,7 +144,7 @@ bool Scanner::isDefinedToken(const std::string& token)
 {
 	for(auto machine: m_scanningMachines)
 	{
-		if(token == machine.second.tag)
+		if(getTokenTag(token) == machine.second.tag)
 			return true;
 	}
 	return false;
