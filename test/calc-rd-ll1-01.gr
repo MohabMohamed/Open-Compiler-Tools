@@ -11,14 +11,15 @@ SUB		:= "\-";
 ASSIGN 	:= "=";
 LPAREN 	:= "\(";
 RPAREN 	:= "\)";
-COMMENT := "//"	{
-	token.literal = "";
-	while (input->peek() != '\n')
+COMMENT := "//"	
 	{
-		token.literal += input->popLetter();
-	}
-	return true;
-};
+		token.literal = "";
+		while (input->peek() != '\n')
+		{
+			token.literal += input->popLetter();
+		}
+		return true;
+	};
 
 ID 		:= "(a-z|A-Z|_)(a-z|A-Z|_|0-9)*";
 

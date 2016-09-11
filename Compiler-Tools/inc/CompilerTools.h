@@ -12,3 +12,4 @@
 #include "Log.h"
 #include "Parser.h"
 #include "GLexer.h"
+#include "GCodeGeneration.h"

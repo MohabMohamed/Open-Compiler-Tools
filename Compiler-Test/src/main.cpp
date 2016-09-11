@@ -31,10 +31,16 @@ int main() {
 	auto in_stream = CT::read_stream(std::cin);
 	std::cout << in_stream->getString() << std::endl;*/
 
-	CT::Lexer::IScannerPtr scanner = std::make_shared<CT::Lexer::GLexer>();
-	CT::InputStreamPtr ss = CT::open_file("E:\\Projects\\Compiler-Tools-v1.0\\test\\calc-rd-ll1-01.gr");
-	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GParser>();
-	auto program = parser->parse(scanner, ss);
+	for (int i = 0; i < 1; i++)
+	{
+		CT::Lexer::IScannerPtr scanner = std::make_shared<CT::Lexer::GLexer>();
+		CT::InputStreamPtr ss = CT::open_file("E:\\Projects\\Compiler-Tools-v1.0\\test\\calc-rd-ll1-01.gr");
+		CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GParser>();
+		auto program = parser->parse(scanner, ss);
+		CT::CodeGen::GCodeGeneration compiler_generator;
+		compiler_generator.generate(program);
+
+	}
 	//CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("int");
 	/*
 	while (true) {
@@ -49,5 +55,6 @@ int main() {
 	/*CT::InputStreamPtr ss2 = std::make_shared<CT::InputStream>("int x;");
 	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GenericParser>();
 	parser->parse(scanner, ss2);*/
+	std::cout << "end" << std::endl;
 	return 0;
 }
