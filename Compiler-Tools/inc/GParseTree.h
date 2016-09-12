@@ -62,5 +62,12 @@ namespace CT
 			virtual ~GParseRule();
 		};
 
+		class API GParseRulesTreeNode
+		{
+		public:
+			//next nodes is a vector because it can branch
+			std::vector<std::shared_ptr<GParseRulesTreeNode>> next;
+
+		};
 	}
 }
