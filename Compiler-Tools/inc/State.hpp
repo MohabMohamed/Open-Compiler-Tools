@@ -141,30 +141,26 @@ namespace CT
 			{
 				return m_id;
 			}
+
+			friend std::ostream& operator<<(std::ostream& out, const State<letterType>& state)
+			{
+				out << "state{" << std::endl;
+				out << "id:= " << state.m_id << std::endl;
+				out << "transitions:= [";
+				for (auto transition : state.m_transitions)
+				{
+					out << "[" << transition.first << transition.second->getID() << "]";
+				}
+				out << "]};" << std::endl;
+				return out;
+			}
 		private:
 			std::multimap<StateInput<letterType>, std::shared_ptr<State<letterType>>, StateInputComparator<letterType>> m_transitions;
 			bool m_final;
 			u64 m_id;
-
-			template<typename letterType>
-			friend std::ostream& operator<<(std::ostream& out, const State<letterType>& state);
 		};
 
 		template<typename letterType>
 		using StatePtr = std::shared_ptr<State<letterType>>;
-
-		template<typename letterType>
-		std::ostream& operator<<(std::ostream& out, const State<letterType>& state)
-		{
-			out << "state{" << std::endl;
-			out << "id:= " << state.m_id << std::endl;
-			out << "transitions:= [";
-			for (auto transition : state.m_transitions)
-			{
-				out << "[" << transition.first << transition.second->getID() << "]";
-			}
-			out << "]};" << std::endl;
-			return out;
-		}
 	}
 }

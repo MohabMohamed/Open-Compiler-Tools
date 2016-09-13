@@ -109,6 +109,9 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	std::shared_ptr<GParseRule> result = std::make_shared<GParseRule>();
+	std::shared_ptr<GParseRulesTreeNode> rules_root = std::make_shared<GParseRulesTreeNode>(true);
+	result->rules = rules_root;
+	auto rules_tree_it = rules_root;
 
 	auto parse_id_token = scanner->scan(input);
 	auto assign_token = scanner->scan(input);
@@ -116,8 +119,8 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 		assign_token.tag == Lexer::getTokenTag("assign"))
 	{
 		result->name = parse_id_token.literal;
-		std::vector<Lexer::Token> rule;
-		rule.reserve(10);
+		//std::vector<Lexer::Token> rule;
+		//rule.reserve(10);
 		auto rule_token = scanner->scan(input);
 		bool foundOr = false;
 		while(true)
@@ -130,20 +133,20 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 					Log::log(LOG_LEVEL::ERROR, "expected a rule after the '|' but found a semicolon", input->getPosition());
 					return nullptr;
 				}
-				if(!rule.empty())
-					result->rules.push_back(rule);
+				rules_tree_it->isLeaf = true;
 				break;
 			}
 			if (rule_token.tag == Lexer::getTokenTag("lex_id") ||
 				rule_token.tag == Lexer::getTokenTag("parse_id"))
 			{
-				rule.push_back(rule_token);
+				//insert a node to the tree
+				rules_tree_it = rules_tree_it->insertNode(rule_token);
 				foundOr = false;
 			}else if(rule_token.tag == Lexer::getTokenTag("or"))
 			{
-				result->rules.push_back(rule);
-				rule = std::vector<Lexer::Token>();
-				rule.reserve(10);
+				//set back the it to the root
+				rules_tree_it->isLeaf = true;
+				rules_tree_it = rules_root;
 				foundOr = true;
 			}
 			rule_token = scanner->scan(input);

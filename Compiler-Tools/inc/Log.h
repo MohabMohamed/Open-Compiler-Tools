@@ -19,7 +19,7 @@ namespace CT
 	class API Log
 	{
 	private:
-		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>> m_logEntries;
+		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>, std::hash<LOG_LEVEL>> m_logEntries;
 	public:
 
 		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>> getLogEntries();

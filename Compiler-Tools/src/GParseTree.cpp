@@ -42,5 +42,28 @@ GParseRule::GParseRule(GParseNodeTypes fType)
 
 GParseRule::~GParseRule()
 {
-	rules.clear();
+	rules = nullptr;
+}
+
+CT::Parser::GParseRulesTreeNode::GParseRulesTreeNode(bool root)
+{
+	isRoot = root;
+	isLeaf = false;
+	token = CT::Lexer::Token::invalid;
+}
+
+CT::Parser::GParseRulesTreeNode::~GParseRulesTreeNode()
+{
+	next.clear();
+}
+
+std::shared_ptr<GParseRulesTreeNode> CT::Parser::GParseRulesTreeNode::insertNode(const CT::Lexer::Token & token)
+{
+	for (auto node : next)
+		if (node && node->token == token)
+			return node;
+	auto new_node = std::make_shared<GParseRulesTreeNode>();
+	new_node->token = token;
+	next.push_back(new_node);
+	return new_node;
 }

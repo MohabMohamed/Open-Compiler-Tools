@@ -52,22 +52,29 @@ namespace CT
 			virtual ~GLexRule();
 		};
 
-		class API GParseRule: public GParseNode
-		{
-		public:
-			std::string name;
-			std::vector<std::vector<CT::Lexer::Token>> rules;
-
-			GParseRule(GParseNodeTypes fType = GParseNodeTypes::PARSE_RULE);
-			virtual ~GParseRule();
-		};
-
 		class API GParseRulesTreeNode
 		{
 		public:
 			//next nodes is a vector because it can branch
 			std::vector<std::shared_ptr<GParseRulesTreeNode>> next;
+			CT::Lexer::Token token;
+			bool isRoot;
+			bool isLeaf;
 
+			GParseRulesTreeNode(bool root = false);
+			~GParseRulesTreeNode();
+
+			std::shared_ptr<GParseRulesTreeNode> insertNode(const CT::Lexer::Token& token);
+		};
+
+		class API GParseRule: public GParseNode
+		{
+		public:
+			std::string name;
+			std::shared_ptr<GParseRulesTreeNode> rules;
+
+			GParseRule(GParseNodeTypes fType = GParseNodeTypes::PARSE_RULE);
+			virtual ~GParseRule();
 		};
 	}
 }

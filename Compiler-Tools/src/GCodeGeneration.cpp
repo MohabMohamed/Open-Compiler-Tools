@@ -73,6 +73,91 @@ std::string CT::CodeGen::GCodeGeneration::generateLexerCPP(std::string lexer_nam
 	return lexer_cpp.str();
 }
 
+void CT::CodeGen::GCodeGeneration::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GParseRulesTreeNode> rule_tree_node, std::ostream & stream, int indentValue)
+{
+	if (rule_tree_node == nullptr)
+		return;
+
+	if (rule_tree_node->isRoot)
+	{
+		stream << indent(indentValue) << "auto token = scanner->scan(input);\n";
+		for (auto next_node : rule_tree_node->next)
+			generateRuleFunctionBody(next_node, stream, indentValue);
+	}
+	else if (rule_tree_node->isLeaf)
+	{
+		stream << indent(indentValue) << "if(token.tag == " << rule_tree_node->token.tag << ")\n";
+		stream << indent(indentValue) << "{\n";
+		for (auto next_node: rule_tree_node->next)
+			generateRuleFunctionBody(next_node, stream, indentValue + 1);
+		stream << indent(indentValue) << "}\n";
+	}
+	else
+	{
+		stream << indent(indentValue) << "if(token.tag == " << rule_tree_node->token.tag << ")\n";
+		stream << indent(indentValue) << "{\n";
+		for (auto next_node : rule_tree_node->next)
+			generateRuleFunctionBody(next_node, stream, indentValue + 1);
+		stream << indent(indentValue) << "}\n";
+	}
+}
+
+std::string CT::CodeGen::GCodeGeneration::generateParserHeader(std::string parser_name, std::vector<CT::Parser::GParseNodePtr> parse_rules)
+{
+	std::stringstream parser_header;
+
+	parser_header << indent(0) << "#pragma once\n";
+	parser_header << indent(0) << "#include <Defines.h>\n";
+	parser_header << indent(0) << "#include <Parser.h>\n";
+	parser_header << indent(0) << "#include <IScanner.h>\n";
+	parser_header << indent(0) << "#include <CachedScanner.h>\n";
+	parser_header << indent(0) << "#include <InputStream.h>\n";
+	parser_header << indent(0) << "namespace " << parser_name << "\n{\n";
+	parser_header << indent(1) << "class " << parser_name << "Parser: public CT::Parser::IParser\n";
+	parser_header << indent(1) << "{\n";
+	parser_header << indent(1) << "private:\n";
+
+	for (auto rule : parse_rules)
+	{
+		auto parse_rule = std::dynamic_pointer_cast<GParseRule>(rule);
+
+		parser_header << indent(2) << "CT::Parser::GParseNodePtr parse" << parse_rule->name << "(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input);\n";
+	}
+
+	parser_header << indent(1) << "public:\n";
+	parser_header << indent(2) << "GParseNodePtr parse(Lexer::IScannerPtr scanner, CT::InputStreamPtr input) override;\n";
+
+	parser_header << indent(1) << "};\n";
+	parser_header << indent(0) << "}";
+	
+
+	return parser_header.str();
+}
+
+std::string CT::CodeGen::GCodeGeneration::generateParserCPP(std::string parser_name, std::vector<CT::Parser::GParseNodePtr> parse_rules)
+{
+	std::stringstream parser_cpp;
+
+	parser_cpp << indent(0) << "#include \"" << parser_name << "Parser \"\n";
+	parser_cpp << indent(0) << "#include <Token.h>\n";
+	parser_cpp << indent(0) << "#include <Log.h>\n";
+	parser_cpp << indent(0) << "using namespace " << parser_name << ";\n";
+	parser_cpp << indent(0) << "using namespace CT;\n";
+	parser_cpp << indent(0) << "using namespace CT::Parser;\n";
+
+	for (auto rule : parse_rules)
+	{
+		auto parse_rule = std::dynamic_pointer_cast<GParseRule>(rule);
+
+		parser_cpp << indent(0) << "GParseNodePtr " << parser_name << "Parser::parse" << parse_rule->name << "(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)\n";
+		parser_cpp << indent(0) << "{\n";
+		generateRuleFunctionBody(parse_rule->rules, parser_cpp, 1);
+		parser_cpp << indent(0) << "}\n";
+	}
+
+	return parser_cpp.str();
+}
+
 std::tuple<std::string, std::string> CT::CodeGen::GCodeGeneration::generateLexer(std::string lexer_name, std::vector<GParseNodePtr> lex_rules)
 {
 
@@ -115,5 +200,7 @@ void GCodeGeneration::generate(GParseNodePtr program)
 	}
 	std::string lexer_h, lexer_cpp;
 	std::tie(lexer_h, lexer_cpp) = generateLexer(name_directive, lex_rules);
+	auto parser_header = generateParserHeader(name_directive, parse_rules);
+	auto parser_cpp = generateParserCPP(name_directive, parse_rules);
 	return;
 }

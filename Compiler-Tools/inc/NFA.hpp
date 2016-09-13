@@ -77,24 +77,19 @@ namespace CT
 				return false;
 			}
 
+			friend std::ostream& operator<<(std::ostream& out, const NFA<tokenType>& nfa)
+			{
+				out << "NFA{" << std::endl << "m_startState:=" << *nfa.m_startState << "m_currentStates:=[";
+				for (auto state : nfa.m_currentStates)
+				{
+					out << *state;
+				}
+				out << "]};" << std::endl;
+				return out;
+			}
 		private:
 			std::vector<StatePtr<tokenType>> m_currentStates;
 			StatePtr<tokenType> m_startState;
-
-			template<typename tokenType>
-			friend std::ostream& operator<<(std::ostream& out, const NFA<tokenType>& nfa);
 		};
-
-		template<typename tokenType>
-		std::ostream& operator<<(std::ostream& out,const NFA<tokenType>& nfa)
-		{
-			out << "NFA{"<< std::endl << "m_startState:=" << *nfa.m_startState << "m_currentStates:=[";
-			for (auto state : nfa.m_currentStates)
-			{
-				out << *state;
-			}
-			out << "]};" << std::endl;
-			return out;
-		}
 	}
 }
