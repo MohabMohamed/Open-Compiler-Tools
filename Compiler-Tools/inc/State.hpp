@@ -39,19 +39,15 @@ namespace CT
 				return result;
 			}
 
-			template<typename letterType>
-			friend std::ostream& operator<<(std::ostream& out, const StateInput<letterType>& input);
+			friend std::ostream& operator<<(std::ostream& out, const StateInput<letterType>& input)
+			{
+				if (input.isEpsilon)
+					out << "StateInput{epsilon};" << std::endl;
+				else
+					out << "StateInput{letter:= " << input.letter << "};" << std::endl;
+				return out;
+			}
 		};
-
-		template<typename letterType>
-		std::ostream& operator<<(std::ostream& out, const StateInput<letterType>& input)
-		{
-			if (input.isEpsilon)
-				out << "StateInput{epsilon};" << std::endl;
-			else
-				out << "StateInput{letter:= " << input.letter << "};" << std::endl;
-			return out;
-		}
 
 		template<typename letterType>
 		struct StateInputComparator{

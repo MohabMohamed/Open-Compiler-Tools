@@ -11,6 +11,16 @@ namespace CT
 {
 	namespace Lexer
 	{
+		struct API Token;
+
+		API std::string getTokenName(u64 tag);
+		API u64 getTokenTag(std::string name);
+		API Token make_token(std::string, std::function<bool(InputStreamPtr, Token&)> = nullptr);
+		API Token eof_token();
+		API Token invalid_token();
+		API bool operator==(const Token& a, const Token& b);
+		API bool operator!=(const Token& a, const Token& b);
+
 		struct API Token
 		{
 		private:
@@ -31,7 +41,7 @@ namespace CT
 
 			friend API std::string getTokenName(u64 tag);
 			friend API u64 getTokenTag(std::string name);
-			friend API Token make_token(std::string, std::function<bool(InputStreamPtr, Token&)> = nullptr);
+			friend API Token make_token(std::string, std::function<bool(InputStreamPtr, Token&)>);
 			friend API Token eof_token();
 			friend API Token invalid_token();
 			friend API bool operator==(const Token& a, const Token& b);
