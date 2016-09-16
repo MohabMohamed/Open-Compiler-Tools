@@ -67,3 +67,13 @@ std::shared_ptr<GParseRulesTreeNode> CT::Parser::GParseRulesTreeNode::insertNode
 	next.push_back(new_node);
 	return new_node;
 }
+
+CT::Parser::GStartRule::GStartRule(GParseNodeTypes fType)
+	: GParseNode(fType)
+{
+}
+
+CT::Parser::GStartRule::~GStartRule()
+{
+	startRule.clear();
+}

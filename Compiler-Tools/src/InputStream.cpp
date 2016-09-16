@@ -98,3 +98,16 @@ API InputStreamPtr CT::read_stream(std::istream& stream)
 	}
 	return result;
 }
+
+API bool CT::write_file(const std::string& filename, const std::string& content)
+{
+	std::ofstream file(filename);
+	if(file.is_open())
+	{
+		file << content;
+	}else{
+		return false;
+	}
+	file.close();
+	return true;
+}

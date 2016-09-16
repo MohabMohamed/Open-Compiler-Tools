@@ -15,7 +15,8 @@ namespace CT
 
 		API std::string getTokenName(u64 tag);
 		API u64 getTokenTag(std::string name);
-		API Token make_token(std::string, std::function<bool(InputStreamPtr, Token&)> = nullptr);
+		API Token make_token_lib(std::string, std::function<bool(InputStreamPtr, Token&)> = nullptr);
+		API Token make_tagged_token(std::string, s64 tag, std::function<bool(InputStreamPtr, Token&)> = nullptr);
 		API Token eof_token();
 		API Token invalid_token();
 		API bool operator==(const Token& a, const Token& b);
@@ -41,7 +42,8 @@ namespace CT
 
 			friend API std::string getTokenName(u64 tag);
 			friend API u64 getTokenTag(std::string name);
-			friend API Token make_token(std::string, std::function<bool(InputStreamPtr, Token&)>);
+			friend API Token make_token_lib(std::string, std::function<bool(InputStreamPtr, Token&)>);
+			friend API Token make_tagged_token(std::string, s64 tag, std::function<bool(InputStreamPtr, Token&)>);
 			friend API Token eof_token();
 			friend API Token invalid_token();
 			friend API bool operator==(const Token& a, const Token& b);

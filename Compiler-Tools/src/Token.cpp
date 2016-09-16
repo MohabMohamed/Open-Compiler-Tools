@@ -31,9 +31,20 @@ u64 Lexer::getTokenTag(std::string name)
 	return IDGenerator::invalid;
 }
 
-Token Lexer::make_token(std::string tagName, std::function<bool(InputStreamPtr, Token&)> eventFunction)
+Token Lexer::make_tagged_token(std::string tagName, s64 tag, std::function<bool(InputStreamPtr, Token&)> eventFunction)
 {
-	auto tag = CT::IDGenerator::generateID();
+	Token::TOKEN_TAGS[tagName] = tag;
+	Token result;
+	result.tag = tag;
+	result.event = eventFunction;
+	result.isEOF = false;
+	result.isInvalid = false;
+	return result;
+}
+
+Token Lexer::make_token_lib(std::string tagName, std::function<bool(InputStreamPtr, Token&)> eventFunction)
+{
+	auto tag = CT::IDGenerator::generateIDLib();
 	Token::TOKEN_TAGS[tagName] = tag;
 	Token result;
 	result.tag = tag;

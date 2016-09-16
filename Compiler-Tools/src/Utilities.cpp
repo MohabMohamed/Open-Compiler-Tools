@@ -1,8 +1,14 @@
 #include "Utilities.h"
 using namespace CT;
 
-u64 IDGenerator::generateID()
+s64 IDGenerator::generateID()
 {
-	static u64 id = 0;
+	static s64 id = 0;
+	return id++;
+}
+
+s64 IDGenerator::generateIDLib()
+{
+	static s64 id = 0;
 	return id++;
 }

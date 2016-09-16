@@ -57,6 +57,12 @@ GParseNodePtr GParser::parseStatement(Lexer::CachedScannerPtr scanner, InputStre
 		auto statement = parseParseRule(scanner, input);
 		return statement;
 	}
+	else if (token.tag == Lexer::getTokenTag("start_rule"))
+	{
+		scanner->rewindToken();
+		auto statement = parseStartRule(scanner, input);
+		return statement;
+	}
 
 	return nullptr;
 }
@@ -154,4 +160,28 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 		return result;
 	}
 	return nullptr;
+}
+
+GParseNodePtr CT::Parser::GParser::parseStartRule(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)
+{
+	std::shared_ptr<GStartRule> result = std::make_shared<GStartRule>();
+
+	auto start_token = scanner->scan(input);
+	auto assign_token = scanner->scan(input);
+	auto start_rule = scanner->scan(input);
+	if (start_token.tag == Lexer::getTokenTag("start_rule") &&
+		assign_token.tag == Lexer::getTokenTag("assign") &&
+		start_rule.tag == Lexer::getTokenTag("parse_id"))
+	{
+		result->startRule = start_rule.literal;
+	}
+	else {
+		scanner->rewindToken();
+		scanner->rewindToken();
+		scanner->rewindToken();
+		CT::Log::log(CT::LOG_LEVEL::ERROR, "cannot parse a start rule expected: start_rule assign parse_id", input->getPosition());
+		return nullptr;
+	}
+
+	return result;
 }

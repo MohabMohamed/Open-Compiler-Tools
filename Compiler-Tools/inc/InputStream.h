@@ -38,4 +38,5 @@ namespace CT
 
 	API InputStreamPtr open_file(const std::string& filename);
 	API InputStreamPtr read_stream(std::istream& stream);
+	API bool write_file(const std::string& filename, const std::string& content);
 }

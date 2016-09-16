@@ -12,7 +12,7 @@ namespace CT
 	{
 
 		enum class GParseNodeTypes : u8 {
-			GENERIC, DIRECTIVE, NAME_DIRECTIVE, LEX_RULE, PARSE_RULE
+			GENERIC, DIRECTIVE, NAME_DIRECTIVE, LEX_RULE, PARSE_RULE, START_RULE
 		};
 
 		class API GParseNode
@@ -75,6 +75,15 @@ namespace CT
 
 			GParseRule(GParseNodeTypes fType = GParseNodeTypes::PARSE_RULE);
 			virtual ~GParseRule();
+		};
+
+		class API GStartRule : public GParseNode
+		{
+		public:
+			std::string startRule;
+
+			GStartRule(GParseNodeTypes fType = GParseNodeTypes::START_RULE);
+			virtual ~GStartRule();
 		};
 	}
 }

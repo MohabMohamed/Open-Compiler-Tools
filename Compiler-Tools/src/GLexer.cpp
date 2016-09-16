@@ -10,8 +10,8 @@ using namespace CT::Lexer;
 void GLexer::init()
 {
 	CT::RegexBuilder builder;
-	registerToken(builder.create(";"), make_token("semicolon"));
-	registerToken(builder.create("#name"), make_token("name_directive", [](CT::InputStreamPtr input, Token& token) -> bool {
+	registerToken(builder.create(";"), make_token_lib("semicolon"));
+	registerToken(builder.create("#name"), make_token_lib("name_directive", [](CT::InputStreamPtr input, Token& token) -> bool {
 		token.literal = "";
 		char pc = input->peek();
 		while (pc != '\n' && pc != ';')
@@ -23,10 +23,10 @@ void GLexer::init()
 		return true;
 	}));
 
-	registerToken(builder.create("(A-Z)+"), make_token("lex_id"));
-	registerToken(builder.create(":="), make_token("assign"));
+	registerToken(builder.create("(A-Z)+"), make_token_lib("lex_id"));
+	registerToken(builder.create(":="), make_token_lib("assign"));
 
-	registerToken(builder.create("\""), make_token("regex", [](CT::InputStreamPtr input, Token& token) -> bool {
+	registerToken(builder.create("\""), make_token_lib("regex", [](CT::InputStreamPtr input, Token& token) -> bool {
 		token.literal = "";
 		char prev = '\0';
 		while (true) {
@@ -45,7 +45,7 @@ void GLexer::init()
 		return true;
 	}));
 
-	registerToken(builder.create("{"), make_token("action", [](CT::InputStreamPtr input, Token& token) -> bool {
+	registerToken(builder.create("{"), make_token_lib("action", [](CT::InputStreamPtr input, Token& token) -> bool {
 		int counter = 1;
 		while (counter != 0)
 		{
@@ -61,8 +61,10 @@ void GLexer::init()
 		return true;
 	}));
 
-	registerToken(builder.create("(a-z)+"), make_token("parse_id"));
-	registerToken(builder.create("\\|"), make_token("or"));
+	registerToken(builder.create("(a-z)+"), make_token_lib("parse_id"));
+	registerToken(builder.create("\\|"), make_token_lib("or"));
+	registerToken(builder.create("_start_"), make_token_lib("start_rule"));
+
 }
 
 GLexer::GLexer()

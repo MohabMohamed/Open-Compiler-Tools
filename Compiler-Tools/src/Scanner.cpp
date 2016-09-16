@@ -20,6 +20,8 @@ Token Scanner::scan(InputStreamPtr input)
 	reset();
 	std::string literal = "";
 	std::stack<Lexer::Token> token_stack;
+
+	bool is_first_encounter = true;
 	//process input
 	while(!input->eof())
 	{
@@ -30,8 +32,18 @@ Token Scanner::scan(InputStreamPtr input)
 			return Token::eof;
 		}else if(isIgnoreChar(c))
 		{
-			input->popLetter();
-			continue;
+			if(is_first_encounter){
+				input->popLetter();
+				continue;
+			}else{
+				if (!token_stack.empty())
+				{
+					auto token = token_stack.top();
+					if (token.event != nullptr)
+						token.event(input, token);
+					return token;
+				}
+			}
 		}
 		int i=0;
 		std::vector<int> m_scheduledForDeletion;
@@ -79,6 +91,7 @@ Token Scanner::scan(InputStreamPtr input)
 			}
 			i++;
 		}
+		is_first_encounter = false;
 
 		if(m_scheduledForDeletion.size() == m_currentMachines.size())
 		{

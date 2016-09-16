@@ -3,14 +3,14 @@
 INT 	:= "(0-9)+";
 REAL 	:= "(0-9)*.(0-9)+";
 
-PLUS 	:= "\+";
-POWER	:= "\*\*";
-MUL 	:= "\*";
+PLUS 	:= "\\+";
+POWER	:= "\\*\\*";
+MUL 	:= "\\*";
 DIV		:= "/";
-SUB		:= "\-";
+SUB		:= "\\-";
 ASSIGN 	:= "=";
-LPAREN 	:= "\(";
-RPAREN 	:= "\)";
+LPAREN 	:= "\\(";
+RPAREN 	:= "\\)";
 COMMENT := "//"	
 	{
 		token.literal = "";
@@ -25,5 +25,7 @@ ID 		:= "(a-z|A-Z|_)(a-z|A-Z|_|0-9)*";
 
 
 num		:= INT | REAL;
-exp 	:= num MUL term | num DIV term | LPAREN exp RPAREN;
+exp 	:= num MUL term | num DIV term | LPAREN exp RPAREN | term;
 term	:= num PLUS exp | num SUB exp | num POWER exp | num;
+
+_start_ := exp;

@@ -10,7 +10,8 @@ namespace CT
 	class API IDGenerator
 	{
 	public:
-		static u64 generateID();
+		static s64 generateID();
+		static s64 generateIDLib();
 		static const u64 invalid = 0xFFFFFFFFFFFFFFFF;
 	};
 
