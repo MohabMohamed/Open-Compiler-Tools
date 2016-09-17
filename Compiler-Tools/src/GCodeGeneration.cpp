@@ -7,27 +7,6 @@ using namespace CT::CodeGen;
 using namespace CT::Lexer;
 using namespace CT::Parser;
 
-s64 CT::CodeGen::GCodeGeneration::generateTokenTag(std::string name)
-{
-	static s64 id = 0;
-	if(TOKEN_TAGS.find(name) == TOKEN_TAGS.end()){
-		auto result_id = id++;
-		TOKEN_TAGS[name] = result_id;
-		return result_id;
-	}
-	return -1;
-}
-
-s64 CT::CodeGen::GCodeGeneration::metaGetTokenTag(std::string name)
-{
-	auto result = TOKEN_TAGS.find(name);
-	if (result != TOKEN_TAGS.end())
-	{
-		return result->second;
-	}
-	return -1;
-}
-
 std::string GCodeGeneration::indent(u64 level)
 {
 	std::string result;
@@ -76,8 +55,7 @@ std::string CT::CodeGen::GCodeGeneration::generateLexerCPP(std::string lexer_nam
 		auto lex_rule = std::dynamic_pointer_cast<GLexRule>(child);
 		if (lex_rule)
 		{
-			auto lex_token_tag = generateTokenTag(lex_rule->tokenName);
-			lexer_cpp << indent(1) << "registerToken(builder.create(\"" << lex_rule->regex << "\"), make_tagged_token(\"" << lex_rule->tokenName << "\"," << lex_token_tag;
+			lexer_cpp << indent(1) << "registerToken(builder.create(\"" << lex_rule->regex << "\"), CT::Lexer::make_token(\"" << lex_rule->tokenName << "\"";
 			if (!lex_rule->action.empty())
 			{
 				lexer_cpp << ", [](CT::InputStreamPtr input, Token& token) -> bool\n";
@@ -130,11 +108,11 @@ void CT::CodeGen::GCodeGeneration::generateRuleFunctionBody(std::shared_ptr<CT::
 	//if it's a leaf node then this must check for end parsing
 	else if (rule_tree_node->isLeaf)
 	{
-		if(rule_tree_node->token.tag == getTokenTag("parse_id"))
+		if(rule_tree_node->token.tag == "parse_id")
 		{
 
-			stream << indent(indentValue) << "auto node = parse" << rule_tree_node->token.literal << "(scanner, input);\n";
-			stream << indent(indentValue) << "if(node != nullptr)\n";
+			stream << indent(indentValue) << "auto node" << rule_tree_node->token.literal << " = parse" << rule_tree_node->token.literal << "(scanner, input);\n";
+			stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal << " != nullptr)\n";
 			stream << indent(indentValue) << "{\n";
 
 			for (int i = 0; i < rule_tree_node->next.size(); i++) {
@@ -147,7 +125,7 @@ void CT::CodeGen::GCodeGeneration::generateRuleFunctionBody(std::shared_ptr<CT::
 		}else{
 
 			stream << indent(indentValue) << "auto " << rule_tree_node->token.literal << "Token = scanner->scan(input);\n";
-			stream << indent(indentValue) << "if("<< rule_tree_node->token.literal <<"Token.tag == " << this->metaGetTokenTag(rule_tree_node->token.literal) << ")\n";
+			stream << indent(indentValue) << "if("<< rule_tree_node->token.literal <<"Token.tag == \"" << rule_tree_node->token.literal << "\")\n";
 			stream << indent(indentValue) << "{\n";
 			for (int i = 0; i < rule_tree_node->next.size(); i++) {
 				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
@@ -165,11 +143,11 @@ void CT::CodeGen::GCodeGeneration::generateRuleFunctionBody(std::shared_ptr<CT::
 		 * check the meta token if it's a lex_id then check with the if statement
 		 * if the meta token is a parse_id then call the function supposed to parse this node and check for nullptr if nullptr then print an error
 		 */
-		if(rule_tree_node->token.tag == getTokenTag("parse_id"))
+		if(rule_tree_node->token.tag == "parse_id")
 		{
 
-			stream << indent(indentValue) << "auto node = parse" << rule_tree_node->token.literal << "(scanner, input);\n";
-			stream << indent(indentValue) << "if(node != nullptr)\n";
+			stream << indent(indentValue) << "auto node" << rule_tree_node->token.literal << " = parse" << rule_tree_node->token.literal << "(scanner, input);\n";
+			stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal << " != nullptr)\n";
 			stream << indent(indentValue) << "{\n";
 
 			std::string list_nodes = "";
@@ -193,7 +171,7 @@ void CT::CodeGen::GCodeGeneration::generateRuleFunctionBody(std::shared_ptr<CT::
 		}else{
 
 			stream << indent(indentValue) << "auto " << rule_tree_node->token.literal << "Token = scanner->scan(input);\n";
-			stream << indent(indentValue) << "if(" << rule_tree_node->token.literal << "Token.tag == " << this->metaGetTokenTag(rule_tree_node->token.literal) << ")\n";
+			stream << indent(indentValue) << "if(" << rule_tree_node->token.literal << "Token.tag == \"" << rule_tree_node->token.literal << "\")\n";
 			stream << indent(indentValue) << "{\n";
 
 			std::string list_nodes = "";

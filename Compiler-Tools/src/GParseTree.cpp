@@ -77,3 +77,13 @@ CT::Parser::GStartRule::~GStartRule()
 {
 	startRule.clear();
 }
+
+CT::Parser::GCodeSegment::GCodeSegment(GParseNodeTypes fType)
+	: GParseNode(fType), isCPP(false)
+{
+}
+
+CT::Parser::GCodeSegment::~GCodeSegment()
+{
+	code.clear();
+}

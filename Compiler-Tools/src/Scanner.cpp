@@ -157,7 +157,7 @@ bool Scanner::isDefinedToken(const std::string& token)
 {
 	for(auto machine: m_scanningMachines)
 	{
-		if(getTokenTag(token) == machine.second.tag)
+		if(token == machine.second.tag)
 			return true;
 	}
 	return false;

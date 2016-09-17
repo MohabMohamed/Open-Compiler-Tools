@@ -5,54 +5,11 @@ using namespace CT::Lexer;
 
 const Token Token::eof = eof_token();
 const Token Token::invalid = invalid_token();
-std::unordered_map<std::string, u64> Token::TOKEN_TAGS;
+std::unordered_map<std::string, s64> Token::TOKEN_TAGS;
 
 Token::Token()
 	:isEOF(false), isInvalid(false)
 {}
-
-std::string Lexer::getTokenName(u64 tag)
-{
-	for(auto entry: Token::TOKEN_TAGS)
-	{
-		if (entry.second == tag)
-			return entry.first;
-	}
-	return "";
-}
-
-u64 Lexer::getTokenTag(std::string name)
-{
-	auto tag_it = Token::TOKEN_TAGS.find(name);
-	if(tag_it != Token::TOKEN_TAGS.end())
-	{
-		return tag_it->second;
-	}
-	return IDGenerator::invalid;
-}
-
-Token Lexer::make_tagged_token(std::string tagName, s64 tag, std::function<bool(InputStreamPtr, Token&)> eventFunction)
-{
-	Token::TOKEN_TAGS[tagName] = tag;
-	Token result;
-	result.tag = tag;
-	result.event = eventFunction;
-	result.isEOF = false;
-	result.isInvalid = false;
-	return result;
-}
-
-Token Lexer::make_token_lib(std::string tagName, std::function<bool(InputStreamPtr, Token&)> eventFunction)
-{
-	auto tag = CT::IDGenerator::generateIDLib();
-	Token::TOKEN_TAGS[tagName] = tag;
-	Token result;
-	result.tag = tag;
-	result.event = eventFunction;
-	result.isEOF = false;
-	result.isInvalid = false;
-	return result;
-}
 
 Token Lexer::eof_token()
 {
@@ -89,4 +46,14 @@ bool Lexer::operator==(const Token& a, const Token& b)
 bool Lexer::operator!=(const Token& a, const Token& b)
 {
 	return !(a==b);
+}
+
+API Token CT::Lexer::make_token(std::string tagName, std::function<bool(InputStreamPtr, Token&)> eventFunction)
+{
+	Token result;
+	result.tag = tagName;
+	result.event = eventFunction;
+	result.isEOF = false;
+	result.isInvalid = false;
+	return result;
 }

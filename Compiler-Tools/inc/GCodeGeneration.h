@@ -11,11 +11,8 @@ namespace CT
 	{
 		class API GCodeGeneration
 		{
-		private:
-			std::unordered_map<std::string, u64> TOKEN_TAGS;
 		protected:
-			s64 generateTokenTag(std::string name);
-			s64 metaGetTokenTag(std::string name);
+
 			inline std::string indent(u64 level);
 			std::string generateLexerHeader(std::string lexer_name);
 			std::string generateLexerCPP(std::string lexer_name, std::vector<CT::Parser::GParseNodePtr> lex_rules);

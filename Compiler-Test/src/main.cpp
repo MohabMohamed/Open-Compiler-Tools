@@ -35,9 +35,18 @@ int main() {
 
 	//for (int i = 0; i < 1; i++)
 	//{
+
 	//	auto t = CT::Lexer::Token::eof;
 	//	CT::Lexer::IScannerPtr scanner = std::make_shared<CT::Lexer::GLexer>();
 	//	CT::InputStreamPtr ss = CT::open_file("..\\test\\calc-rd-ll1-01.gr");
+	//	//while (true)
+	//	//{
+	//	//	auto token = scanner->scan(ss);
+	//	//	std::cout << CT::Lexer::TokenManager<CT::Lexer::TOKEN_SPACE::USER>::getTokenName(token.tag) << std::endl;
+	//	//	if (token == CT::Lexer::Token::eof)
+	//	//		break;
+	//	//}
+	//	//return 0;
 	//	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GParser>();
 	//	auto program = parser->parse(scanner, ss);
 	//	CT::CodeGen::GCodeGeneration compiler_generator;
@@ -45,7 +54,7 @@ int main() {
 	//	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
 	//}
 
-	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("5 * (6 + 4)");
+	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("5");
 	auto calc_lexer = std::make_shared<SimpleCalc::SimpleCalcLexer>();
 	auto calc_parser = std::make_shared<SimpleCalc::SimpleCalcParser>();
 	auto program = calc_parser->parse(calc_lexer, ss);
