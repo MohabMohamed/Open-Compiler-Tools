@@ -25,7 +25,8 @@ ID 		:= "(a-z|A-Z|_)(a-z|A-Z|_|0-9)*";
 
 
 num		:= INT | REAL;
-exp 	:= num MUL term | num DIV term | LPAREN exp RPAREN | term;
-term	:= num PLUS exp | num SUB exp | num POWER exp | num;
+factor 	:= num | LPAREN expr RPAREN;
+term 	:= factor MUL term | factor DIV term | factor;
+expr 	:= term PLUS expr | term SUB expr | term;
 
-_start_ := exp;
+_start_ := expr;

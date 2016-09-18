@@ -7,7 +7,7 @@ using namespace CT::CodeGen;
 using namespace CT::Lexer;
 using namespace CT::Parser;
 
-std::string GCodeGeneration::indent(u64 level)
+std::string LL1RD::indent(u64 level)
 {
 	std::string result;
 	for(int i=0;i<level;i++)
@@ -15,7 +15,7 @@ std::string GCodeGeneration::indent(u64 level)
 	return result;
 }
 
-std::string GCodeGeneration::generateLexerHeader(std::string name)
+std::string LL1RD::generateLexerHeader(const std::string& name)
 {
 	stringstream lexer_header;
 
@@ -34,7 +34,7 @@ std::string GCodeGeneration::generateLexerHeader(std::string name)
 	return lexer_header.str();
 }
 
-std::string CT::CodeGen::GCodeGeneration::generateLexerCPP(std::string lexer_name, std::vector<GParseNodePtr> lex_rules)
+std::string CT::CodeGen::LL1RD::generateLexerCPP(const std::string& lexer_name, const std::vector<GParseNodePtr>& lex_rules)
 {
 	stringstream lexer_cpp;
 
@@ -75,7 +75,7 @@ std::string CT::CodeGen::GCodeGeneration::generateLexerCPP(std::string lexer_nam
 	return lexer_cpp.str();
 }
 
-void CT::CodeGen::GCodeGeneration::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GParseRulesTreeNode> rule_tree_node, std::ostream & stream, int indentValue)
+void CT::CodeGen::LL1RD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GParseRulesTreeNode> rule_tree_node, std::ostream & stream, int indentValue)
 {
 	//if there's no node then get the fuck out of here
 	if (rule_tree_node == nullptr)
@@ -196,7 +196,7 @@ void CT::CodeGen::GCodeGeneration::generateRuleFunctionBody(std::shared_ptr<CT::
 	}
 }
 
-std::string CT::CodeGen::GCodeGeneration::generateParserHeader(std::string parser_name, std::vector<CT::Parser::GParseNodePtr> parse_rules)
+std::string CT::CodeGen::LL1RD::generateParserHeader(const std::string& parser_name, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
 {
 	std::stringstream parser_header;
 
@@ -228,7 +228,7 @@ std::string CT::CodeGen::GCodeGeneration::generateParserHeader(std::string parse
 	return parser_header.str();
 }
 
-std::string CT::CodeGen::GCodeGeneration::generateParserCPP(std::string parser_name, std::string start_rule, std::vector<CT::Parser::GParseNodePtr> parse_rules)
+std::string CT::CodeGen::LL1RD::generateParserCPP(const std::string& parser_name, const std::string& start_rule, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
 {
 	std::stringstream parser_cpp;
 
@@ -267,14 +267,19 @@ std::string CT::CodeGen::GCodeGeneration::generateParserCPP(std::string parser_n
 	return parser_cpp.str();
 }
 
-std::tuple<std::string, std::string> CT::CodeGen::GCodeGeneration::generateLexer(std::string lexer_name, std::vector<GParseNodePtr> lex_rules)
+std::tuple<std::string, std::string> CT::CodeGen::LL1RD::generateLexer(const std::string& lexer_name, const std::vector<GParseNodePtr>& lex_rules)
 {
 
 	return{ generateLexerHeader(lexer_name), generateLexerCPP(lexer_name, lex_rules) };
 }
 
+std::tuple<std::string, std::string> CT::CodeGen::LL1RD::generateParser(const std::string& parser_name, const std::string& start_rule, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
+{
+	return std::make_tuple(generateParserHeader(parser_name, parse_rules), generateParserCPP(parser_name, start_rule, parse_rules));
+}
 
-void GCodeGeneration::generate(GParseNodePtr program)
+
+CodeGenOutput CT::CodeGen::LL1RD::generate(GParseNodePtr program)
 {
 	std::string name_directive = "Default";
 	std::string start_rule = "";
@@ -315,15 +320,14 @@ void GCodeGeneration::generate(GParseNodePtr program)
 			break;
 		}
 	}
-	std::string lexer_h, lexer_cpp;
-	std::tie(lexer_h, lexer_cpp) = generateLexer(name_directive, lex_rules);
-	auto parser_header = generateParserHeader(name_directive, parse_rules);
-	auto parser_cpp = generateParserCPP(name_directive, start_rule, parse_rules);
+	CodeGenOutput result;
+	std::tie(result.lexer_h, result.lexer_cpp) = generateLexer(name_directive, lex_rules);
+	std::tie(result.parser_h, result.parser_cpp) = generateParser(name_directive, start_rule, parse_rules);
 
-	//move this out of here
-	CT::write_file(name_directive+"Lexer.h", lexer_h);
-	CT::write_file(name_directive+"Lexer.cpp", lexer_cpp);
-	CT::write_file(name_directive+"Parser.h", parser_header);
-	CT::write_file(name_directive+"Parser.cpp", parser_cpp);
-	return;
+	result.lexer_h_filename = name_directive+"Lexer.h";
+	result.lexer_cpp_filename = name_directive+"Lexer.cpp";
+	result.parser_h_filename = name_directive+"Parser.h";
+	result.parser_cpp_filename = name_directive+"Parser.cpp";
+
+	return result;
 }
