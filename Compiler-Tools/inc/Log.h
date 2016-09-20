@@ -20,6 +20,7 @@ namespace CT
 	{
 	private:
 		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>, std::hash<LOG_LEVEL>> m_logEntries;
+		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>, std::hash<LOG_LEVEL>> m_commitedEntries;
 	public:
 
 		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>> getLogEntries();
@@ -31,5 +32,11 @@ namespace CT
 		static void dumpLogEntriesToFile(std::string filename);
 
 		static void log(LOG_LEVEL,const std::string& message, Position position);
+
+		static void commitEntry(LOG_LEVEL, const std::string& message, Position position);
+
+		static void pushEntries();
+
+		static void discardCommittedEntries();
 	};
 }

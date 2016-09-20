@@ -4,6 +4,7 @@
 using namespace CT;
 
 std::unordered_map<LOG_LEVEL, std::vector<LogEntry>> Log::m_logEntries;
+std::unordered_map<LOG_LEVEL, std::vector<LogEntry>> Log::m_commitedEntries;
 
 std::unordered_map<LOG_LEVEL, std::vector<LogEntry>> Log::getLogEntries()
 {
@@ -126,4 +127,24 @@ void Log::log(LOG_LEVEL level,const std::string& message, Position position)
 	entry.level = level;
 	entry.position = position;
 	m_logEntries[level].push_back(entry);
+}
+
+void CT::Log::commitEntry(LOG_LEVEL level, const std::string & message, Position position)
+{
+	LogEntry entry;
+	entry.message = message;
+	entry.level = level;
+	entry.position = position;
+	m_commitedEntries[level].push_back(entry);
+}
+
+void CT::Log::pushEntries()
+{
+	m_logEntries.insert(m_commitedEntries.begin(), m_commitedEntries.end());
+	m_commitedEntries.clear();
+}
+
+void CT::Log::discardCommittedEntries()
+{
+	m_commitedEntries.clear();
 }

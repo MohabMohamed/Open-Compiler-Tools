@@ -54,7 +54,7 @@ int main() {
 	//	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
 	//}
 
-	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("5 * (6+6)");
+	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("5 *+");
 	auto calc_lexer = std::make_shared<SimpleCalc::SimpleCalcLexer>();
 	auto calc_parser = std::make_shared<SimpleCalc::SimpleCalcParser>();
 	auto program = calc_parser->parse(calc_lexer, ss);

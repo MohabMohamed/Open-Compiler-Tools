@@ -18,7 +18,7 @@ GParseNodePtr SimpleCalcParser::parsenum(CT::Lexer::CachedScannerPtr scanner, CT
 		return std::make_shared<GParseRule>();
 	}
 	scanner->rewindToken();
-	CT::Log::log(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {INT, REAL} but found none", input->getPosition());
+	CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {INT, REAL} but found none", input->getPosition());
 	return nullptr;
 }
 GParseNodePtr SimpleCalcParser::parsefactor(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)
@@ -28,6 +28,7 @@ GParseNodePtr SimpleCalcParser::parsefactor(CT::Lexer::CachedScannerPtr scanner,
 	{
 		return std::make_shared<GParseRule>();
 	}
+
 	auto LPARENToken = scanner->scan(input);
 	if(LPARENToken.tag == "LPAREN")
 	{
@@ -40,12 +41,12 @@ GParseNodePtr SimpleCalcParser::parsefactor(CT::Lexer::CachedScannerPtr scanner,
 				return std::make_shared<GParseRule>();
 			}
 			scanner->rewindToken();
-			CT::Log::log(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {RPAREN} but found none", input->getPosition());
+			CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {RPAREN} but found none", input->getPosition());
 		}
-		CT::Log::log(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {expr} but found none", input->getPosition());
+		CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {expr} but found none", input->getPosition());
 	}
 	scanner->rewindToken();
-	CT::Log::log(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {num, LPAREN} but found none", input->getPosition());
+	CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {num, LPAREN} but found none", input->getPosition());
 	return nullptr;
 }
 GParseNodePtr SimpleCalcParser::parseterm(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)
@@ -61,7 +62,7 @@ GParseNodePtr SimpleCalcParser::parseterm(CT::Lexer::CachedScannerPtr scanner, C
 			{
 				return std::make_shared<GParseRule>();
 			}
-			CT::Log::log(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {term} but found none", input->getPosition());
+			CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {term} but found none", input->getPosition());
 		}
 		scanner->rewindToken();
 		auto DIVToken = scanner->scan(input);
@@ -72,12 +73,12 @@ GParseNodePtr SimpleCalcParser::parseterm(CT::Lexer::CachedScannerPtr scanner, C
 			{
 				return std::make_shared<GParseRule>();
 			}
-			CT::Log::log(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {term} but found none", input->getPosition());
+			CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {term} but found none", input->getPosition());
 		}
 		scanner->rewindToken();
 		return std::make_shared<GParseRule>();
 	}
-	CT::Log::log(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {factor} but found none", input->getPosition());
+	CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {factor} but found none", input->getPosition());
 	return nullptr;
 }
 GParseNodePtr SimpleCalcParser::parseexpr(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)
@@ -93,7 +94,7 @@ GParseNodePtr SimpleCalcParser::parseexpr(CT::Lexer::CachedScannerPtr scanner, C
 			{
 				return std::make_shared<GParseRule>();
 			}
-			CT::Log::log(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {expr} but found none", input->getPosition());
+			CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {expr} but found none", input->getPosition());
 		}
 		scanner->rewindToken();
 		auto SUBToken = scanner->scan(input);
@@ -104,12 +105,12 @@ GParseNodePtr SimpleCalcParser::parseexpr(CT::Lexer::CachedScannerPtr scanner, C
 			{
 				return std::make_shared<GParseRule>();
 			}
-			CT::Log::log(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {expr} but found none", input->getPosition());
+			CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {expr} but found none", input->getPosition());
 		}
 		scanner->rewindToken();
 		return std::make_shared<GParseRule>();
 	}
-	CT::Log::log(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {term} but found none", input->getPosition());
+	CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {term} but found none", input->getPosition());
 	return nullptr;
 }
 GParseNodePtr SimpleCalcParser::parse(CT::Lexer::IScannerPtr scanner, CT::InputStreamPtr input)
@@ -117,5 +118,10 @@ GParseNodePtr SimpleCalcParser::parse(CT::Lexer::IScannerPtr scanner, CT::InputS
 	auto cached_scanner = std::dynamic_pointer_cast<CT::Lexer::CachedScanner>(scanner);
 	if(cached_scanner == nullptr)
 		return nullptr;
-	return parseexpr(cached_scanner, input);
+	auto result = parseexpr(cached_scanner, input);
+	if (result == nullptr)
+		CT::Log::pushEntries();
+	else
+		CT::Log::discardCommittedEntries();
+	return result;
 }
