@@ -101,7 +101,7 @@ void CT::CodeGen::LL1RD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 
 		//add the last else to report the failure of parsing this node
 		if(!rule_tree_node->next.empty()){
-			stream << indent(indentValue) << "CT::Log::log(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", input->getPosition());\n";
+			stream << indent(indentValue) << "CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", input->getPosition());\n";
 			stream << indent(indentValue) << "return nullptr;\n";
 		}
 	}
@@ -165,7 +165,8 @@ void CT::CodeGen::LL1RD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 				}
 			}
 			
-			stream << indent(indentValue + 1) << "CT::Log::log(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", input->getPosition());\n";
+			stream << indent(indentValue + 1) << "CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", input->getPosition());\n";
+			stream << indent(indentValue + 1) << "return nullptr;\n";
 			stream << indent(indentValue) << "}\n";
 
 		}else{
@@ -188,7 +189,8 @@ void CT::CodeGen::LL1RD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 					list_nodes += rule_tree_node->next[i]->token.literal;
 				}
 			}
-			stream << indent(indentValue + 1) << "CT::Log::log(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", input->getPosition());\n";
+			stream << indent(indentValue + 1) << "CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", input->getPosition());\n";
+			stream << indent(indentValue + 1) << "return nullptr;\n";
 			stream << indent(indentValue) << "}\n";
 			stream << indent(indentValue) << "scanner->rewindToken();\n";
 
@@ -256,7 +258,12 @@ std::string CT::CodeGen::LL1RD::generateParserCPP(const std::string& parser_name
 		parser_cpp << indent(1) << "auto cached_scanner = std::dynamic_pointer_cast<CT::Lexer::CachedScanner>(scanner);\n";
 		parser_cpp << indent(1) << "if(cached_scanner == nullptr)\n";
 		parser_cpp << indent(2) << "return nullptr;\n";
-		parser_cpp << indent(1) << "return parse" << start_rule << "(cached_scanner, input);\n";
+		parser_cpp << indent(1) << "auto result =  parse" << start_rule << "(cached_scanner, input);\n";
+		parser_cpp << indent(1) << "if (result == nullptr)\n";
+		parser_cpp << indent(2) << "CT::Log::pushEntries();\n";
+		parser_cpp << indent(1) << "else\n";
+		parser_cpp << indent(2) << "CT::Log::discardCommittedEntries();\n";
+		parser_cpp << indent(1) << "return result;\n";
 		parser_cpp << indent(0) << "}\n";
 	}
 	else

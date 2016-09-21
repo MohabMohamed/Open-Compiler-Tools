@@ -12,4 +12,5 @@
 #include "Log.h"
 #include "Parser.h"
 #include "GLexer.h"
+#include "IGCodeGeneration.h"
 #include "GCodeGeneration.h"
