@@ -277,7 +277,7 @@ std::string CT::CodeGen::LL1RD::generateParserCPP(const std::string& parser_name
 std::tuple<std::string, std::string> CT::CodeGen::LL1RD::generateLexer(const std::string& lexer_name, const std::vector<GParseNodePtr>& lex_rules)
 {
 
-	return{ generateLexerHeader(lexer_name), generateLexerCPP(lexer_name, lex_rules) };
+	return std::make_tuple(generateLexerHeader(lexer_name), generateLexerCPP(lexer_name, lex_rules));
 }
 
 std::tuple<std::string, std::string> CT::CodeGen::LL1RD::generateParser(const std::string& parser_name, const std::string& start_rule, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)

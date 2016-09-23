@@ -3,10 +3,10 @@
 #include <sstream>
 using namespace CT;
 
-std::unordered_map<LOG_LEVEL, std::vector<LogEntry>> Log::m_logEntries;
-std::unordered_map<LOG_LEVEL, std::vector<LogEntry>> Log::m_commitedEntries;
+std::unordered_map<LOG_LEVEL, std::vector<LogEntry>, EnumClassHash> Log::m_logEntries;
+std::unordered_map<LOG_LEVEL, std::vector<LogEntry>, EnumClassHash> Log::m_commitedEntries;
 
-std::unordered_map<LOG_LEVEL, std::vector<LogEntry>> Log::getLogEntries()
+std::unordered_map<LOG_LEVEL, std::vector<LogEntry>, EnumClassHash> Log::getLogEntries()
 {
 	return m_logEntries;
 }

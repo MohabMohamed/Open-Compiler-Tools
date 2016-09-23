@@ -15,6 +15,16 @@ namespace CT
 		static const u64 invalid = 0xFFFFFFFFFFFFFFFF;
 	};
 
+	//for linux g++ because it can't hash the enum
+	struct EnumClassHash
+	{
+		template<typename T>
+		std::size_t operator()(T t) const
+		{
+			return static_cast<std::size_t>(t);
+		}
+	};
+
 	// trim from start
 	static inline std::string &ltrim(std::string &s) {
 		s.erase(s.begin(), std::find_if(s.begin(), s.end(),

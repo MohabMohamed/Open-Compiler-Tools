@@ -1,5 +1,6 @@
 #pragma once
 #include "Defines.h"
+#include "Utilities.h"
 #include <unordered_map>
 #include <string>
 #include <vector>
@@ -19,11 +20,11 @@ namespace CT
 	class API Log
 	{
 	private:
-		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>, std::hash<LOG_LEVEL>> m_logEntries;
-		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>, std::hash<LOG_LEVEL>> m_commitedEntries;
+		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>, EnumClassHash> m_logEntries;
+		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>, EnumClassHash> m_commitedEntries;
 	public:
 
-		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>> getLogEntries();
+		static std::unordered_map<LOG_LEVEL, std::vector<LogEntry>, EnumClassHash> getLogEntries();
 
 		static std::string getLogText();
 
