@@ -1,8 +1,8 @@
 #include "SimpleCalcLexer.h"
-#include <RegexBuilder.h>
-#include <InputStream.h>
-#include <Utilities.h>
-#include <Token.h>
+#include <Chalcedony/Automata/RegexBuilder.h>
+#include <Chalcedony/InputStream.h>
+#include <Chalcedony/Utilities.h>
+#include <Chalcedony/Lexer/Token.h>
 using namespace std;
 using namespace CT;
 using namespace CT::Lexer;

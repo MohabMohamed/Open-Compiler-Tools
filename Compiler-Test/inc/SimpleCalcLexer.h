@@ -1,6 +1,6 @@
 #pragma once
-#include <Defines.h>
-#include <CachedScanner.h>
+#include <Chalcedony/Defines.h>
+#include <Chalcedony/Chalcedony.h>
 namespace SimpleCalc
 {
 	class SimpleCalcLexer: public CT::Lexer::CachedScanner

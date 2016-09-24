@@ -1,6 +1,6 @@
 #include "SimpleCalcParser.h"
-#include <Token.h>
-#include <Log.h>
+#include <Chalcedony/Lexer/Token.h>
+#include <Chalcedony/Log.h>
 using namespace SimpleCalc;
 using namespace CT;
 using namespace CT::Parser;

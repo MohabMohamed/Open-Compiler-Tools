@@ -1,9 +1,9 @@
 #pragma once
-#include <Defines.h>
-#include <IParser.h>
-#include <IScanner.h>
-#include <CachedScanner.h>
-#include <InputStream.h>
+#include <Chalcedony/Defines.h>
+#include <Chalcedony/Parser/IParser.h>
+#include <Chalcedony/Lexer/IScanner.h>
+#include <Chalcedony/Lexer/CachedScanner.h>
+#include <Chalcedony/InputStream.h>
 namespace SimpleCalc
 {
 

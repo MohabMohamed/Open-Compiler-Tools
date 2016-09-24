@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <CompilerTools.h>
+#include <Chalcedony\Chalcedony.h>
 #include "SimpleCalcLexer.h"
 #include "SimpleCalcParser.h"
 
