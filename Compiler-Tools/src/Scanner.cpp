@@ -161,7 +161,7 @@ Token Scanner::scan(InputStreamPtr input)
 			if (!eventResult)
 				callErrorFunction(input);
 		}
-		return token_stack.top();
+		return token;
 	}
 	return Token::eof;
 }
