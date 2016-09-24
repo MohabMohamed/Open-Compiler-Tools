@@ -19,8 +19,9 @@ namespace CT
 		std::string getString();
 		~StringMarker();
 
-		API friend std::ostream& operator<<(std::ostream& out, const StringMarker& marker);
 	};
+
+	API std::ostream& operator<<(std::ostream& out, const StringMarker& marker);
 
 	API bool operator==(const StringMarker& a, const StringMarker& b);
 	API bool operator!=(const StringMarker& a, const StringMarker& b);
