@@ -20,13 +20,14 @@ void SimpleCalcLexer::init()
 	registerToken(builder.create("="), CT::Lexer::make_token("ASSIGN"));
 	registerToken(builder.create("\\("), CT::Lexer::make_token("LPAREN"));
 	registerToken(builder.create("\\)"), CT::Lexer::make_token("RPAREN"));
-	registerToken(builder.create("//"), CT::Lexer::make_token("COMMENT", [](CT::InputStreamPtr input, Token& token) -> bool
+	registerToken(builder.create("//"), CT::Lexer::make_token("COMMENT", [](CT::InputStreamPtr ct_input, Token& ct_token) -> bool
 	{
-		token.literal = "";
-		while (input->peek() != '\n')
+		ct_input->pushMarker();
+		while (ct_input->peek() != '\n')
 		{
-			token.literal += input->popLetter();
+			ct_input->popLetter();
 		}
+		ct_token.literal = ct_input->popMarker();
 		return true;
 	}
 	));

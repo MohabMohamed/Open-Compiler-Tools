@@ -6,7 +6,7 @@
 using namespace CT;
 using namespace Parser;
 
-GParseNodePtr GParser::parse(Lexer::IScannerPtr scanner, InputStreamPtr input)
+IParseNodePtr GParser::parse(Lexer::IScannerPtr scanner, InputStreamPtr input)
 {
 	auto cachedScanner = std::dynamic_pointer_cast<Lexer::CachedScanner>(scanner);
 	auto program = parseProgram(cachedScanner, input);
@@ -63,6 +63,18 @@ GParseNodePtr GParser::parseStatement(Lexer::CachedScannerPtr scanner, InputStre
 		auto statement = parseStartRule(scanner, input);
 		return statement;
 	}
+	else if (token.tag == "header_code")
+	{
+		std::shared_ptr<GHeaderSegment> result = std::make_shared<GHeaderSegment>();
+		result->code = token.literal;
+		return result;
+	}
+	else if (token.tag == "cpp_code")
+	{
+		std::shared_ptr<GCPPSegment> result = std::make_shared<GCPPSegment>();
+		result->code = token.literal;
+		return result;
+	}
 
 	return nullptr;
 }
@@ -101,8 +113,10 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 		}
 		result->tokenName = lex_id_token.literal;
 		result->regex = regex_token.literal;
-		if(foundAction)
+		if (foundAction)
 			result->action = action_token.literal;
+		else
+			result->action = StringMarker::invalid;
 		return result;
 	}else{
 		scanner->rewindToken();
@@ -147,6 +161,15 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 			{
 				//insert a node to the tree
 				rules_tree_it = rules_tree_it->insertNode(rule_token);
+				auto action_token = scanner->scan(input);
+				if (action_token.tag == "action")
+				{
+					rules_tree_it->action = action_token.literal;
+				}
+				else
+				{
+					scanner->rewindToken();
+				}
 				foundOr = false;
 			}else if(rule_token.tag == "or")
 			{

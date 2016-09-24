@@ -120,7 +120,7 @@ void Log::dumpLogEntriesToFile(std::string filename)
 	}
 }
 
-void Log::log(LOG_LEVEL level,const std::string& message, Position position)
+void Log::log(LOG_LEVEL level,const std::string& message, FilePosition position)
 {
 	LogEntry entry;
 	entry.message = message;
@@ -129,7 +129,7 @@ void Log::log(LOG_LEVEL level,const std::string& message, Position position)
 	m_logEntries[level].push_back(entry);
 }
 
-void CT::Log::commitEntry(LOG_LEVEL level, const std::string & message, Position position)
+void CT::Log::commitEntry(LOG_LEVEL level, const std::string & message, FilePosition position)
 {
 	LogEntry entry;
 	entry.message = message;

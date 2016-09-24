@@ -12,14 +12,17 @@ void GLexer::init()
 	CT::RegexBuilder builder;
 	registerToken(builder.create(";"), make_token("semicolon"));
 	registerToken(builder.create("#name"), make_token("name_directive", [](CT::InputStreamPtr input, Token& token) -> bool {
-		token.literal = "";
+		//token.literal = "";
+		input->pushMarker();
 		char pc = input->peek();
 		while (pc != '\n' && pc != ';')
 		{
-			token.literal += input->popLetter();
+			input->popLetter();
 			pc = input->peek();
 		}
-		trim(token.literal);
+
+		token.literal = input->popMarker();
+		//trim(token.literal);
 		return true;
 	}));
 
@@ -28,18 +31,19 @@ void GLexer::init()
 	};
 
 	registerToken(builder.create("#header"), make_token("header_code", [](CT::InputStreamPtr input, Token& token) -> bool {
-		token.literal = "";
+		//token.literal = "";
 		int i = 0;
 		while (true)
 		{
 			auto c = input->popLetter();
 			if (c == '{')
 			{
-				input->rewindLetter();
+				i++;
 				break;
 			}
 		}
 
+		input->pushMarker();
 		while (true)
 		{
 			auto c = input->popLetter();
@@ -51,30 +55,37 @@ void GLexer::init()
 			{
 				i--;
 			}
-			else {
-				token.literal += c;
-			}
+			//else {
+			//	token.literal += c;
+			//}
 
-			if (i == 0)
+			if (i == 0) {
+				//back this last }
+				input->rewindLetter();
+				//pop the literal
+				token.literal = input->popMarker();
+				//consume the } back
+				input->popLetter();
 				break;
+			}
 		}
-
 		return true;
 	}));
 
 	registerToken(builder.create("#cpp"), make_token("cpp_code", [](CT::InputStreamPtr input, Token& token) -> bool {
-		token.literal = "";
+		//token.literal = "";
 		int i = 0;
 		while (true)
 		{
 			auto c = input->popLetter();
 			if (c == '{')
 			{
-				input->rewindLetter();
+				i++;
 				break;
 			}
 		}
 
+		input->pushMarker();
 		while (true)
 		{
 			auto c = input->popLetter();
@@ -86,14 +97,21 @@ void GLexer::init()
 			{
 				i--;
 			}
-			else {
+			/*else {
 				token.literal += c;
-			}
+			}*/
 
 			if (i == 0)
+			{
+				//back this last }
+				input->rewindLetter();
+				//pop the literal
+				token.literal = input->popMarker();
+				//consume the } back
+				input->popLetter();
 				break;
+			}
 		}
-
 		return true;
 	}));
 
@@ -101,25 +119,28 @@ void GLexer::init()
 	registerToken(builder.create(":="), make_token("assign"));
 
 	registerToken(builder.create("\""), make_token("regex", [](CT::InputStreamPtr input, Token& token) -> bool {
-		token.literal = "";
+		//token.literal = "";
+		input->pushMarker();
 		char prev = '\0';
 		while (true) {
 			char c = input->peek();
-			if (c == '"' && prev == '\\')
-				token.literal += c;
-			else if (c == '"')
+			//if (c == '"' && prev == '\\')
+			//	token.literal += c;
+			if (c == '"')
 				break;
 
-			token.literal += c;
+			//token.literal += c;
 
 			prev = input->popLetter();
 		}
+		token.literal = input->popMarker();
 		//pop last quote
 		input->popLetter();
 		return true;
 	}));
 
 	registerToken(builder.create("{"), make_token("action", [](CT::InputStreamPtr input, Token& token) -> bool {
+		input->pushMarker(token.literal);
 		int counter = 1;
 		while (counter != 0)
 		{
@@ -129,9 +150,10 @@ void GLexer::init()
 			else if (c == '}')
 				counter--;
 
-			token.literal += c;
+			//token.literal += c;
 			input->popLetter();
 		}
+		token.literal = input->popMarker();
 		return true;
 	}));
 

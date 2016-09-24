@@ -3,12 +3,13 @@
 #include "Defines.h"
 #include "Token.h"
 #include "NFA.hpp"
-#include "Position.h"
+#include "FilePosition.h"
 #include "InputStream.h"
 #include <istream>
 #include <vector>
 #include <memory>
 #include <stack>
+#include <functional>
 
 namespace CT
 {
@@ -16,6 +17,12 @@ namespace CT
 
 		class API IScanner
 		{
+		protected:
+			std::function<void(InputStreamPtr)> m_errorFunction;
+			void callErrorFunction(InputStreamPtr input) {
+				if (m_errorFunction != nullptr)
+					m_errorFunction(input);
+			}
 		public:
 			virtual ~IScanner()
 			{
@@ -24,6 +31,7 @@ namespace CT
 			virtual void registerToken(std::shared_ptr<Automata::NFA<char>> regexMachine,const Token& token) = 0;
 			virtual bool isIgnoreChar(char c) = 0;
 			virtual bool isDefinedToken(const std::string&) = 0;
+			void setErrorFunction(std::function<void(InputStreamPtr)> errorFunction){m_errorFunction = errorFunction;}
 		};
 		using IScannerPtr = std::shared_ptr<IScanner>;
 	}

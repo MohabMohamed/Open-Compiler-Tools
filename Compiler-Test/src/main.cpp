@@ -32,7 +32,6 @@ int main() {
 	std::cout<<CT::Log::getLogText()<<std::endl;
 	auto in_stream = CT::read_stream(std::cin);
 	std::cout << in_stream->getString() << std::endl;*/
-
 	//for (int i = 0; i < 1; i++)
 	//{
 
@@ -50,7 +49,7 @@ int main() {
 	//	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GParser>();
 	//	auto program = parser->parse(scanner, ss);
 	//	CT::CodeGen::LL1RD compiler_generator;
-	//	auto generated_code = compiler_generator.generate(program);
+	//	auto generated_code = compiler_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(program));
 	//	CT::write_file(generated_code.lexer_h_filename, generated_code.lexer_h);
 	//	CT::write_file(generated_code.lexer_cpp_filename, generated_code.lexer_cpp);
 	//	CT::write_file(generated_code.parser_h_filename, generated_code.parser_h);
@@ -58,10 +57,29 @@ int main() {
 	//	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
 	//}
 
-	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("(5 * 6) / ((5+3) * 5)");
+	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("1+99");
 	auto calc_lexer = std::make_shared<SimpleCalc::SimpleCalcLexer>();
 	auto calc_parser = std::make_shared<SimpleCalc::SimpleCalcParser>();
-	auto program = calc_parser->parse(calc_lexer, ss);
+	while (true) {
+		ss->clear();
+		calc_lexer->clear();
+		std::string input;
+		std::getline(std::cin, input);
+		ss->append(input);
+		auto program = calc_parser->parse(calc_lexer, ss);
+		if (program) {
+			auto generic_node = std::dynamic_pointer_cast<SimpleCalc::GenericNode>(program);
+			auto result = generic_node->eval();
+			if (result.type == SimpleCalc::num_value_type::REAL)
+				std::cout << result.value.real << std::endl;
+			else if (result.type == SimpleCalc::num_value_type::INT)
+				std::cout << result.value.integer << std::endl;
+		}
+		else
+		{
+			std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
+		}
+	}
 	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
 
 

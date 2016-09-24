@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
-#include "Position.h"
+#include "FilePosition.h"
 
 namespace CT
 {
@@ -14,7 +14,7 @@ namespace CT
 	{
 		LOG_LEVEL level;
 		std::string message;
-		Position position;
+		FilePosition position;
 	};
 
 	class API Log
@@ -32,9 +32,9 @@ namespace CT
 
 		static void dumpLogEntriesToFile(std::string filename);
 
-		static void log(LOG_LEVEL,const std::string& message, Position position);
+		static void log(LOG_LEVEL,const std::string& message, FilePosition position);
 
-		static void commitEntry(LOG_LEVEL, const std::string& message, Position position);
+		static void commitEntry(LOG_LEVEL, const std::string& message, FilePosition position);
 
 		static void pushEntries();
 

@@ -17,7 +17,8 @@ GDirectiveNode::GDirectiveNode(GParseNodeTypes fType)
 {}
 
 GDirectiveNode::~GDirectiveNode()
-{directiveValue.clear();}
+{
+}
 
 GNameDirective::GNameDirective(GParseNodeTypes fType)
 : GDirectiveNode(fType)
@@ -29,9 +30,6 @@ GLexRule::GLexRule(GParseNodeTypes fType)
 
 GLexRule::~GLexRule()
 {
-	tokenName.clear();
-	regex.clear();
-	action.clear();
 }
 
 GParseRule::GParseRule(GParseNodeTypes fType)
@@ -50,6 +48,7 @@ CT::Parser::GParseRulesTreeNode::GParseRulesTreeNode(bool root)
 	isRoot = root;
 	isLeaf = false;
 	token = CT::Lexer::Token::invalid;
+	action = StringMarker::invalid;
 }
 
 CT::Parser::GParseRulesTreeNode::~GParseRulesTreeNode()
@@ -75,15 +74,22 @@ CT::Parser::GStartRule::GStartRule(GParseNodeTypes fType)
 
 CT::Parser::GStartRule::~GStartRule()
 {
-	startRule.clear();
 }
 
-CT::Parser::GCodeSegment::GCodeSegment(GParseNodeTypes fType)
-	: GParseNode(fType), isCPP(false)
+CT::Parser::GCPPSegment::GCPPSegment(GParseNodeTypes fType)
+	: GParseNode(fType)
 {
 }
 
-CT::Parser::GCodeSegment::~GCodeSegment()
+CT::Parser::GCPPSegment::~GCPPSegment()
 {
-	code.clear();
+}
+
+CT::Parser::GHeaderSegment::GHeaderSegment(GParseNodeTypes fType)
+	:GParseNode(fType)
+{
+}
+
+CT::Parser::GHeaderSegment::~GHeaderSegment()
+{
 }

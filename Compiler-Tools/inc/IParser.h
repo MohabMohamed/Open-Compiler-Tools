@@ -3,7 +3,6 @@
 #include "IScanner.h"
 #include "CachedScanner.h"
 #include "InputStream.h"
-#include "GParseTree.h"
 #include <memory>
 #include <map>
 #include <vector>
@@ -12,10 +11,25 @@ namespace CT
 {
 	namespace Parser
 	{
+		class API IParseNode {
+		public:
+			virtual ~IParseNode(){}
+		};
+		using IParseNodePtr = std::shared_ptr<IParseNode>;
+
+		union API ParsingElement {
+			CT::Lexer::Token token;
+			IParseNodePtr node;
+
+			ParsingElement();
+			~ParsingElement();
+			ParsingElement(const ParsingElement& element);
+		};
+
 		class API IParser
 		{
 		public:
-			virtual GParseNodePtr parse(Lexer::IScannerPtr scanner, CT::InputStreamPtr input) = 0;
+			virtual IParseNodePtr parse(Lexer::IScannerPtr scanner, CT::InputStreamPtr input) = 0;
 		};
 		using IParserPtr = std::shared_ptr<IParser>;
 	}

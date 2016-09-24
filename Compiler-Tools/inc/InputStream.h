@@ -1,18 +1,22 @@
 #pragma once
 #include "Defines.h"
-#include "Position.h"
+#include "FilePosition.h"
+#include "StringMarker.h"
 #include <string>
 #include <memory>
+#include <stack>
 
 namespace CT
 {
-	class API InputStream
+	class API InputStream: public std::enable_shared_from_this<InputStream>
 	{
 	private:
 		std::string m_input;
 		std::size_t m_index;
-		Position m_position;
+		FilePosition m_position;
 		u64 m_lastLineCount;
+		std::stack<StringMarker> m_markerStack;
+
 	public:
 		InputStream(const std::string& input);
 
@@ -26,13 +30,23 @@ namespace CT
 
 		void reset();
 
+		void clear();
+
 		bool eof();
 
 		void append(const std::string& str);
 
 		void push(const std::string& str);
 
-		Position getPosition() const;
+		FilePosition getPosition() const;
+
+		void pushMarker(StringMarker marker = StringMarker::invalid);
+
+		StringMarker popMarker();
+
+		StringMarker topMarker();
+
+		std::string requestString(StringMarker marker);
 	};
 	using InputStreamPtr = std::shared_ptr<InputStream>;
 

@@ -2,6 +2,7 @@
 
 #include "Defines.h"
 #include "InputStream.h"
+#include "StringMarker.h"
 #include "Utilities.h"
 #include "Log.h"
 #include <functional>
@@ -30,7 +31,7 @@ namespace CT
 			
 		public:
 			std::string tag;
-			std::string literal;
+			StringMarker literal;
 
 			std::function<bool(InputStreamPtr, Token&)> event;
 

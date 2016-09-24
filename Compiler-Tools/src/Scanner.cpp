@@ -19,6 +19,7 @@ Token Scanner::scan(InputStreamPtr input)
 	//reset the current scanning machines;
 	reset();
 	std::string literal = "";
+	//input->pushMarker();
 	std::stack<Lexer::Token> token_stack;
 
 	bool is_first_encounter = true;
@@ -39,12 +40,21 @@ Token Scanner::scan(InputStreamPtr input)
 				if (!token_stack.empty())
 				{
 					auto token = token_stack.top();
+					token.literal = input->popMarker();
 					if (token.event != nullptr)
-						token.event(input, token);
+					{
+						auto eventResult = token.event(input, token);
+						if (!eventResult)
+							callErrorFunction(input);
+					}
+					auto inspect = token.literal.getString();
 					return token;
 				}
 			}
 		}
+
+		if (is_first_encounter)
+			input->pushMarker();
 		int i=0;
 		std::vector<int> m_scheduledForDeletion;
 		bool isOk = false;
@@ -60,14 +70,21 @@ Token Scanner::scan(InputStreamPtr input)
 					Lexer::Token result;
 					result.tag = machineTagPair.second.tag;
 					result.event = machineTagPair.second.event;
-					result.literal = literal + c;
+					//result.literal = literal + c;
+					
 
 					//consume the char
 					input->popLetter();
-					//invoke the event function
-					if (machineTagPair.second.event != nullptr)
-						machineTagPair.second.event(input, result);
 
+					result.literal = input->popMarker();
+					//invoke the event function
+					if (machineTagPair.second.event != nullptr) {
+
+						auto eventResult = machineTagPair.second.event(input, result);
+						if (!eventResult)
+							callErrorFunction(input);
+					}
+					auto inspect = result.literal.getString();
 					return result;
 				}
 				else {
@@ -75,7 +92,9 @@ Token Scanner::scan(InputStreamPtr input)
 					Lexer::Token result;
 					result.tag = machineTagPair.second.tag;
 					result.event = machineTagPair.second.event;
-					result.literal = literal + c;
+					//result.literal = literal + c;
+					result.literal = input->topMarker();
+					auto inspect = result.literal.getString();
 					token_stack.push(result);
 				}
 	
@@ -98,12 +117,20 @@ Token Scanner::scan(InputStreamPtr input)
 			if (!token_stack.empty())
 			{
 				auto token = token_stack.top();
+				token.literal = input->popMarker();
 				if (token.event != nullptr)
-					token.event(input, token);
+				{
+
+					auto eventResult = token.event(input, token);
+					if (!eventResult)
+						callErrorFunction(input);
+				}
+				auto inspect = token.literal.getString();
 				return token;
 			}
 			//error scanning report and return nullptr
 			Log::log(LOG_LEVEL::ERROR, "unable to recognize string='"+literal+c+"'", input->getPosition());
+			callErrorFunction(input);
 			return Token::invalid;
 		}
 		else
@@ -125,8 +152,17 @@ Token Scanner::scan(InputStreamPtr input)
 		literal += c;
 		input->popLetter();
 	}
-	if (!token_stack.empty())
+	if (!token_stack.empty()) {
+		auto token = token_stack.top();
+		token.literal = input->popMarker();
+		if (token.event != nullptr)
+		{
+			auto eventResult = token.event(input, token);
+			if (!eventResult)
+				callErrorFunction(input);
+		}
 		return token_stack.top();
+	}
 	return Token::eof;
 }
 
@@ -134,7 +170,7 @@ void Scanner::registerToken(std::shared_ptr<NFA<char>> regexMachine, const Token
 {
 	std::stringstream stream;
 	stream << *regexMachine;
-	Log::log(CT::LOG_LEVEL::LDEBUG, stream.str(), CT::Position::invalid);
+	Log::log(CT::LOG_LEVEL::LDEBUG, stream.str(), CT::FilePosition::invalid);
 	m_scanningMachines.push_back(std::make_pair(regexMachine, token));
 }
 

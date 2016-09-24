@@ -42,3 +42,9 @@ Token CT::Lexer::CachedScanner::rewindToken()
 	}
 	return Token::invalid;
 }
+
+void CT::Lexer::CachedScanner::clear()
+{
+	m_cache.clear();
+	m_index = m_cache.size();
+}

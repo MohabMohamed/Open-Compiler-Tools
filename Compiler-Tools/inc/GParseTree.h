@@ -2,6 +2,7 @@
 
 #include "Defines.h"
 #include "Token.h"
+#include "IParser.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -12,10 +13,10 @@ namespace CT
 	{
 
 		enum class GParseNodeTypes : u8 {
-			GENERIC, DIRECTIVE, NAME_DIRECTIVE, LEX_RULE, PARSE_RULE, START_RULE, CODE_SEGMENT
+			GENERIC, DIRECTIVE, NAME_DIRECTIVE, LEX_RULE, PARSE_RULE, START_RULE, CPP_SEGMENT, HEADER_SEGMENT
 		};
 
-		class API GParseNode
+		class API GParseNode: public IParseNode
 		{
 		public:
 			std::vector<std::shared_ptr<GParseNode>> children;
@@ -29,7 +30,7 @@ namespace CT
 		class API GDirectiveNode: public GParseNode
 		{
 		public:
-			std::string directiveValue;
+			StringMarker directiveValue;
 
 			GDirectiveNode(GParseNodeTypes fType = GParseNodeTypes::DIRECTIVE);
 			virtual ~GDirectiveNode();
@@ -44,9 +45,9 @@ namespace CT
 		class API GLexRule: public GParseNode
 		{
 		public:
-			std::string tokenName;
-			std::string regex;
-			std::string action;
+			StringMarker tokenName;
+			StringMarker regex;
+			StringMarker action;
 
 			GLexRule(GParseNodeTypes fType = GParseNodeTypes::LEX_RULE);
 			virtual ~GLexRule();
@@ -58,6 +59,7 @@ namespace CT
 			//next nodes is a vector because it can branch
 			std::vector<std::shared_ptr<GParseRulesTreeNode>> next;
 			CT::Lexer::Token token;
+			StringMarker action;
 			bool isRoot;
 			bool isLeaf;
 
@@ -70,7 +72,7 @@ namespace CT
 		class API GParseRule: public GParseNode
 		{
 		public:
-			std::string name;
+			StringMarker name;
 			std::shared_ptr<GParseRulesTreeNode> rules;
 
 			GParseRule(GParseNodeTypes fType = GParseNodeTypes::PARSE_RULE);
@@ -80,21 +82,28 @@ namespace CT
 		class API GStartRule : public GParseNode
 		{
 		public:
-			std::string startRule;
+			StringMarker startRule;
 
 			GStartRule(GParseNodeTypes fType = GParseNodeTypes::START_RULE);
 			virtual ~GStartRule();
 		};
 
-
-		class API GCodeSegment : public GParseNode
+		class API GCPPSegment : public GParseNode
 		{
 		public:
-			bool isCPP;
-			std::string code;
+			StringMarker code;
 
-			GCodeSegment(GParseNodeTypes fType = GParseNodeTypes::CODE_SEGMENT);
-			virtual ~GCodeSegment();
+			GCPPSegment(GParseNodeTypes fType = GParseNodeTypes::CPP_SEGMENT);
+			virtual ~GCPPSegment();
+		};
+
+		class API GHeaderSegment : public GParseNode
+		{
+		public:
+			StringMarker code;
+
+			GHeaderSegment(GParseNodeTypes fType = GParseNodeTypes::HEADER_SEGMENT);
+			virtual ~GHeaderSegment();
 		};
 	}
 }

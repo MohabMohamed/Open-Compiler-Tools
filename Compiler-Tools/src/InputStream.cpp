@@ -47,8 +47,16 @@ void InputStream::rewindLetter(){
 
 void InputStream::reset(){
 	m_index=0;
-	m_position = Position();
+	m_position = FilePosition();
 	m_lastLineCount = 0;
+	while (!m_markerStack.empty())
+		m_markerStack.pop();
+}
+
+void CT::InputStream::clear()
+{
+	m_input.clear();
+	reset();
 }
 
 bool InputStream::eof(){
@@ -65,8 +73,46 @@ void InputStream::push(const std::string& str)
 	m_input.insert(m_index,str);
 }
 
-Position InputStream::getPosition() const{
+FilePosition InputStream::getPosition() const{
 	return m_position;
+}
+
+void CT::InputStream::pushMarker(StringMarker marker)
+{
+	if (marker == StringMarker::invalid) {
+		marker.inputStream = shared_from_this();
+		marker.start = m_index;
+		marker.end = -1;
+		m_markerStack.push(marker);
+	}
+	else {
+		marker.end = -1;
+		m_markerStack.push(marker);
+	}
+}
+
+StringMarker CT::InputStream::popMarker()
+{
+	auto marker = m_markerStack.top();
+	marker.end = m_index;
+	m_markerStack.pop();
+	return marker;
+}
+
+StringMarker CT::InputStream::topMarker()
+{
+	auto marker = m_markerStack.top();
+	marker.end = m_index;
+	return marker;
+}
+
+std::string CT::InputStream::requestString(StringMarker marker)
+{
+	if (marker.start < marker.end)
+	{
+		return m_input.substr(marker.start, marker.end - marker.start);
+	}
+	return std::string();
 }
 
 API InputStreamPtr CT::open_file(const std::string& filename)

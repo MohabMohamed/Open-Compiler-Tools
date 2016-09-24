@@ -21,6 +21,8 @@ namespace CT
 
 			virtual Token scan(InputStreamPtr input) override;
 			virtual Token rewindToken();
+
+			void clear();
 		};
 		using CachedScannerPtr = std::shared_ptr<CachedScanner>;
 	}
