@@ -337,8 +337,10 @@ CodeGenOutput CT::CodeGen::LL1RD::generate(GParseNodePtr program)
 		case GParseNodeTypes::NAME_DIRECTIVE:
 			{
 				auto name_directive_node = std::dynamic_pointer_cast<GNameDirective>(child);
-				if(name_directive_node)
-					name_directive = trim(name_directive_node->directiveValue.getString());
+				if (name_directive_node) {
+					name_directive = name_directive_node->directiveValue.getString();
+					name_directive = trim(name_directive);
+				}
 			}
 			directives.push_back(child);
 			break;
