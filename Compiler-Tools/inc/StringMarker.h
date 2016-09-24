@@ -14,7 +14,9 @@ namespace CT
 		s64 end;
 		std::shared_ptr<InputStream> inputStream;
 		operator std::string();
+		operator std::string() const;
 		std::string getString() const;
+		std::string getString();
 		~StringMarker();
 
 		API friend std::ostream& operator<<(std::ostream& out, const StringMarker& marker);

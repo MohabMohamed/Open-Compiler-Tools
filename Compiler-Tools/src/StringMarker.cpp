@@ -25,7 +25,21 @@ CT::StringMarker::operator std::string()
 	return getString();
 }
 
+CT::StringMarker::operator std::string() const
+{
+	return getString();
+}
+
 std::string CT::StringMarker::getString() const
+{
+	if (inputStream) {
+		auto koko = inputStream->requestString(*this);
+		return koko;
+	}
+	return "";
+}
+
+std::string CT::StringMarker::getString()
 {
 	if (inputStream) {
 		auto koko = inputStream->requestString(*this);
