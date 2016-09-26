@@ -28,11 +28,11 @@ project "Compiler-Test"
 		optimize "On"
 
 	filter "configurations:DebugStatic"
-		defines {"DEBUG"}
+		defines {"DEBUG", "STATIC_LIB"}
 		flags {"Symbols"}
 
 	filter "configurations:ReleaseStatic"
-		defines {"NDEBUG"}
+		defines {"NDEBUG", "STATIC_LIB"}
 		optimize "On"
 
 	filter "platforms:x86"
@@ -45,6 +45,13 @@ project "Compiler-Tools"
 	language "C++"
 	targetdir "bin/%{cfg.buildcfg}"
 	location "Compiler-Tools"
+
+	configuration "*Static"
+		kind "StaticLib"
+
+	configuration "*Shared"
+		kind "SharedLib"
+
 
 	files {"Compiler-Tools/inc/**.h", "Compiler-Tools/inc/**.hpp", 
 		   "Compiler-Tools/src/**.cpp"}
@@ -66,12 +73,12 @@ project "Compiler-Tools"
 
 	filter "configurations:DebugStatic"
 		kind "StaticLib"
-		defines {"DEBUG", "COMPILE_STATIC_LIB"}
+		defines {"DEBUG", "STATIC_LIB"}
 		flags {"Symbols"}
 
 	filter "configurations:ReleaseStatic"
 		kind "StaticLib"
-		defines {"NDEBUG", "COMPILE_STATIC_LIB"}
+		defines {"NDEBUG", "STATIC_LIB"}
 		optimize "On"
 
 	filter "platforms:x86"

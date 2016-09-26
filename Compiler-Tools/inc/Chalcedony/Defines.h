@@ -11,7 +11,7 @@
 #ifdef OS_WINDOWS
 #ifdef COMPILE_DYNAMIC_LIB
     #define API __declspec(dllexport)
-#elif COMPILE_STATIC_LIB
+#elif STATIC_LIB
 	#define API 
 #else
 	#define API __declspec(dllimport)

@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string>
 #include <sstream>
 #include <Chalcedony\Chalcedony.h>
@@ -64,7 +66,25 @@ int main() {
 		ss->clear();
 		calc_lexer->clear();
 		std::string input;
-		std::getline(std::cin, input);
+		int c = '\0';
+		while ((c = std::getc(stdin)) != 27)
+		{
+			if (c == 8) {
+				if(!input.empty())
+					input.erase(input.size() - 1, 1);
+			}
+			else if (c == '\n')
+			{
+				break;
+			}
+			else
+			{
+				input += c;
+			}
+		}
+		if (c == 27)
+			break;
+		//std::getline(std::cin, input);
 		ss->append(input);
 		auto program = calc_parser->parse(calc_lexer, ss);
 		if (program) {
