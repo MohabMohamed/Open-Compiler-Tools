@@ -5,6 +5,8 @@
 #include <tuple>
 #include <memory>
 #include <ostream>
+#include <unordered_map>
+#include <set>
 
 namespace CT
 {
@@ -34,6 +36,7 @@ namespace CT
 		protected:
 			std::unordered_map<std::string, CT::Parser::GParseRulesTreeNodePtr> m_rulesTable;
 			std::unordered_map<std::string, bool> m_validRules;
+			std::set<std::tuple<std::string, CT::Parser::GParseRulesTreeNodePtr>> m_visited;
 
 			bool check(const std::string& rule_name, CT::Parser::GParseRulesTreeNodePtr rule_node);
 		public:

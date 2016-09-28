@@ -301,7 +301,8 @@ factor 	:= num  {
 		}
 		;
 
-term 	:= term MUL factor 
+term 	:= factor MUL & {std::cout<<"MOKA"<<std::endl;}
+		term
 		{
 			auto term_node = std::make_shared<Term>();
 			term_node->factor = std::dynamic_pointer_cast<GenericNode>(ct_elements[0].node);

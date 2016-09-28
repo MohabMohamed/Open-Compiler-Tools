@@ -38,7 +38,7 @@ RealNum::RealNum(SimpleCalcNodeTypes fType)
 num_value RealNum::eval()
 {
 	num_value result;
-	result.type = num_value_type::REAL;
+	result.type = num_value_type::INT;
 	result.value.real = value;
 	return result;
 }

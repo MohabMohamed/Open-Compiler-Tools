@@ -122,6 +122,9 @@
     <ClCompile Include="src\Chalcedony\CodeGen\GCodeGeneration.cpp">
       <Filter>src\Chalcedony\CodeGen</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chalcedony\CodeGen\IGCodeGeneration.cpp">
+      <Filter>src\Chalcedony\CodeGen</Filter>
+    </ClCompile>
     <ClCompile Include="src\Chalcedony\FilePosition.cpp">
       <Filter>src\Chalcedony</Filter>
     </ClCompile>

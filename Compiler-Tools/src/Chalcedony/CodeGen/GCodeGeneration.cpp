@@ -370,7 +370,11 @@ CodeGenOutput CT::CodeGen::LLKRD::generate(GParseNodePtr program)
 	}
 
 	LeftRecursionChecker checker;
-	bool leftRecExists = checker.process(parse_rules);
+	bool goodGrammar = checker.process(parse_rules);
+	if (!goodGrammar)
+	{
+		return CodeGenOutput::invalid;
+	}
 
 	CodeGenOutput result;
 	std::tie(result.lexer_h, result.lexer_cpp) = generateLexer(name_directive, lex_rules);
@@ -390,14 +394,25 @@ CodeGenOutput CT::CodeGen::LLKRD::generate(GParseNodePtr program)
 
 bool LeftRecursionChecker::check(const std::string& rule_name, CT::Parser::GParseRulesTreeNodePtr rule_node)
 {
-	//check if this rule is previously checked
-	auto valid_it = m_validRules.find(rule_name);
-	if(valid_it != m_validRules.end())
-	{
-		return valid_it->second;
+	//check if visited this configuration
+	auto visited_it = m_visited.find(std::make_tuple(rule_name, rule_node));
+	if (visited_it != m_visited.end()) {
+		//check if this rule is previously checked
+		auto valid_it = m_validRules.find(rule_name);
+		if (valid_it != m_validRules.end())
+		{
+			return valid_it->second;
+		}
+		else {
+			//it means that i has visited this node before and didn't find and answer then this is clearly a cycle
+			return false;
+		}
+	}
+	else {
+		m_visited.insert(std::make_tuple(rule_name, rule_node));
 	}
 	//this line to make the recursion exit when there's a cycle in the rules
-	m_validRules.insert(std::make_pair(rule_name, false));
+	//m_validRules.insert(std::make_pair(rule_name, false));
 
 	//if it's not checked previously then do the usual
 	if(rule_node->isRoot)
@@ -428,6 +443,7 @@ bool LeftRecursionChecker::process(std::vector<CT::Parser::GParseNodePtr> parse_
 {
 	m_validRules.clear();
 	m_rulesTable.clear();
+	m_visited.clear();
 
 	for(auto& rule: parse_rules)
 	{
@@ -445,8 +461,10 @@ bool LeftRecursionChecker::process(std::vector<CT::Parser::GParseNodePtr> parse_
 			continue;
 
 		bool result = check(parse_rule->name, parse_rule->rules);
-		if (!result)
+		if (!result) {
+			Log::log(CT::LOG_LEVEL::ERROR, "A left recursion cycle found in the grammar rule: " + parse_rule->name.getString() + ". you can't have a left recursion without consuming any tokens.", CT::FilePosition::invalid);
 			return false;
+		}
 	}
 	return true;
 }
