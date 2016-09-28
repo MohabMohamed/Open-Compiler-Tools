@@ -301,7 +301,7 @@ factor 	:= num  {
 		}
 		;
 
-term 	:= factor MUL term 
+term 	:= term MUL factor 
 		{
 			auto term_node = std::make_shared<Term>();
 			term_node->factor = std::dynamic_pointer_cast<GenericNode>(ct_elements[0].node);

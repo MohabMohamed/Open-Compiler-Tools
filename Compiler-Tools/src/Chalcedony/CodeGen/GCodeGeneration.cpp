@@ -7,7 +7,7 @@ using namespace CT::CodeGen;
 using namespace CT::Lexer;
 using namespace CT::Parser;
 
-std::string LL1RD::indent(u64 level)
+std::string LLKRD::indent(u64 level)
 {
 	std::string result;
 	for(int i=0;i<level;i++)
@@ -15,7 +15,7 @@ std::string LL1RD::indent(u64 level)
 	return result;
 }
 
-std::string LL1RD::generateLexerHeader(const std::string& name)
+std::string LLKRD::generateLexerHeader(const std::string& name)
 {
 	stringstream lexer_header;
 
@@ -34,7 +34,7 @@ std::string LL1RD::generateLexerHeader(const std::string& name)
 	return lexer_header.str();
 }
 
-std::string CT::CodeGen::LL1RD::generateLexerCPP(const std::string& lexer_name, const std::vector<GParseNodePtr>& lex_rules)
+std::string CT::CodeGen::LLKRD::generateLexerCPP(const std::string& lexer_name, const std::vector<GParseNodePtr>& lex_rules)
 {
 	stringstream lexer_cpp;
 
@@ -75,7 +75,7 @@ std::string CT::CodeGen::LL1RD::generateLexerCPP(const std::string& lexer_name, 
 	return lexer_cpp.str();
 }
 
-void CT::CodeGen::LL1RD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GParseRulesTreeNode> rule_tree_node, std::ostream & stream, int indentValue)
+void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GParseRulesTreeNode> rule_tree_node, std::ostream & stream, int indentValue)
 {
 	//if there's no node then get the fuck out of here
 	if (rule_tree_node == nullptr)
@@ -215,7 +215,7 @@ void CT::CodeGen::LL1RD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 	}
 }
 
-std::string CT::CodeGen::LL1RD::generateParserHeader(const std::string& parser_name, std::shared_ptr<GHeaderSegment> header_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
+std::string CT::CodeGen::LLKRD::generateParserHeader(const std::string& parser_name, std::shared_ptr<GHeaderSegment> header_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
 {
 	std::stringstream parser_header;
 
@@ -248,7 +248,7 @@ std::string CT::CodeGen::LL1RD::generateParserHeader(const std::string& parser_n
 	return parser_header.str();
 }
 
-std::string CT::CodeGen::LL1RD::generateParserCPP(const std::string& parser_name, const std::string& start_rule, std::shared_ptr<GCPPSegment> cpp_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
+std::string CT::CodeGen::LLKRD::generateParserCPP(const std::string& parser_name, const std::string& start_rule, std::shared_ptr<GCPPSegment> cpp_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
 {
 	std::stringstream parser_cpp;
 
@@ -295,29 +295,38 @@ std::string CT::CodeGen::LL1RD::generateParserCPP(const std::string& parser_name
 	return parser_cpp.str();
 }
 
-std::tuple<std::string, std::string> CT::CodeGen::LL1RD::generateLexer(const std::string& lexer_name, const std::vector<GParseNodePtr>& lex_rules)
+std::tuple<std::string, std::string> CT::CodeGen::LLKRD::generateLexer(const std::string& lexer_name, const std::vector<GParseNodePtr>& lex_rules)
 {
 
 	return std::make_tuple(generateLexerHeader(lexer_name), generateLexerCPP(lexer_name, lex_rules));
 }
 
-std::tuple<std::string, std::string> CT::CodeGen::LL1RD::generateParser(const std::string& parser_name, const std::string& start_rule, std::shared_ptr<GHeaderSegment> header_code, std::shared_ptr<GCPPSegment> cpp_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
+std::tuple<std::string, std::string> CT::CodeGen::LLKRD::generateParser(const std::string& parser_name, const std::string& start_rule, std::shared_ptr<GHeaderSegment> header_code, std::shared_ptr<GCPPSegment> cpp_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
 {
 	return std::make_tuple(generateParserHeader(parser_name, header_code, parse_rules), generateParserCPP(parser_name, start_rule, cpp_code, parse_rules));
 }
 
 
-CodeGenOutput CT::CodeGen::LL1RD::generate(GParseNodePtr program)
+CodeGenOutput CT::CodeGen::LLKRD::generate(GParseNodePtr program)
 {
 	if (!program)
 		return CodeGenOutput();
+	//grammar name
 	std::string name_directive = "Default";
+	//start rule name
 	std::string start_rule = "";
+
+	//user code in parser header and cpp
 	GParseNodePtr header_code, cpp_code;
+
+	//directives container
 	std::vector<GParseNodePtr> directives;
 	directives.reserve(5);
+	//lex rules contianer
 	std::vector<GParseNodePtr> lex_rules;
 	lex_rules.reserve(250);
+
+	//parse rules container;
 	std::vector<GParseNodePtr> parse_rules;
 	parse_rules.reserve(250);
 
@@ -359,6 +368,10 @@ CodeGenOutput CT::CodeGen::LL1RD::generate(GParseNodePtr program)
 			break;
 		}
 	}
+
+	LeftRecursionChecker checker;
+	bool leftRecExists = checker.process(parse_rules);
+
 	CodeGenOutput result;
 	std::tie(result.lexer_h, result.lexer_cpp) = generateLexer(name_directive, lex_rules);
 	std::tie(result.parser_h, result.parser_cpp) = generateParser(name_directive,
@@ -373,4 +386,67 @@ CodeGenOutput CT::CodeGen::LL1RD::generate(GParseNodePtr program)
 	result.parser_cpp_filename = name_directive+"Parser.cpp";
 
 	return result;
+}
+
+bool LeftRecursionChecker::check(const std::string& rule_name, CT::Parser::GParseRulesTreeNodePtr rule_node)
+{
+	//check if this rule is previously checked
+	auto valid_it = m_validRules.find(rule_name);
+	if(valid_it != m_validRules.end())
+	{
+		return valid_it->second;
+	}
+	//this line to make the recursion exit when there's a cycle in the rules
+	m_validRules.insert(std::make_pair(rule_name, false));
+
+	//if it's not checked previously then do the usual
+	if(rule_node->isRoot)
+	{
+		bool result = true;
+		for(auto& node_it: rule_node->next)
+			result &= check(rule_name, node_it);
+		m_validRules[rule_name] = result;
+		return result;
+	}else{
+		if (rule_node->token.tag == "lex_id")
+		{
+			m_validRules[rule_name] = true;
+			return true;
+		}
+		else if (rule_node->token.tag == "parse_id")
+		{
+			auto sub_rule_name = rule_node->token.literal.getString();
+			bool result = check(sub_rule_name, m_rulesTable[sub_rule_name]);
+			m_validRules[rule_name] = result;
+			return result;
+		}
+	}
+	return false;
+}
+
+bool LeftRecursionChecker::process(std::vector<CT::Parser::GParseNodePtr> parse_rules)
+{
+	m_validRules.clear();
+	m_rulesTable.clear();
+
+	for(auto& rule: parse_rules)
+	{
+		auto parse_rule = std::dynamic_pointer_cast<CT::Parser::GParseRule>(rule);
+		if(!parse_rule)
+			continue;
+
+		m_rulesTable.insert(std::make_pair(parse_rule->name, parse_rule->rules));
+	}
+	
+	for (auto& rule : parse_rules)
+	{
+		auto parse_rule = std::dynamic_pointer_cast<CT::Parser::GParseRule>(rule);
+		if (!parse_rule)
+			continue;
+
+		bool result = check(parse_rule->name, parse_rule->rules);
+		if (!result)
+			return false;
+	}
+	return true;
 }

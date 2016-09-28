@@ -20,5 +20,11 @@ namespace CT
 			virtual ~IGCodeGeneration(){}
 			virtual CodeGenOutput generate(CT::Parser::GParseNodePtr program) = 0;
 		};
+
+		class API IGrammarProcessor
+		{
+		public:
+			virtual bool process(std::vector<CT::Parser::GParseNodePtr> grammar) = 0;
+		};
 	}
 }

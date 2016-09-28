@@ -10,7 +10,8 @@ namespace CT
 {
 	namespace CodeGen
 	{
-		class API LL1RD: public IGCodeGeneration
+
+		class API LLKRD: public IGCodeGeneration
 		{
 		protected:
 			inline std::string indent(u64 level);
@@ -26,6 +27,17 @@ namespace CT
 			std::tuple<std::string, std::string> generateParser(const std::string& parser_name, const std::string& start_rule, std::shared_ptr<CT::Parser::GHeaderSegment> header_code, std::shared_ptr<CT::Parser::GCPPSegment> cpp_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules);
 		public:
 			virtual CodeGenOutput generate(CT::Parser::GParseNodePtr program) override;
+		};
+
+		class API LeftRecursionChecker: public IGrammarProcessor
+		{
+		protected:
+			std::unordered_map<std::string, CT::Parser::GParseRulesTreeNodePtr> m_rulesTable;
+			std::unordered_map<std::string, bool> m_validRules;
+
+			bool check(const std::string& rule_name, CT::Parser::GParseRulesTreeNodePtr rule_node);
+		public:
+			bool process(std::vector<CT::Parser::GParseNodePtr> parse_rules) override;
 		};
 	}
 }

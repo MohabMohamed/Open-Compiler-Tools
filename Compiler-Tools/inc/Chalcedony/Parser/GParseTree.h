@@ -68,6 +68,7 @@ namespace CT
 
 			std::shared_ptr<GParseRulesTreeNode> insertNode(const CT::Lexer::Token& token);
 		};
+		using GParseRulesTreeNodePtr = std::shared_ptr<GParseRulesTreeNode>;
 
 		class API GParseRule: public GParseNode
 		{
