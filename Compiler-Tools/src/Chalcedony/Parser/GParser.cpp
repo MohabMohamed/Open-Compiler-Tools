@@ -6,6 +6,7 @@
 using namespace CT;
 using namespace Parser;
 
+//_start_ := program;
 IParseNodePtr GParser::parse(Lexer::IScannerPtr scanner, InputStreamPtr input)
 {
 	auto cachedScanner = std::dynamic_pointer_cast<Lexer::CachedScanner>(scanner);
@@ -13,6 +14,7 @@ IParseNodePtr GParser::parse(Lexer::IScannerPtr scanner, InputStreamPtr input)
 	return program;
 }
 
+//program := statement semicolon program;
 GParseNodePtr GParser::parseProgram(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	GParseNodePtr program = std::make_shared<GParseNode>(), statement = nullptr;
@@ -38,6 +40,7 @@ GParseNodePtr GParser::parseProgram(Lexer::CachedScannerPtr scanner, InputStream
 	return program;
 }
 
+//statement := namedirective | lexrule | parserule | startrule | headercode | cppcode | predicate;
 GParseNodePtr GParser::parseStatement(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	auto token = scanner->scan(input);
@@ -48,14 +51,36 @@ GParseNodePtr GParser::parseStatement(Lexer::CachedScannerPtr scanner, InputStre
 		return statement;
 	}else if(token.tag == "lex_id")
 	{
-		scanner->rewindToken();
-		auto statement = parseLexRule(scanner, input);
-		return statement;
+		auto maybe_action_token = scanner->scan(input);
+		if (maybe_action_token.tag == "action")
+		{
+			scanner->rewindToken();
+			scanner->rewindToken();
+			auto statement = parsePredicate(scanner, input);
+			return statement;
+		}
+		else {
+			scanner->rewindToken();
+			scanner->rewindToken();
+			auto statement = parseLexRule(scanner, input);
+			return statement;
+		}
 	}else if(token.tag == "parse_id")
 	{
-		scanner->rewindToken();
-		auto statement = parseParseRule(scanner, input);
-		return statement;
+		auto maybe_action_token = scanner->scan(input);
+		if (maybe_action_token.tag == "action")
+		{
+			scanner->rewindToken();
+			scanner->rewindToken();
+			auto statement = parsePredicate(scanner, input);
+			return statement;
+		}
+		else {
+			scanner->rewindToken();
+			scanner->rewindToken();
+			auto statement = parseParseRule(scanner, input);
+			return statement;
+		}
 	}
 	else if (token.tag == "start_rule")
 	{
@@ -75,10 +100,17 @@ GParseNodePtr GParser::parseStatement(Lexer::CachedScannerPtr scanner, InputStre
 		result->code = token.literal;
 		return result;
 	}
+	else if (token.tag == "c_id")
+	{
+		scanner->rewindToken();
+		auto statement = parsePredicate(scanner, input);
+		return statement;
+	}
 
 	return nullptr;
 }
 
+//namedirective := NAME;
 GParseNodePtr GParser::parseNameDirective(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	std::shared_ptr<GNameDirective> result = std::make_shared<GNameDirective>();
@@ -93,6 +125,7 @@ GParseNodePtr GParser::parseNameDirective(Lexer::CachedScannerPtr scanner, Input
 	return nullptr;
 }
 
+//lexrule := LEXID ASSIGN REGEX | LEXID ASSIGN REGEX ACTION;
 GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	std::shared_ptr<GLexRule> result = std::make_shared<GLexRule>();
@@ -126,6 +159,9 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 	}
 }
 
+//parserule := PARSEID ASSIGN parsebody;
+//parsebody := parsenode parsebody;
+//parsenode := LEXID | LEXID action | PARSEID | PARSEID action;
 GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	std::shared_ptr<GParseRule> result = std::make_shared<GParseRule>();
@@ -161,15 +197,37 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 			{
 				//insert a node to the tree
 				rules_tree_it = rules_tree_it->insertNode(rule_token);
+
+				//check for predicate
+				auto and_token = scanner->scan(input);
+				if (and_token.tag == "and")
+				{
+					//scanner->rewindToken();
+					auto id_token = scanner->scan(input);
+					if (id_token.tag == "parse_id" || id_token.tag == "lex_id" || id_token.tag == "c_id")
+						rules_tree_it->predicate = id_token.literal;
+					else
+					{
+						scanner->rewindToken();
+						CT::Log::log(CT::LOG_LEVEL::ERROR, "found an and but didn't find a predicate id", input->getPosition());
+						return nullptr;
+					}
+					rules_tree_it->predicate;
+				}
+				else {
+					scanner->rewindToken();
+				}
+
+				//check for action
 				auto action_token = scanner->scan(input);
 				if (action_token.tag == "action")
 				{
 					rules_tree_it->action = action_token.literal;
-				}
-				else
+				}else
 				{
 					scanner->rewindToken();
 				}
+
 				foundOr = false;
 			}else if(rule_token.tag == "or")
 			{
@@ -185,6 +243,7 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 	return nullptr;
 }
 
+//startrule := START ASSIGN PARSEID;
 GParseNodePtr CT::Parser::GParser::parseStartRule(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)
 {
 	std::shared_ptr<GStartRule> result = std::make_shared<GStartRule>();
@@ -207,4 +266,21 @@ GParseNodePtr CT::Parser::GParser::parseStartRule(CT::Lexer::CachedScannerPtr sc
 	}
 
 	return result;
+}
+
+//predicate := CID action;
+GParseNodePtr CT::Parser::GParser::parsePredicate(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)
+{
+	std::shared_ptr<GPredicate> predicate = std::make_shared<GPredicate>();
+	auto id = scanner->scan(input);
+	auto action = scanner->scan(input);
+	if ((id.tag == "parse_id" || id.tag == "lex_id" || id.tag == "c_id") && action.tag == "action")
+	{
+		predicate->name = id.literal;
+		predicate->code = action.literal;
+	}
+	else {
+		return nullptr;
+	}
+	return predicate;
 }

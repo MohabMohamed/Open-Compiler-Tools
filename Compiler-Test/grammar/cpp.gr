@@ -1,0 +1,6 @@
+#name C;
+
+INT := "int";
+
+num := INT;
+_start_ := num;

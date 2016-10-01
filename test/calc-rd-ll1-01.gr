@@ -1,4 +1,5 @@
 #name SimpleCalc;
+
 #header {
 	enum class SimpleCalcNodeTypes { GENERIC, INT_NUM, REAL_NUM, FACTOR, TERM, EXPR};
 
@@ -74,181 +75,184 @@
 };
 
 #cpp {
-#include <iostream>
-#include <memory>
+	#include <iostream>
+	#include <memory>
 
-GenericNode::GenericNode(SimpleCalcNodeTypes fType)
-:type(fType)
-{}
+	GenericNode::GenericNode(SimpleCalcNodeTypes fType)
+	:type(fType)
+	{}
 
-num_value GenericNode::eval()
-{
-	num_value result;
-	result.type = num_value_type::NONE;
-	return result;
-}
-
-IntNum::IntNum(SimpleCalcNodeTypes fType)
-:GenericNode(fType)
-{}
-
-num_value IntNum::eval()
-{
-	num_value result;
-	result.type = num_value_type::INT;
-	result.value.integer = value;
-	return result;
-}
-
-RealNum::RealNum(SimpleCalcNodeTypes fType)
-:GenericNode(fType)
-{}
-
-num_value RealNum::eval()
-{
-	num_value result;
-	result.type = num_value_type::INT;
-	result.value.real = value;
-	return result;
-}
-
-Factor::Factor(SimpleCalcNodeTypes fType)
-:GenericNode(fType)
-{}
-
-num_value Factor::eval()
-{
-	return node->eval();
-}
-
-Term::Term(SimpleCalcNodeTypes fType)
-:GenericNode(fType)
-{}
-
-num_value Term::eval()
-{
-	auto fvalue = factor->eval();
-	if(op == "*")
+	num_value GenericNode::eval()
 	{
-		auto tvalue = term->eval();
 		num_value result;
-
-		if (fvalue.type == num_value_type::INT && tvalue.type == num_value_type::INT)
-		{
-			result.type = num_value_type::INT;
-			result.value.integer = fvalue.value.integer * tvalue.value.integer;
-		}
-		else if (fvalue.type == num_value_type::REAL && tvalue.type == num_value_type::REAL)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = fvalue.value.real * tvalue.value.real;
-		}
-		else if (fvalue.type == num_value_type::INT && tvalue.type == num_value_type::REAL)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = fvalue.value.integer * tvalue.value.real;
-		}
-		else if (fvalue.type == num_value_type::REAL && tvalue.type == num_value_type::INT)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = fvalue.value.real * tvalue.value.integer;
-		}
-
-		return result;
-	}else if(op == "/")
-	{
-		auto tvalue = term->eval();
-		num_value result;
-
-		if (fvalue.type == num_value_type::INT && tvalue.type == num_value_type::INT)
-		{
-			result.type = num_value_type::INT;
-			result.value.integer = fvalue.value.integer / tvalue.value.integer;
-		}
-		else if (fvalue.type == num_value_type::REAL && tvalue.type == num_value_type::REAL)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = fvalue.value.real / tvalue.value.real;
-		}
-		else if (fvalue.type == num_value_type::INT && tvalue.type == num_value_type::REAL)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = fvalue.value.integer / tvalue.value.real;
-		}
-		else if (fvalue.type == num_value_type::REAL && tvalue.type == num_value_type::INT)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = fvalue.value.real / tvalue.value.integer;
-		}
-
+		result.type = num_value_type::NONE;
 		return result;
 	}
-	return fvalue;
-}
 
-Expr::Expr(SimpleCalcNodeTypes fType)
-:GenericNode(fType)
-{}
+	IntNum::IntNum(SimpleCalcNodeTypes fType)
+	:GenericNode(fType)
+	{}
 
-num_value Expr::eval()
-{
-	auto tvalue = term->eval();
-	if(op == "+")
+	num_value IntNum::eval()
 	{
-		auto evalue = expr->eval();
 		num_value result;
-
-		if (tvalue.type == num_value_type::INT && evalue.type == num_value_type::INT) {
-			result.type = num_value_type::INT;
-			result.value.integer = tvalue.value.integer + evalue.value.integer;
-		}
-		else if (tvalue.type == num_value_type::REAL && evalue.type == num_value_type::REAL)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = tvalue.value.real + evalue.value.real;
-		}
-		else if (tvalue.type == num_value_type::INT && evalue.type == num_value_type::REAL)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = tvalue.value.integer + evalue.value.real;
-		}
-		else if (tvalue.type == num_value_type::REAL && evalue.type == num_value_type::INT)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = tvalue.value.real + evalue.value.integer;
-		}
-
-		return result;
-	}else if(op == "-")
-	{
-		auto evalue = expr->eval();
-		num_value result;
-
-		if (tvalue.type == num_value_type::INT && evalue.type == num_value_type::INT)
-		{
-			result.type = num_value_type::INT;
-			result.value.integer = tvalue.value.integer - evalue.value.integer;
-		}
-		else if (tvalue.type == num_value_type::REAL && evalue.type == num_value_type::REAL)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = tvalue.value.real - evalue.value.real;
-		}
-		else if (tvalue.type == num_value_type::INT && evalue.type == num_value_type::REAL)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = tvalue.value.integer - evalue.value.real;
-		}
-		else if (tvalue.type == num_value_type::REAL && evalue.type == num_value_type::INT)
-		{
-			result.type = num_value_type::REAL;
-			result.value.real = tvalue.value.real - evalue.value.integer;
-		}
+		result.type = num_value_type::INT;
+		result.value.integer = value;
 		return result;
 	}
-	return tvalue;
-}
 
+	RealNum::RealNum(SimpleCalcNodeTypes fType)
+	:GenericNode(fType)
+	{}
+
+	num_value RealNum::eval()
+	{
+		num_value result;
+		result.type = num_value_type::INT;
+		result.value.real = value;
+		return result;
+	}
+
+	Factor::Factor(SimpleCalcNodeTypes fType)
+	:GenericNode(fType)
+	{}
+
+	num_value Factor::eval()
+	{
+		return node->eval();
+	}
+
+	Term::Term(SimpleCalcNodeTypes fType)
+	:GenericNode(fType)
+	{}
+
+	num_value Term::eval()
+	{
+		auto fvalue = factor->eval();
+		if(op == "*")
+		{
+			auto tvalue = term->eval();
+			num_value result;
+
+			if (fvalue.type == num_value_type::INT && tvalue.type == num_value_type::INT)
+			{
+				result.type = num_value_type::INT;
+				result.value.integer = fvalue.value.integer * tvalue.value.integer;
+			}
+			else if (fvalue.type == num_value_type::REAL && tvalue.type == num_value_type::REAL)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = fvalue.value.real * tvalue.value.real;
+			}
+			else if (fvalue.type == num_value_type::INT && tvalue.type == num_value_type::REAL)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = fvalue.value.integer * tvalue.value.real;
+			}
+			else if (fvalue.type == num_value_type::REAL && tvalue.type == num_value_type::INT)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = fvalue.value.real * tvalue.value.integer;
+			}
+
+			return result;
+		}else if(op == "/")
+		{
+			auto tvalue = term->eval();
+			num_value result;
+
+			if (fvalue.type == num_value_type::INT && tvalue.type == num_value_type::INT)
+			{
+				result.type = num_value_type::INT;
+				result.value.integer = fvalue.value.integer / tvalue.value.integer;
+			}
+			else if (fvalue.type == num_value_type::REAL && tvalue.type == num_value_type::REAL)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = fvalue.value.real / tvalue.value.real;
+			}
+			else if (fvalue.type == num_value_type::INT && tvalue.type == num_value_type::REAL)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = fvalue.value.integer / tvalue.value.real;
+			}
+			else if (fvalue.type == num_value_type::REAL && tvalue.type == num_value_type::INT)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = fvalue.value.real / tvalue.value.integer;
+			}
+
+			return result;
+		}
+		return fvalue;
+	}
+
+	Expr::Expr(SimpleCalcNodeTypes fType)
+	:GenericNode(fType)
+	{}
+
+	num_value Expr::eval()
+	{
+		auto tvalue = term->eval();
+		if(op == "+")
+		{
+			auto evalue = expr->eval();
+			num_value result;
+
+			if (tvalue.type == num_value_type::INT && evalue.type == num_value_type::INT) {
+				result.type = num_value_type::INT;
+				result.value.integer = tvalue.value.integer + evalue.value.integer;
+			}
+			else if (tvalue.type == num_value_type::REAL && evalue.type == num_value_type::REAL)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = tvalue.value.real + evalue.value.real;
+			}
+			else if (tvalue.type == num_value_type::INT && evalue.type == num_value_type::REAL)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = tvalue.value.integer + evalue.value.real;
+			}
+			else if (tvalue.type == num_value_type::REAL && evalue.type == num_value_type::INT)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = tvalue.value.real + evalue.value.integer;
+			}
+
+			return result;
+		}else if(op == "-")
+		{
+			auto evalue = expr->eval();
+			num_value result;
+
+			if (tvalue.type == num_value_type::INT && evalue.type == num_value_type::INT)
+			{
+				result.type = num_value_type::INT;
+				result.value.integer = tvalue.value.integer - evalue.value.integer;
+			}
+			else if (tvalue.type == num_value_type::REAL && evalue.type == num_value_type::REAL)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = tvalue.value.real - evalue.value.real;
+			}
+			else if (tvalue.type == num_value_type::INT && evalue.type == num_value_type::REAL)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = tvalue.value.integer - evalue.value.real;
+			}
+			else if (tvalue.type == num_value_type::REAL && evalue.type == num_value_type::INT)
+			{
+				result.type = num_value_type::REAL;
+				result.value.real = tvalue.value.real - evalue.value.integer;
+			}
+			return result;
+		}
+		return tvalue;
+	}
+};
+
+predicate -> {
+	return true;
 };
 
 INT 	:= "(0-9)+";
@@ -262,7 +266,7 @@ SUB		:= "\\-";
 ASSIGN 	:= "=";
 LPAREN 	:= "\\(";
 RPAREN 	:= "\\)";
-COMMENT := "//"	
+COMMENT := "//"	->
 	{
 		ct_input->pushMarker();
 		while (ct_input->peek() != '\n')
@@ -276,24 +280,29 @@ COMMENT := "//"
 ID 		:= "(a-z|A-Z|_)(a-z|A-Z|_|0-9)*";
 
 
-num		:= INT  { 
-					auto int_node = std::make_shared<IntNum>();
-					int_node->value = std::stoi(ct_elements[0].token.literal.getString());
-					return int_node;
-				}
-		| REAL  { 
-					auto real_node = std::make_shared<RealNum>();
-					real_node->value = std::stod(ct_elements[0].token.literal.getString());
-					return real_node;
-				}
+num		:= INT && predicate ->
+		{ 
+			auto int_node = std::make_shared<IntNum>();
+			int_node->value = std::stoi(ct_elements[0].token.literal.getString());
+			return int_node;
+		}
+
+		| REAL ->
+		{ 
+			auto real_node = std::make_shared<RealNum>();
+			real_node->value = std::stod(ct_elements[0].token.literal.getString());
+			return real_node;
+		}
+
 		;
 
-factor 	:= num  {
-					auto factor_node = std::make_shared<Factor>();
-					factor_node->node = std::dynamic_pointer_cast<GenericNode>(ct_elements[0].node);
-					return factor_node;
-				}
-		| LPAREN expr RPAREN 
+factor 	:= num -> 
+		{
+			auto factor_node = std::make_shared<Factor>();
+			factor_node->node = std::dynamic_pointer_cast<GenericNode>(ct_elements[0].node);
+			return factor_node;
+		}
+		| LPAREN expr RPAREN ->
 		{
 			auto factor_node = std::make_shared<Factor>();
 			factor_node->node = std::dynamic_pointer_cast<GenericNode>(ct_elements[1].node);
@@ -301,8 +310,7 @@ factor 	:= num  {
 		}
 		;
 
-term 	:= factor MUL & {std::cout<<"MOKA"<<std::endl;}
-		term
+term 	:= factor MUL -> {std::cout<<"Mul"<<std::endl;} term ->
 		{
 			auto term_node = std::make_shared<Term>();
 			term_node->factor = std::dynamic_pointer_cast<GenericNode>(ct_elements[0].node);
@@ -310,7 +318,8 @@ term 	:= factor MUL & {std::cout<<"MOKA"<<std::endl;}
 			term_node->op = "*";
 			return term_node;
 		}
-		| factor DIV term 
+
+		| factor DIV && predicate -> {std::cout<<"DIV"<<std::endl;} term ->
 		{
 			auto term_node = std::make_shared<Term>();
 			term_node->factor = std::dynamic_pointer_cast<GenericNode>(ct_elements[0].node);
@@ -318,7 +327,8 @@ term 	:= factor MUL & {std::cout<<"MOKA"<<std::endl;}
 			term_node->op = "/";
 			return term_node;
 		}
-		| factor
+
+		| factor ->
 		{
 			auto term_node = std::make_shared<Term>();
 			term_node->factor = std::dynamic_pointer_cast<GenericNode>(ct_elements[0].node);
@@ -326,7 +336,7 @@ term 	:= factor MUL & {std::cout<<"MOKA"<<std::endl;}
 		}
 		;
 
-expr 	:= term PLUS expr
+expr 	:= term PLUS && predicate expr ->
 		{
 			auto expr_node = std::make_shared<Expr>();
 			expr_node->term = std::dynamic_pointer_cast<GenericNode>(ct_elements[0].node);
@@ -334,7 +344,8 @@ expr 	:= term PLUS expr
 			expr_node->op = "+";
 			return expr_node;
 		}
-		| term SUB expr
+
+		| term SUB expr ->
 		{
 			auto expr_node = std::make_shared<Expr>();
 			expr_node->term = std::dynamic_pointer_cast<GenericNode>(ct_elements[0].node);
@@ -342,7 +353,8 @@ expr 	:= term PLUS expr
 			expr_node->op = "-";
 			return expr_node;
 		}
-		| term
+
+		| term ->
 		{
 			auto expr_node = std::make_shared<Expr>();
 			expr_node->term = std::dynamic_pointer_cast<GenericNode>(ct_elements[0].node);

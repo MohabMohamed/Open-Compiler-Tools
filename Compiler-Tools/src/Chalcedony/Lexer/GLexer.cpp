@@ -115,7 +115,7 @@ void GLexer::init()
 		return true;
 	}));
 
-	registerToken(builder.create("(A-Z)+"), make_token("lex_id"));
+	registerToken(builder.create("(A-Z)(A-Z|_)+"), make_token("lex_id"));
 	registerToken(builder.create(":="), make_token("assign"));
 
 	registerToken(builder.create("\""), make_token("regex", [](CT::InputStreamPtr input, Token& token) -> bool {
@@ -139,8 +139,24 @@ void GLexer::init()
 		return true;
 	}));
 
-	registerToken(builder.create("{"), make_token("action", [](CT::InputStreamPtr input, Token& token) -> bool {
-		input->pushMarker(token.literal);
+	registerToken(builder.create("->"), make_token("action", [](CT::InputStreamPtr input, Token& token) -> bool {
+		while (true)
+		{
+			auto c = input->popLetter();
+			if (c == '{') {
+				input->rewindLetter();
+				break;
+			}
+			if (input->eof())
+			{
+				CT::Log::log(CT::LOG_LEVEL::ERROR, "error expected to find an action but found none", input->getPosition());
+				return false;
+			}
+		}
+		token.literal = CT::StringMarker::invalid;
+		input->pushMarker();
+		//pop the first {
+		input->popLetter();
 		int counter = 1;
 		while (counter != 0)
 		{
@@ -157,10 +173,11 @@ void GLexer::init()
 		return true;
 	}));
 
-	registerToken(builder.create("(a-z)+"), make_token("parse_id"));
+	registerToken(builder.create("(a-z)(a-z|_)+"), make_token("parse_id"));
 	registerToken(builder.create("\\|"), make_token("or"));
+	registerToken(builder.create("&&"), make_token("and"));
 	registerToken(builder.create("_start_"), make_token("start_rule"));
-
+	registerToken(builder.create("(_|a-z|A-Z)(_|a-z|A-Z|0-9)*"), make_token("c_id"));
 }
 
 GLexer::GLexer()

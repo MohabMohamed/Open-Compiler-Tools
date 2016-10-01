@@ -13,7 +13,8 @@ namespace CT
 	{
 
 		enum class GParseNodeTypes : u8 {
-			GENERIC, DIRECTIVE, NAME_DIRECTIVE, LEX_RULE, PARSE_RULE, START_RULE, CPP_SEGMENT, HEADER_SEGMENT
+			GENERIC, DIRECTIVE, NAME_DIRECTIVE, LEX_RULE, PARSE_RULE, START_RULE, CPP_SEGMENT, HEADER_SEGMENT,
+			PREDICATE
 		};
 
 		class API GParseNode: public IParseNode
@@ -59,6 +60,7 @@ namespace CT
 			//next nodes is a vector because it can branch
 			std::vector<std::shared_ptr<GParseRulesTreeNode>> next;
 			CT::Lexer::Token token;
+			StringMarker predicate;
 			StringMarker action;
 			bool isRoot;
 			bool isLeaf;
@@ -105,6 +107,16 @@ namespace CT
 
 			GHeaderSegment(GParseNodeTypes fType = GParseNodeTypes::HEADER_SEGMENT);
 			virtual ~GHeaderSegment();
+		};
+
+		class API GPredicate : public GParseNode
+		{
+		public:
+			StringMarker name;
+			StringMarker code;
+
+			GPredicate(GParseNodeTypes fType = GParseNodeTypes::PREDICATE);
+			virtual ~GPredicate();
 		};
 	}
 }

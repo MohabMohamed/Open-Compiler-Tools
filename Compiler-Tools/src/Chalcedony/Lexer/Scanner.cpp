@@ -2,7 +2,7 @@
 #include "Chalcedony/Log.h"
 #include "Chalcedony/Automata/State.hpp"
 #include "Chalcedony/Lexer/Token.h"
-#include <stack>
+#include <deque>
 #include <iostream>
 #include <sstream>
 using namespace CT;
@@ -21,6 +21,7 @@ Token Scanner::scan(InputStreamPtr input)
 	std::string literal = "";
 	//input->pushMarker();
 	std::stack<Lexer::Token> token_stack;
+	std::deque<Lexer::Token> token_stack_buffer;
 
 	bool is_first_encounter = true;
 	//process input
@@ -58,6 +59,8 @@ Token Scanner::scan(InputStreamPtr input)
 		int i=0;
 		std::vector<int> m_scheduledForDeletion;
 		bool isOk = false;
+		
+		token_stack_buffer.clear();
 		//go through machines providing input and check states
 		for(auto& machineTagPair: m_currentMachines)
 		{
@@ -95,7 +98,7 @@ Token Scanner::scan(InputStreamPtr input)
 					//result.literal = literal + c;
 					result.literal = input->topMarker();
 					auto inspect = result.literal.getString();
-					token_stack.push(result);
+					token_stack_buffer.push_front(result);
 				}
 	
 			}else if(state == FSMState::OK)
@@ -110,6 +113,9 @@ Token Scanner::scan(InputStreamPtr input)
 			}
 			i++;
 		}
+		//add tokens from buffer to stack to reserve the order of the scanning machines
+		for (auto& token : token_stack_buffer)
+			token_stack.push(token);
 		is_first_encounter = false;
 
 		if(m_scheduledForDeletion.size() == m_currentMachines.size())

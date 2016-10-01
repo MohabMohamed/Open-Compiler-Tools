@@ -1,0 +1,35 @@
+#name C;
+
+SINGLE_LINE_COMMENT := "//" ->
+{
+	while (ct_input->peek() != '\n')
+	{
+		ct_input->popLetter();
+	}
+	ct_token.literal = CT::StringMarker::invalid;
+	return true;
+};
+
+MULTI_LINE_COMMENT := "/*" ->
+{
+	char prev = '\0';
+	while(true)
+	{
+		auto c = ct_input->popLetter();
+		if(c == '\0')
+			return false;
+
+		if(prev == '*' && c == '/')
+			break;
+		prev = c;
+	}
+	ct_token.literal = CT::StringMarker::invalid;
+	return true;
+};
+
+HASH := "#";
+INCLUDE := "include";
+
+
+program := MULTI_LINE_COMMENT;
+_start_ := program;

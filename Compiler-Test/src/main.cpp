@@ -3,12 +3,16 @@
 #include <stdlib.h>
 #include <string>
 #include <sstream>
+#include <memory>
 #include <Chalcedony\Chalcedony.h>
-#include "SimpleCalcLexer.h"
-#include "SimpleCalcParser.h"
+#include <CLexer.h>
+#include <CParser.h>
 
 using namespace std;
+
 int main() {
+
+	/*
 	/*int x = 0;
 	x |= 1;
 	cout<<"Hello, World!"<<endl;
@@ -62,47 +66,47 @@ int main() {
 	//	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
 	//}
 
-	CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("1+99");
-	auto calc_lexer = std::make_shared<SimpleCalc::SimpleCalcLexer>();
-	auto calc_parser = std::make_shared<SimpleCalc::SimpleCalcParser>();
-	while (true) {
-		ss->clear();
-		calc_lexer->clear();
-		std::string input;
-		int c = '\0';
-		while ((c = std::getc(stdin)) != 27)
-		{
-			if (c == 8) {
-				if(!input.empty())
-					input.erase(input.size() - 1, 1);
-			}
-			else if (c == '\n')
-			{
-				break;
-			}
-			else
-			{
-				input += c;
-			}
-		}
-		if (c == 27)
-			break;
-		//std::getline(std::cin, input);
-		ss->append(input);
-		auto program = calc_parser->parse(calc_lexer, ss);
-		if (program) {
-			auto generic_node = std::dynamic_pointer_cast<SimpleCalc::GenericNode>(program);
-			auto result = generic_node->eval();
-			if (result.type == SimpleCalc::num_value_type::REAL)
-				std::cout << result.value.real << std::endl;
-			else if (result.type == SimpleCalc::num_value_type::INT)
-				std::cout << result.value.integer << std::endl;
-		}
-		else
-		{
-			std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
-		}
-	}
+	//CT::InputStreamPtr ss = std::make_shared<CT::InputStream>("1+99");
+	//auto calc_lexer = std::make_shared<SimpleCalc::SimpleCalcLexer>();
+	//auto calc_parser = std::make_shared<SimpleCalc::SimpleCalcParser>();
+	//while (true) {
+	//	ss->clear();
+	//	calc_lexer->clear();
+	//	std::string input;
+	//	int c = '\0';
+	//	while ((c = std::getc(stdin)) != 27)
+	//	{
+	//		if (c == 8) {
+	//			if(!input.empty())
+	//				input.erase(input.size() - 1, 1);
+	//		}
+	//		else if (c == '\n')
+	//		{
+	//			break;
+	//		}
+	//		else
+	//		{
+	//			input += c;
+	//		}
+	//	}
+	//	if (c == 27)
+	//		break;
+	//	//std::getline(std::cin, input);
+	//	ss->append(input);
+	//	auto program = calc_parser->parse(calc_lexer, ss);
+	//	if (program) {
+	//		auto generic_node = std::dynamic_pointer_cast<SimpleCalc::GenericNode>(program);
+	//		auto result = generic_node->eval();
+	//		if (result.type == SimpleCalc::num_value_type::REAL)
+	//			std::cout << result.value.real << std::endl;
+	//		else if (result.type == SimpleCalc::num_value_type::INT)
+	//			std::cout << result.value.integer << std::endl;
+	//	}
+	//	else
+	//	{
+	//		std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
+	//	}
+	//}
 	//std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
 
 
@@ -120,6 +124,12 @@ int main() {
 	/*CT::InputStreamPtr ss2 = std::make_shared<CT::InputStream>("int x;");
 	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GenericParser>();
 	parser->parse(scanner, ss2);*/
-	std::cout << "end" << std::endl;
+
+	CT::InputStreamPtr file_input = CT::open_file("test/c_test.c");
+	auto lexer_ptr = std::make_shared<C::CLexer>();
+	auto parser_ptr = std::make_shared<C::CParser>();
+	auto program = parser_ptr->parse(lexer_ptr, file_input);
+	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
+
 	return 0;
 }

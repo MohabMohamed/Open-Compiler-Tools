@@ -22,6 +22,7 @@ namespace CT
 			GParseNodePtr parseLexRule(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input);
 			GParseNodePtr parseParseRule(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input);
 			GParseNodePtr parseStartRule(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input);
+			GParseNodePtr parsePredicate(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input);
 		public:
 			virtual IParseNodePtr parse(Lexer::IScannerPtr scanner, CT::InputStreamPtr input) override;
 		};

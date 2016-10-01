@@ -49,6 +49,7 @@ CT::Parser::GParseRulesTreeNode::GParseRulesTreeNode(bool root)
 	isLeaf = false;
 	token = CT::Lexer::Token::invalid;
 	action = StringMarker::invalid;
+	predicate = StringMarker::invalid;
 }
 
 CT::Parser::GParseRulesTreeNode::~GParseRulesTreeNode()
@@ -91,5 +92,14 @@ CT::Parser::GHeaderSegment::GHeaderSegment(GParseNodeTypes fType)
 }
 
 CT::Parser::GHeaderSegment::~GHeaderSegment()
+{
+}
+
+CT::Parser::GPredicate::GPredicate(GParseNodeTypes fType)
+	:GParseNode(fType)
+{
+}
+
+CT::Parser::GPredicate::~GPredicate()
 {
 }

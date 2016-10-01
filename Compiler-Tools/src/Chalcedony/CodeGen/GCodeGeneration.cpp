@@ -1,5 +1,5 @@
-#include "Chalcedony/CodeGen/GCodeGeneration.h"
-#include "Chalcedony/Log.h"
+#include <Chalcedony/CodeGen/GCodeGeneration.h>
+#include <Chalcedony/Log.h>
 #include <sstream>
 using namespace std;
 using namespace CT;
@@ -20,8 +20,8 @@ std::string LLKRD::generateLexerHeader(const std::string& name)
 	stringstream lexer_header;
 
 	lexer_header << indent(0) << "#pragma once\n";
-	lexer_header << indent(0) << "#include <Defines.h>\n";
-	lexer_header << indent(0) << "#include <CachedScanner.h>\n";
+	lexer_header << indent(0) << "#include <Chalcedony/Defines.h>\n";
+	lexer_header << indent(0) << "#include <Chalcedony/Lexer/CachedScanner.h>\n";
 	lexer_header << indent(0) << "namespace " << name << "\n{\n";
 	lexer_header << indent(1) << "class " << name << "Lexer" << ": public CT::Lexer::CachedScanner" << "\n\t{\n";
 	lexer_header << indent(1) << "protected:\n";
@@ -39,10 +39,10 @@ std::string CT::CodeGen::LLKRD::generateLexerCPP(const std::string& lexer_name, 
 	stringstream lexer_cpp;
 
 	lexer_cpp << indent(0) << "#include \"" << lexer_name << "Lexer.h\"\n";
-	lexer_cpp << indent(0) << "#include <RegexBuilder.h>\n";
-	lexer_cpp << indent(0) << "#include <InputStream.h>\n";
-	lexer_cpp << indent(0) << "#include <Utilities.h>\n";
-	lexer_cpp << indent(0) << "#include <Token.h>\n";
+	lexer_cpp << indent(0) << "#include <Chalcedony/Automata/RegexBuilder.h>\n";
+	lexer_cpp << indent(0) << "#include <Chalcedony/InputStream.h>\n";
+	lexer_cpp << indent(0) << "#include <Chalcedony/Utilities.h>\n";
+	lexer_cpp << indent(0) << "#include <Chalcedony/Lexer/Token.h>\n";
 	lexer_cpp << indent(0) << "using namespace std;\n";
 	lexer_cpp << indent(0) << "using namespace CT;\n";
 	lexer_cpp << indent(0) << "using namespace CT::Lexer;\n";
@@ -103,7 +103,7 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 
 		//add the last else to report the failure of parsing this node
 		if(!rule_tree_node->next.empty()){
-			stream << indent(indentValue) << "CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", input->getPosition());\n";
+			stream << indent(indentValue) << "CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", ct_input->getPosition());\n";
 			stream << indent(indentValue) << "return nullptr;\n";
 		}
 	}
@@ -113,15 +113,27 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 		if(rule_tree_node->token.tag == "parse_id")
 		{
 
-			stream << indent(indentValue) << "auto node" << rule_tree_node->token.literal.getString() << " = parse" << rule_tree_node->token.literal.getString() << "(scanner, input);\n";
-			stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal.getString() << " != nullptr)\n";
+			stream << indent(indentValue) << "auto node" << rule_tree_node->token.literal.getString() << " = parse" << rule_tree_node->token.literal.getString() << "(ct_scanner, ct_input);\n";
+			//predicate
+			if (rule_tree_node->predicate != CT::StringMarker::invalid)
+			{
+				stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal.getString() << " != nullptr && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
+			}
+			else
+			{
+				stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal.getString() << " != nullptr)\n";
+			}
 			stream << indent(indentValue) << "{\n";
-			stream << indent(indentValue+1) << "CT::Parser::ParsingElement nodeElement; nodeElement.node = node" << rule_tree_node->token.literal.getString() << ";\n";
-			stream << indent(indentValue+1) << "ct_elements.push_back(nodeElement);\n";
+
+			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement nodeElement; nodeElement.node = node" << rule_tree_node->token.literal.getString() << ";\n";
+			stream << indent(indentValue + 1) << "ct_elements.push_back(nodeElement);\n";
+
+
 			for (int i = 0; i < rule_tree_node->next.size(); i++) {
 				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
 			}
-			
+
+			//action
 			if (rule_tree_node->action != StringMarker::invalid)
 				stream << indent(indentValue + 1) << rule_tree_node->action.getString() << "\n";
 			stream << indent(indentValue + 1) << "return std::make_shared<IParseNode>();\n";
@@ -129,21 +141,31 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 
 		}else{
 
-			stream << indent(indentValue) << "auto " << rule_tree_node->token.literal.getString() << "Token = scanner->scan(input);\n";
-			stream << indent(indentValue) << "if("<< rule_tree_node->token.literal.getString() <<"Token.tag == \"" << rule_tree_node->token.literal.getString() << "\")\n";
+			stream << indent(indentValue) << "auto " << rule_tree_node->token.literal.getString() << "Token = ct_scanner->scan(ct_input);\n";
+			//predicate
+			if (rule_tree_node->predicate != CT::StringMarker::invalid)
+			{
+				stream << indent(indentValue) << "if(" << rule_tree_node->token.literal.getString() << "Token.tag == \"" << rule_tree_node->token.literal.getString() << "\" && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
+			}
+			else {
+				stream << indent(indentValue) << "if(" << rule_tree_node->token.literal.getString() << "Token.tag == \"" << rule_tree_node->token.literal.getString() << "\")\n";
+			}
 			stream << indent(indentValue) << "{\n";
 
-			stream << indent(indentValue+1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = " << rule_tree_node->token.literal.getString() << "Token;\n";
-			stream << indent(indentValue+1) << "ct_elements.push_back(tokenElement);\n";
+			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = " << rule_tree_node->token.literal.getString() << "Token;\n";
+			stream << indent(indentValue + 1) << "ct_elements.push_back(tokenElement);\n";
 
 			for (int i = 0; i < rule_tree_node->next.size(); i++) {
 				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
 			}
+
+			//action
 			if (rule_tree_node->action != StringMarker::invalid)
 				stream << indent(indentValue + 1) << rule_tree_node->action.getString() << "\n";
+
 			stream << indent(indentValue + 1) << "return std::make_shared<IParseNode>();\n";
 			stream << indent(indentValue) << "}\n";
-			stream << indent(indentValue) << "scanner->rewindToken();\n";
+			stream << indent(indentValue) << "ct_scanner->rewindToken();\n";
 
 		}
 	}
@@ -157,12 +179,59 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 		if(rule_tree_node->token.tag == "parse_id")
 		{
 
-			stream << indent(indentValue) << "auto node" << rule_tree_node->token.literal.getString() << " = parse" << rule_tree_node->token.literal.getString() << "(scanner, input);\n";
-			stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal.getString() << " != nullptr)\n";
+			stream << indent(indentValue) << "auto node" << rule_tree_node->token.literal.getString() << " = parse" << rule_tree_node->token.literal.getString() << "(ct_scanner, ct_input);\n";
+			//predicate
+			if (rule_tree_node->predicate != CT::StringMarker::invalid)
+			{
+				stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal.getString() << " != nullptr && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
+			}
+			else
+			{
+				stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal.getString() << " != nullptr)\n";
+			}
 			stream << indent(indentValue) << "{\n";
 
-			stream << indent(indentValue+1) << "CT::Parser::ParsingElement nodeElement; nodeElement.node = node" << rule_tree_node->token.literal.getString() << ";\n";
-			stream << indent(indentValue+1) << "ct_elements.push_back(nodeElement);\n";
+			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement nodeElement; nodeElement.node = node" << rule_tree_node->token.literal.getString() << ";\n";
+			stream << indent(indentValue + 1) << "ct_elements.push_back(nodeElement);\n";
+
+			std::string list_nodes = "";
+			for (int i = 0; i < rule_tree_node->next.size(); i++) {
+				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
+
+				//they all an if statements then this else for the branching tree of the generated code
+				if (i < rule_tree_node->next.size() - 1) 
+				{
+					list_nodes += rule_tree_node->next[i]->token.literal.getString() + ", ";
+				}
+				else
+				{
+					list_nodes += rule_tree_node->next[i]->token.literal;
+				}
+			}
+
+			//action
+			if (rule_tree_node->action != StringMarker::invalid)
+				stream << indent(indentValue + 1) << rule_tree_node->action.getString() << "\n";
+
+			stream << indent(indentValue + 1) << "CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", ct_input->getPosition());\n";
+			stream << indent(indentValue + 1) << "return nullptr;\n";
+			stream << indent(indentValue) << "}\n";
+
+		}else{
+
+			stream << indent(indentValue) << "auto " << rule_tree_node->token.literal.getString() << "Token = ct_scanner->scan(ct_input);\n";
+			//predicate
+			if (rule_tree_node->predicate != CT::StringMarker::invalid)
+			{
+				stream << indent(indentValue) << "if(" << rule_tree_node->token.literal.getString() << "Token.tag == \"" << rule_tree_node->token.literal.getString() << "\" && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
+			}
+			else {
+				stream << indent(indentValue) << "if(" << rule_tree_node->token.literal.getString() << "Token.tag == \"" << rule_tree_node->token.literal.getString() << "\")\n";
+			}
+			stream << indent(indentValue) << "{\n";
+
+			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = " << rule_tree_node->token.literal.getString() << "Token;\n";
+			stream << indent(indentValue + 1) << "ct_elements.push_back(tokenElement);\n";
 
 			std::string list_nodes = "";
 			for (int i = 0; i < rule_tree_node->next.size(); i++) {
@@ -179,52 +248,32 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 				}
 			}
 			
-			stream << indent(indentValue + 1) << "CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", input->getPosition());\n";
+			//action
+			if (rule_tree_node->action != StringMarker::invalid)
+				stream << indent(indentValue + 1) << rule_tree_node->action.getString() << "\n";
+
+			stream << indent(indentValue + 1) << "CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", ct_input->getPosition());\n";
 			stream << indent(indentValue + 1) << "return nullptr;\n";
 			stream << indent(indentValue) << "}\n";
-
-		}else{
-
-			stream << indent(indentValue) << "auto " << rule_tree_node->token.literal.getString() << "Token = scanner->scan(input);\n";
-			stream << indent(indentValue) << "if(" << rule_tree_node->token.literal.getString() << "Token.tag == \"" << rule_tree_node->token.literal.getString() << "\")\n";
-			stream << indent(indentValue) << "{\n";
-
-			stream << indent(indentValue+1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = " << rule_tree_node->token.literal.getString() << "Token;\n";
-			stream << indent(indentValue+1) << "ct_elements.push_back(tokenElement);\n";
-
-			std::string list_nodes = "";
-			for (int i = 0; i < rule_tree_node->next.size(); i++) {
-				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
-
-				//they all an if statements then this else for the branching tree of the generated code
-				if (i < rule_tree_node->next.size() - 1) 
-				{
-					list_nodes += rule_tree_node->next[i]->token.literal.getString() + ", ";
-				}
-				else
-				{
-					list_nodes += rule_tree_node->next[i]->token.literal;
-				}
-			}
-			stream << indent(indentValue + 1) << "CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \"parser was expecting one of this nodes {" << list_nodes << "} but found none\", input->getPosition());\n";
-			stream << indent(indentValue + 1) << "return nullptr;\n";
-			stream << indent(indentValue) << "}\n";
-			stream << indent(indentValue) << "scanner->rewindToken();\n";
+			stream << indent(indentValue) << "ct_scanner->rewindToken();\n";
 
 		}
 	}
 }
 
-std::string CT::CodeGen::LLKRD::generateParserHeader(const std::string& parser_name, std::shared_ptr<GHeaderSegment> header_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
+std::string CT::CodeGen::LLKRD::generateParserHeader(const std::string& parser_name,
+	std::shared_ptr<GHeaderSegment> header_code,
+	const std::vector<CT::Parser::GParseNodePtr>& parse_rules,
+	const std::vector<std::shared_ptr<CT::Parser::GPredicate>>& predicates)
 {
 	std::stringstream parser_header;
 
 	parser_header << indent(0) << "#pragma once\n";
-	parser_header << indent(0) << "#include <Defines.h>\n";
-	parser_header << indent(0) << "#include <IParser.h>\n";
-	parser_header << indent(0) << "#include <IScanner.h>\n";
-	parser_header << indent(0) << "#include <CachedScanner.h>\n";
-	parser_header << indent(0) << "#include <InputStream.h>\n";
+	parser_header << indent(0) << "#include <Chalcedony/Defines.h>\n";
+	parser_header << indent(0) << "#include <Chalcedony/Parser/IParser.h>\n";
+	parser_header << indent(0) << "#include <Chalcedony/Lexer/IScanner.h>\n";
+	parser_header << indent(0) << "#include <Chalcedony/Lexer/CachedScanner.h>\n";
+	parser_header << indent(0) << "#include <Chalcedony/InputStream.h>\n";
 	parser_header << indent(0) << "namespace " << parser_name << "\n{\n";
 	if(header_code)
 		parser_header << indent(0) << header_code->code.getString() << "\n";
@@ -232,15 +281,20 @@ std::string CT::CodeGen::LLKRD::generateParserHeader(const std::string& parser_n
 	parser_header << indent(1) << "{\n";
 	parser_header << indent(1) << "private:\n";
 
+	for (auto& predicate : predicates)
+	{
+		parser_header << indent(2) << "bool " << predicate->name.getString() << "(const std::vector<CT::Parser::ParsingElement>& ct_elements, CT::Lexer::CachedScannerPtr ct_scanner, CT::InputStreamPtr ct_input);\n";
+	}
+
 	for (auto rule : parse_rules)
 	{
 		auto parse_rule = std::dynamic_pointer_cast<GParseRule>(rule);
 
-		parser_header << indent(2) << "CT::Parser::IParseNodePtr parse" << parse_rule->name.getString() << "(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input);\n";
+		parser_header << indent(2) << "CT::Parser::IParseNodePtr parse" << parse_rule->name.getString() << "(CT::Lexer::CachedScannerPtr ct_scanner, CT::InputStreamPtr ct_input);\n";
 	}
 
 	parser_header << indent(1) << "public:\n";
-	parser_header << indent(2) << "CT::Parser::IParseNodePtr parse(CT::Lexer::IScannerPtr scanner, CT::InputStreamPtr input) override;\n";
+	parser_header << indent(2) << "CT::Parser::IParseNodePtr parse(CT::Lexer::IScannerPtr ct_scanner, CT::InputStreamPtr ct_input) override;\n";
 	parser_header << indent(1) << "};\n";
 	parser_header << indent(0) << "}";
 	
@@ -248,13 +302,17 @@ std::string CT::CodeGen::LLKRD::generateParserHeader(const std::string& parser_n
 	return parser_header.str();
 }
 
-std::string CT::CodeGen::LLKRD::generateParserCPP(const std::string& parser_name, const std::string& start_rule, std::shared_ptr<GCPPSegment> cpp_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
+std::string CT::CodeGen::LLKRD::generateParserCPP(const std::string& parser_name,
+	const std::string& start_rule,
+	std::shared_ptr<GCPPSegment> cpp_code,
+	const std::vector<CT::Parser::GParseNodePtr>& parse_rules,
+	const std::vector<std::shared_ptr<CT::Parser::GPredicate>>& predicates)
 {
 	std::stringstream parser_cpp;
 
 	parser_cpp << indent(0) << "#include \"" << parser_name << "Parser.h\"\n";
-	parser_cpp << indent(0) << "#include <Token.h>\n";
-	parser_cpp << indent(0) << "#include <Log.h>\n";
+	parser_cpp << indent(0) << "#include <Chalcedony/Lexer/Token.h>\n";
+	parser_cpp << indent(0) << "#include <Chalcedony/Log.h>\n";
 	parser_cpp << indent(0) << "using namespace " << parser_name << ";\n";
 	parser_cpp << indent(0) << "using namespace CT;\n";
 	parser_cpp << indent(0) << "using namespace CT::Parser;\n";
@@ -262,11 +320,19 @@ std::string CT::CodeGen::LLKRD::generateParserCPP(const std::string& parser_name
 	if(cpp_code)
 		parser_cpp << indent(0) << cpp_code->code.getString() << "\n";
 
+	for (auto& predicate : predicates)
+	{
+		parser_cpp << indent(0) << "bool "<< parser_name << "Parser::" << predicate->name.getString() << "(const std::vector<CT::Parser::ParsingElement>& ct_elements, CT::Lexer::CachedScannerPtr ct_scanner, CT::InputStreamPtr ct_input)\n";
+		//parser_cpp << indent(0) << "{\n";
+		parser_cpp << indent(0) << predicate->code.getString() << "\n";
+		//parser_cpp << indent(0) << "}\n";
+	}
+
 	for (auto rule : parse_rules)
 	{
 		auto parse_rule = std::dynamic_pointer_cast<GParseRule>(rule);
 
-		parser_cpp << indent(0) << "IParseNodePtr " << parser_name << "Parser::parse" << parse_rule->name.getString() << "(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)\n";
+		parser_cpp << indent(0) << "IParseNodePtr " << parser_name << "Parser::parse" << parse_rule->name.getString() << "(CT::Lexer::CachedScannerPtr ct_scanner, CT::InputStreamPtr ct_input)\n";
 		parser_cpp << indent(0) << "{\n";
 		generateRuleFunctionBody(parse_rule->rules, parser_cpp, 1);
 		parser_cpp << indent(0) << "}\n";
@@ -274,12 +340,12 @@ std::string CT::CodeGen::LLKRD::generateParserCPP(const std::string& parser_name
 
 	if (!start_rule.empty())
 	{
-		parser_cpp << indent(0) << "IParseNodePtr " << parser_name << "Parser::parse(CT::Lexer::IScannerPtr scanner, CT::InputStreamPtr input)\n";
+		parser_cpp << indent(0) << "IParseNodePtr " << parser_name << "Parser::parse(CT::Lexer::IScannerPtr ct_scanner, CT::InputStreamPtr ct_input)\n";
 		parser_cpp << indent(0) << "{\n";
-		parser_cpp << indent(1) << "auto cached_scanner = std::dynamic_pointer_cast<CT::Lexer::CachedScanner>(scanner);\n";
+		parser_cpp << indent(1) << "auto cached_scanner = std::dynamic_pointer_cast<CT::Lexer::CachedScanner>(ct_scanner);\n";
 		parser_cpp << indent(1) << "if(cached_scanner == nullptr)\n";
 		parser_cpp << indent(2) << "return nullptr;\n";
-		parser_cpp << indent(1) << "auto result =  parse" << start_rule << "(cached_scanner, input);\n";
+		parser_cpp << indent(1) << "auto result =  parse" << start_rule << "(cached_scanner, ct_input);\n";
 		parser_cpp << indent(1) << "if (result == nullptr)\n";
 		parser_cpp << indent(2) << "CT::Log::pushEntries();\n";
 		parser_cpp << indent(1) << "else\n";
@@ -301,9 +367,14 @@ std::tuple<std::string, std::string> CT::CodeGen::LLKRD::generateLexer(const std
 	return std::make_tuple(generateLexerHeader(lexer_name), generateLexerCPP(lexer_name, lex_rules));
 }
 
-std::tuple<std::string, std::string> CT::CodeGen::LLKRD::generateParser(const std::string& parser_name, const std::string& start_rule, std::shared_ptr<GHeaderSegment> header_code, std::shared_ptr<GCPPSegment> cpp_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)
+std::tuple<std::string, std::string> CT::CodeGen::LLKRD::generateParser(const std::string& parser_name,
+	const std::string& start_rule,
+	std::shared_ptr<GHeaderSegment> header_code,
+	std::shared_ptr<GCPPSegment> cpp_code,
+	const std::vector<CT::Parser::GParseNodePtr>& parse_rules,
+	const std::vector<std::shared_ptr<CT::Parser::GPredicate>>& predicates)
 {
-	return std::make_tuple(generateParserHeader(parser_name, header_code, parse_rules), generateParserCPP(parser_name, start_rule, cpp_code, parse_rules));
+	return std::make_tuple(generateParserHeader(parser_name, header_code, parse_rules, predicates), generateParserCPP(parser_name, start_rule, cpp_code, parse_rules, predicates));
 }
 
 
@@ -329,6 +400,10 @@ CodeGenOutput CT::CodeGen::LLKRD::generate(GParseNodePtr program)
 	//parse rules container;
 	std::vector<GParseNodePtr> parse_rules;
 	parse_rules.reserve(250);
+
+	//predicate container
+	std::vector<std::shared_ptr<GPredicate>> predicate_rules;
+	predicate_rules.reserve(100);
 
 	for(auto child: program->children)
 	{
@@ -366,6 +441,13 @@ CodeGenOutput CT::CodeGen::LLKRD::generate(GParseNodePtr program)
 					start_rule = start_rule_node->startRule;
 			}
 			break;
+		case GParseNodeTypes::PREDICATE:
+			{
+				auto predicate_node = std::dynamic_pointer_cast<GPredicate>(child);
+				if (predicate_node)
+					predicate_rules.push_back(predicate_node);
+			}
+			break;
 		}
 	}
 
@@ -382,7 +464,7 @@ CodeGenOutput CT::CodeGen::LLKRD::generate(GParseNodePtr program)
 		start_rule,
 		std::dynamic_pointer_cast<GHeaderSegment>(header_code),
 		std::dynamic_pointer_cast<GCPPSegment>(cpp_code),
-		parse_rules);
+		parse_rules, predicate_rules);
 
 	result.lexer_h_filename = name_directive+"Lexer.h";
 	result.lexer_cpp_filename = name_directive+"Lexer.cpp";

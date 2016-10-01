@@ -1,0 +1,1949 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"err",
+				"errorFunction"
+			],
+			[
+				"ct_",
+				"ct_elements"
+			],
+			[
+				"fac",
+				"factor_node"
+			],
+			[
+				"enum",
+				"enum_value_type"
+			],
+			[
+				"num",
+				"num_value"
+			],
+			[
+				"INT",
+				"INT_NUM"
+			],
+			[
+				"Simpl",
+				"SimpleCalcNodeTypes"
+			],
+			[
+				"IPar",
+				"IParseNode"
+			],
+			[
+				"Code",
+				"CodeGenOutput"
+			],
+			[
+				"parse_rule",
+				"parse_rules"
+			],
+			[
+				"GPar",
+				"GParseNodePtr"
+			],
+			[
+				"Input",
+				"InputStream.h	(IParser.h)"
+			],
+			[
+				"Cac",
+				"CachedScanner.h	(IParser.h)"
+			],
+			[
+				"ISc",
+				"IScanner.h	(IParser.h)"
+			],
+			[
+				"G",
+				"GParseRule"
+			],
+			[
+				"name",
+				"name_directive"
+			],
+			[
+				"Cah",
+				"CachedScanner	(GLexer.h)"
+			],
+			[
+				"foun",
+				"foundOr"
+			],
+			[
+				"rule",
+				"rule_token"
+			],
+			[
+				"lex",
+				"lex_id"
+			],
+			[
+				"assig",
+				"assign_token"
+			],
+			[
+				"Cha",
+				"CachedScannerPtr"
+			],
+			[
+				"lit",
+				"literal"
+			],
+			[
+				"actio",
+				"action_token"
+			],
+			[
+				"found",
+				"foundAction"
+			],
+			[
+				"fou",
+				"foundAction"
+			],
+			[
+				"GPa",
+				"GParseNodePtr"
+			],
+			[
+				"GL",
+				"GLexRule"
+			],
+			[
+				"GP",
+				"GParseNode"
+			],
+			[
+				"N",
+				"NAME_DIRECTIVE"
+			],
+			[
+				"sc",
+				"scanner"
+			],
+			[
+				"ac",
+				"action_token"
+			],
+			[
+				"rege",
+				"regex_token"
+			],
+			[
+				"assi",
+				"assign_token"
+			],
+			[
+				"push",
+				"push_back"
+			],
+			[
+				"scan",
+				"scanner"
+			],
+			[
+				"Parse",
+				"ParseNode"
+			],
+			[
+				"state",
+				"statement"
+			],
+			[
+				"Pars",
+				"ParseNode"
+			],
+			[
+				"Par",
+				"ParseNode"
+			],
+			[
+				"RegexBuil",
+				"RegexBuilder	(RegexBuilder.h)"
+			],
+			[
+				"Regex",
+				"RegexBuilder.h	(CompilerTools.h)"
+			],
+			[
+				"literal_",
+				"literal_size"
+			],
+			[
+				"liter",
+				"literal_start"
+			],
+			[
+				"getC",
+				"getCharAt	(InputStream.h)"
+			],
+			[
+				"m_in",
+				"m_input"
+			],
+			[
+				"InputS",
+				"InputStreamPtr"
+			],
+			[
+				"tok",
+				"token2"
+			],
+			[
+				"token",
+				"token1"
+			],
+			[
+				"Inp",
+				"InputStream.h	(Parser.cpp)"
+			],
+			[
+				"pars",
+				"parse	(scratch)"
+			],
+			[
+				"IS",
+				"IScannerPtr"
+			],
+			[
+				"Scan",
+				"Scanner.h	(CompilerTools.h)"
+			],
+			[
+				"tran",
+				"transition"
+			],
+			[
+				"transi",
+				"transitions"
+			],
+			[
+				"gene",
+				"generateID"
+			],
+			[
+				"Op",
+				"Optional"
+			],
+			[
+				"State",
+				"StateInput"
+			],
+			[
+				"end",
+				"end_point"
+			],
+			[
+				"log",
+				"logic_and"
+			],
+			[
+				"m_",
+				"m_input"
+			],
+			[
+				"is",
+				"isInvalid"
+			],
+			[
+				"EOF",
+				"EOF_token"
+			],
+			[
+				"en",
+				"entry"
+			],
+			[
+				"Log",
+				"LogEntry"
+			],
+			[
+				"LOG",
+				"LOG_LEVEL"
+			],
+			[
+				"mahc",
+				"machineTagPair"
+			],
+			[
+				"be",
+				"begin"
+			],
+			[
+				"m_s",
+				"m_scheduledForDeletion"
+			],
+			[
+				"machine",
+				"machineTagPair"
+			],
+			[
+				"eve",
+				"eventFunction"
+			],
+			[
+				"le",
+				"letterType"
+			],
+			[
+				"m_i",
+				"m_index"
+			],
+			[
+				"vis",
+				"visited_set"
+			],
+			[
+				"eps",
+				"epsilonTransitAux"
+			],
+			[
+				"m_op",
+				"m_operands"
+			],
+			[
+				"cl",
+				"clone_final"
+			],
+			[
+				"clone",
+				"clone_start"
+			],
+			[
+				"Stat",
+				"StateToken"
+			],
+			[
+				"clon",
+				"clonedA"
+			],
+			[
+				"add",
+				"addTransition"
+			],
+			[
+				"Stae",
+				"StatePtr"
+			],
+			[
+				"St",
+				"Star"
+			],
+			[
+				"re",
+				"recommend_concat"
+			],
+			[
+				"char",
+				"char_it"
+			],
+			[
+				"las",
+				"last_is_input"
+			],
+			[
+				"m_oper",
+				"m_operators"
+			],
+			[
+				"m_ope",
+				"m_operators"
+			],
+			[
+				"ty",
+				"tokenType"
+			],
+			[
+				"m_o",
+				"m_operands"
+			],
+			[
+				"Lef",
+				"LeftParan"
+			],
+			[
+				"opera",
+				"m_operators"
+			],
+			[
+				"oper",
+				"operands"
+			],
+			[
+				"opea",
+				"operands"
+			],
+			[
+				"Or",
+				"Operators"
+			],
+			[
+				"O",
+				"Or"
+			],
+			[
+				"pu",
+				"push_back"
+			],
+			[
+				"res",
+				"result_transitions"
+			],
+			[
+				"stat",
+				"stateType"
+			],
+			[
+				"Comp",
+				"Compiler-Tools"
+			],
+			[
+				"Rele",
+				"ReleaseStatic"
+			],
+			[
+				"confi",
+				"configurations"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "#include \"Utilities.h\"\nusing namespace CT;\n\ns64 IDGenerator::generateID()\n{\n	static s64 id = 0;\n	return id++;\n}\n\ns64 IDGenerator::generateIDLib()\n{\n	static s64 id = 0;\n	return id++;\n}",
+			"file": "Compiler-Tools/src/Utilities.cpp",
+			"file_size": 196,
+			"file_write_time": 131185847380306104,
+			"settings":
+			{
+				"buffer_size": 183,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include \"FilePosition.h\"\nusing namespace CT;\n\nconst FilePosition FilePosition::invalid = FilePosition(false);\n\nFilePosition::FilePosition(bool valid)\n:isValid(valid)\n{}\n\nFilePosition::FilePosition(u64 Row, u64 Col)\n:row(Row), col(Col), isValid(true)\n{}\n\nFilePosition::FilePosition()\n:row(0), col(0), isValid(true)\n{\n}\n",
+			"file": "Compiler-Tools/src/FilePosition.cpp",
+			"file_size": 336,
+			"file_write_time": 131191119404415850,
+			"settings":
+			{
+				"buffer_size": 319,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Compiler-Test/src/main.cpp",
+			"settings":
+			{
+				"buffer_size": 3937,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scratch",
+			"settings":
+			{
+				"buffer_size": 1376,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "test/scan-test-01.cpp",
+			"settings":
+			{
+				"buffer_size": 217,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "build/Compiler-Tools.sln",
+			"settings":
+			{
+				"buffer_size": 3816,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include \"GCodeGeneration.h\"\n#include \"Log.h\"\n#include <sstream>\nusing namespace std;\nusing namespace CT;\nusing namespace CT::CodeGen;\nusing namespace CT::Lexer;\nusing namespace CT::Parser;\n\nstd::string LL1RD::indent(u64 level)\n{\n	std::string result;\n	for(int i=0;i<level;i++)\n		result += \"\\t\";\n	return result;\n}\n\nstd::string LL1RD::generateLexerHeader(const std::string& name)\n{\n	stringstream lexer_header;\n\n	lexer_header << indent(0) << \"#pragma once\\n\";\n	lexer_header << indent(0) << \"#include <Defines.h>\\n\";\n	lexer_header << indent(0) << \"#include <CachedScanner.h>\\n\";\n	lexer_header << indent(0) << \"namespace \" << name << \"\\n{\\n\";\n	lexer_header << indent(1) << \"class \" << name << \"Lexer\" << \": public CT::Lexer::CachedScanner\" << \"\\n\\t{\\n\";\n	lexer_header << indent(1) << \"protected:\\n\";\n	lexer_header << indent(2) << \"void init();\\n\";\n	lexer_header << indent(1) << \"public:\\n\";\n	lexer_header << indent(2) << name << \"Lexer();\\n\";\n	lexer_header << indent(1) << \"};\\n\";\n	lexer_header << indent(0) << \"}\";\n\n	return lexer_header.str();\n}\n\nstd::string CT::CodeGen::LL1RD::generateLexerCPP(const std::string& lexer_name, const std::vector<GParseNodePtr>& lex_rules)\n{\n	stringstream lexer_cpp;\n\n	lexer_cpp << indent(0) << \"#include \\\"\" << lexer_name << \"Lexer.h\\\"\\n\";\n	lexer_cpp << indent(0) << \"#include <RegexBuilder.h>\\n\";\n	lexer_cpp << indent(0) << \"#include <InputStream.h>\\n\";\n	lexer_cpp << indent(0) << \"#include <Utilities.h>\\n\";\n	lexer_cpp << indent(0) << \"#include <Token.h>\\n\";\n	lexer_cpp << indent(0) << \"using namespace std;\\n\";\n	lexer_cpp << indent(0) << \"using namespace CT;\\n\";\n	lexer_cpp << indent(0) << \"using namespace CT::Lexer;\\n\";\n	lexer_cpp << indent(0) << \"using namespace \" << lexer_name << \";\\n\";\n	lexer_cpp << indent(0) << \"void \" << lexer_name << \"Lexer::init()\\n\";\n	lexer_cpp << indent(0) << \"{\\n\";\n	lexer_cpp << indent(1) << \"CT::RegexBuilder builder;\\n\";\n	for (auto child : lex_rules)\n	{\n		auto lex_rule = std::dynamic_pointer_cast<GLexRule>(child);\n		if (lex_rule)\n		{\n			lexer_cpp << indent(1) << \"registerToken(builder.create(\\\"\" << lex_rule->regex.getString() << \"\\\"), CT::Lexer::make_token(\\\"\" << lex_rule->tokenName.getString() << \"\\\"\";\n			if (lex_rule->action != StringMarker::invalid)\n			{\n				lexer_cpp << \", [](CT::InputStreamPtr ct_input, Token& ct_token) -> bool\\n\";\n				lexer_cpp << indent(1) << lex_rule->action.getString() << \"\\n\\t));\\n\";\n			}\n			else\n			{\n				lexer_cpp << \"));\\n\";\n			}\n		}\n	}\n	lexer_cpp << indent(0) << \"}\\n\";\n	lexer_cpp << indent(0) << lexer_name << \"Lexer::\" << lexer_name << \"Lexer()\\n\";\n	lexer_cpp << indent(0) << \"{\\n\";\n	lexer_cpp << indent(1) << \"init();\\n\";\n	lexer_cpp << indent(0) << \"}\";\n	return lexer_cpp.str();\n}\n\nvoid CT::CodeGen::LL1RD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GParseRulesTreeNode> rule_tree_node, std::ostream & stream, int indentValue)\n{\n	//if there's no node then get the fuck out of here\n	if (rule_tree_node == nullptr)\n		return;\n\n	//if this is the start of a function then get a token and visit the children\n	if (rule_tree_node->isRoot)\n	{\n		stream << indent(indentValue) << \"std::vector<CT::Parser::ParsingElement> ct_elements;\\n\";\n\n		std::string list_nodes = \"\";\n		//generate code for each other node in the tree\n		for (int i = 0; i < rule_tree_node->next.size(); i++) {\n			generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue);\n			//they all an if statements then this else for the branching tree of the generated code\n			if (i < rule_tree_node->next.size() - 1) \n			{\n				list_nodes += rule_tree_node->next[i]->token.literal.getString() + \", \";\n			}\n			else\n			{\n				list_nodes += rule_tree_node->next[i]->token.literal;\n			}\n		}\n\n		//add the last else to report the failure of parsing this node\n		if(!rule_tree_node->next.empty()){\n			stream << indent(indentValue) << \"CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \\\"parser was expecting one of this nodes {\" << list_nodes << \"} but found none\\\", input->getPosition());\\n\";\n			stream << indent(indentValue) << \"return nullptr;\\n\";\n		}\n	}\n	//if it's a leaf node then this must check for end parsing\n	else if (rule_tree_node->isLeaf)\n	{\n		if(rule_tree_node->token.tag == \"parse_id\")\n		{\n\n			stream << indent(indentValue) << \"auto node\" << rule_tree_node->token.literal.getString() << \" = parse\" << rule_tree_node->token.literal.getString() << \"(scanner, input);\\n\";\n			stream << indent(indentValue) << \"if(node\" << rule_tree_node->token.literal.getString() << \" != nullptr)\\n\";\n			stream << indent(indentValue) << \"{\\n\";\n			stream << indent(indentValue+1) << \"CT::Parser::ParsingElement nodeElement; nodeElement.node = node\" << rule_tree_node->token.literal.getString() << \";\\n\";\n			stream << indent(indentValue+1) << \"ct_elements.push_back(nodeElement);\\n\";\n			for (int i = 0; i < rule_tree_node->next.size(); i++) {\n				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);\n			}\n			\n			if (rule_tree_node->action != StringMarker::invalid)\n				stream << indent(indentValue + 1) << rule_tree_node->action.getString() << \"\\n\";\n			stream << indent(indentValue + 1) << \"return std::make_shared<IParseNode>();\\n\";\n			stream << indent(indentValue) << \"}\\n\";\n\n		}else{\n\n			stream << indent(indentValue) << \"auto \" << rule_tree_node->token.literal.getString() << \"Token = scanner->scan(input);\\n\";\n			stream << indent(indentValue) << \"if(\"<< rule_tree_node->token.literal.getString() <<\"Token.tag == \\\"\" << rule_tree_node->token.literal.getString() << \"\\\")\\n\";\n			stream << indent(indentValue) << \"{\\n\";\n\n			stream << indent(indentValue+1) << \"CT::Parser::ParsingElement tokenElement; tokenElement.token = \" << rule_tree_node->token.literal.getString() << \"Token;\\n\";\n			stream << indent(indentValue+1) << \"ct_elements.push_back(tokenElement);\\n\";\n\n			for (int i = 0; i < rule_tree_node->next.size(); i++) {\n				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);\n			}\n			if (rule_tree_node->action != StringMarker::invalid)\n				stream << indent(indentValue + 1) << rule_tree_node->action.getString() << \"\\n\";\n			stream << indent(indentValue + 1) << \"return std::make_shared<IParseNode>();\\n\";\n			stream << indent(indentValue) << \"}\\n\";\n			stream << indent(indentValue) << \"scanner->rewindToken();\\n\";\n\n		}\n	}\n	//if ordinary node then do the usual\n	else\n	{\n		/*\n		 * check the meta token if it's a lex_id then check with the if statement\n		 * if the meta token is a parse_id then call the function supposed to parse this node and check for nullptr if nullptr then print an error\n		 */\n		if(rule_tree_node->token.tag == \"parse_id\")\n		{\n\n			stream << indent(indentValue) << \"auto node\" << rule_tree_node->token.literal.getString() << \" = parse\" << rule_tree_node->token.literal.getString() << \"(scanner, input);\\n\";\n			stream << indent(indentValue) << \"if(node\" << rule_tree_node->token.literal.getString() << \" != nullptr)\\n\";\n			stream << indent(indentValue) << \"{\\n\";\n\n			stream << indent(indentValue+1) << \"CT::Parser::ParsingElement nodeElement; nodeElement.node = node\" << rule_tree_node->token.literal.getString() << \";\\n\";\n			stream << indent(indentValue+1) << \"ct_elements.push_back(nodeElement);\\n\";\n\n			std::string list_nodes = \"\";\n			for (int i = 0; i < rule_tree_node->next.size(); i++) {\n				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);\n\n				//they all an if statements then this else for the branching tree of the generated code\n				if (i < rule_tree_node->next.size() - 1) \n				{\n					list_nodes += rule_tree_node->next[i]->token.literal.getString() + \", \";\n				}\n				else\n				{\n					list_nodes += rule_tree_node->next[i]->token.literal;\n				}\n			}\n			\n			stream << indent(indentValue + 1) << \"CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \\\"parser was expecting one of this nodes {\" << list_nodes << \"} but found none\\\", input->getPosition());\\n\";\n			stream << indent(indentValue + 1) << \"return nullptr;\\n\";\n			stream << indent(indentValue) << \"}\\n\";\n\n		}else{\n\n			stream << indent(indentValue) << \"auto \" << rule_tree_node->token.literal.getString() << \"Token = scanner->scan(input);\\n\";\n			stream << indent(indentValue) << \"if(\" << rule_tree_node->token.literal.getString() << \"Token.tag == \\\"\" << rule_tree_node->token.literal.getString() << \"\\\")\\n\";\n			stream << indent(indentValue) << \"{\\n\";\n\n			stream << indent(indentValue+1) << \"CT::Parser::ParsingElement tokenElement; tokenElement.token = \" << rule_tree_node->token.literal.getString() << \"Token;\\n\";\n			stream << indent(indentValue+1) << \"ct_elements.push_back(tokenElement);\\n\";\n\n			std::string list_nodes = \"\";\n			for (int i = 0; i < rule_tree_node->next.size(); i++) {\n				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);\n\n				//they all an if statements then this else for the branching tree of the generated code\n				if (i < rule_tree_node->next.size() - 1) \n				{\n					list_nodes += rule_tree_node->next[i]->token.literal.getString() + \", \";\n				}\n				else\n				{\n					list_nodes += rule_tree_node->next[i]->token.literal;\n				}\n			}\n			stream << indent(indentValue + 1) << \"CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, \\\"parser was expecting one of this nodes {\" << list_nodes << \"} but found none\\\", input->getPosition());\\n\";\n			stream << indent(indentValue + 1) << \"return nullptr;\\n\";\n			stream << indent(indentValue) << \"}\\n\";\n			stream << indent(indentValue) << \"scanner->rewindToken();\\n\";\n\n		}\n	}\n}\n\nstd::string CT::CodeGen::LL1RD::generateParserHeader(const std::string& parser_name, std::shared_ptr<GHeaderSegment> header_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)\n{\n	std::stringstream parser_header;\n\n	parser_header << indent(0) << \"#pragma once\\n\";\n	parser_header << indent(0) << \"#include <Defines.h>\\n\";\n	parser_header << indent(0) << \"#include <IParser.h>\\n\";\n	parser_header << indent(0) << \"#include <IScanner.h>\\n\";\n	parser_header << indent(0) << \"#include <CachedScanner.h>\\n\";\n	parser_header << indent(0) << \"#include <InputStream.h>\\n\";\n	parser_header << indent(0) << \"namespace \" << parser_name << \"\\n{\\n\";\n	if(header_code)\n		parser_header << indent(0) << header_code->code.getString() << \"\\n\";\n	parser_header << indent(1) << \"class \" << parser_name << \"Parser: public CT::Parser::IParser\\n\";\n	parser_header << indent(1) << \"{\\n\";\n	parser_header << indent(1) << \"private:\\n\";\n\n	for (auto rule : parse_rules)\n	{\n		auto parse_rule = std::dynamic_pointer_cast<GParseRule>(rule);\n\n		parser_header << indent(2) << \"CT::Parser::IParseNodePtr parse\" << parse_rule->name.getString() << \"(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input);\\n\";\n	}\n\n	parser_header << indent(1) << \"public:\\n\";\n	parser_header << indent(2) << \"CT::Parser::IParseNodePtr parse(CT::Lexer::IScannerPtr scanner, CT::InputStreamPtr input) override;\\n\";\n	parser_header << indent(1) << \"};\\n\";\n	parser_header << indent(0) << \"}\";\n	\n\n	return parser_header.str();\n}\n\nstd::string CT::CodeGen::LL1RD::generateParserCPP(const std::string& parser_name, const std::string& start_rule, std::shared_ptr<GCPPSegment> cpp_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)\n{\n	std::stringstream parser_cpp;\n\n	parser_cpp << indent(0) << \"#include \\\"\" << parser_name << \"Parser.h\\\"\\n\";\n	parser_cpp << indent(0) << \"#include <Token.h>\\n\";\n	parser_cpp << indent(0) << \"#include <Log.h>\\n\";\n	parser_cpp << indent(0) << \"using namespace \" << parser_name << \";\\n\";\n	parser_cpp << indent(0) << \"using namespace CT;\\n\";\n	parser_cpp << indent(0) << \"using namespace CT::Parser;\\n\";\n\n	if(cpp_code)\n		parser_cpp << indent(0) << cpp_code->code.getString() << \"\\n\";\n\n	for (auto rule : parse_rules)\n	{\n		auto parse_rule = std::dynamic_pointer_cast<GParseRule>(rule);\n\n		parser_cpp << indent(0) << \"IParseNodePtr \" << parser_name << \"Parser::parse\" << parse_rule->name.getString() << \"(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)\\n\";\n		parser_cpp << indent(0) << \"{\\n\";\n		generateRuleFunctionBody(parse_rule->rules, parser_cpp, 1);\n		parser_cpp << indent(0) << \"}\\n\";\n	}\n\n	if (!start_rule.empty())\n	{\n		parser_cpp << indent(0) << \"IParseNodePtr \" << parser_name << \"Parser::parse(CT::Lexer::IScannerPtr scanner, CT::InputStreamPtr input)\\n\";\n		parser_cpp << indent(0) << \"{\\n\";\n		parser_cpp << indent(1) << \"auto cached_scanner = std::dynamic_pointer_cast<CT::Lexer::CachedScanner>(scanner);\\n\";\n		parser_cpp << indent(1) << \"if(cached_scanner == nullptr)\\n\";\n		parser_cpp << indent(2) << \"return nullptr;\\n\";\n		parser_cpp << indent(1) << \"auto result =  parse\" << start_rule << \"(cached_scanner, input);\\n\";\n		parser_cpp << indent(1) << \"if (result == nullptr)\\n\";\n		parser_cpp << indent(2) << \"CT::Log::pushEntries();\\n\";\n		parser_cpp << indent(1) << \"else\\n\";\n		parser_cpp << indent(2) << \"CT::Log::discardCommittedEntries();\\n\";\n		parser_cpp << indent(1) << \"return result;\\n\";\n		parser_cpp << indent(0) << \"}\\n\";\n	}\n	else\n	{\n		CT::Log::log(CT::LOG_LEVEL::ERROR, \"you didn't specify a start rule\", CT::FilePosition::invalid);\n	}\n\n	return parser_cpp.str();\n}\n\nstd::tuple<std::string, std::string> CT::CodeGen::LL1RD::generateLexer(const std::string& lexer_name, const std::vector<GParseNodePtr>& lex_rules)\n{\n\n	return std::make_tuple(generateLexerHeader(lexer_name), generateLexerCPP(lexer_name, lex_rules));\n}\n\nstd::tuple<std::string, std::string> CT::CodeGen::LL1RD::generateParser(const std::string& parser_name, const std::string& start_rule, std::shared_ptr<GHeaderSegment> header_code, std::shared_ptr<GCPPSegment> cpp_code, const std::vector<CT::Parser::GParseNodePtr>& parse_rules)\n{\n	return std::make_tuple(generateParserHeader(parser_name, header_code, parse_rules), generateParserCPP(parser_name, start_rule, cpp_code, parse_rules));\n}\n\n\nCodeGenOutput CT::CodeGen::LL1RD::generate(GParseNodePtr program)\n{\n	if (!program)\n		return CodeGenOutput();\n	std::string name_directive = \"Default\";\n	std::string start_rule = \"\";\n	GParseNodePtr header_code, cpp_code;\n	std::vector<GParseNodePtr> directives;\n	directives.reserve(5);\n	std::vector<GParseNodePtr> lex_rules;\n	lex_rules.reserve(250);\n	std::vector<GParseNodePtr> parse_rules;\n	parse_rules.reserve(250);\n\n	for(auto child: program->children)\n	{\n		switch (child->type)\n		{\n		case GParseNodeTypes::DIRECTIVE:\n			directives.push_back(child);\n			break;\n		case GParseNodeTypes::CPP_SEGMENT:\n			cpp_code = std::dynamic_pointer_cast<GCPPSegment>(child);\n			break;\n		case GParseNodeTypes::HEADER_SEGMENT:\n			header_code = std::dynamic_pointer_cast<GHeaderSegment>(child);\n			break;\n		case GParseNodeTypes::NAME_DIRECTIVE:\n			{\n				auto name_directive_node = std::dynamic_pointer_cast<GNameDirective>(child);\n				if (name_directive_node) {\n					name_directive = name_directive_node->directiveValue.getString();\n					name_directive = trim(name_directive);\n				}\n			}\n			directives.push_back(child);\n			break;\n		case GParseNodeTypes::LEX_RULE:\n			lex_rules.push_back(child);\n			break;\n		case GParseNodeTypes::PARSE_RULE:\n			parse_rules.push_back(child);\n			break;\n		case GParseNodeTypes::START_RULE:\n			{\n				auto start_rule_node = std::dynamic_pointer_cast<GStartRule>(child);\n				if (start_rule_node)\n					start_rule = start_rule_node->startRule;\n			}\n			break;\n		}\n	}\n	CodeGenOutput result;\n	std::tie(result.lexer_h, result.lexer_cpp) = generateLexer(name_directive, lex_rules);\n	std::tie(result.parser_h, result.parser_cpp) = generateParser(name_directive,\n		start_rule,\n		std::dynamic_pointer_cast<GHeaderSegment>(header_code),\n		std::dynamic_pointer_cast<GCPPSegment>(cpp_code),\n		parse_rules);\n\n	result.lexer_h_filename = name_directive+\"Lexer.h\";\n	result.lexer_cpp_filename = name_directive+\"Lexer.cpp\";\n	result.parser_h_filename = name_directive+\"Parser.h\";\n	result.parser_cpp_filename = name_directive+\"Parser.cpp\";\n\n	return result;\n}",
+			"file": "Compiler-Tools/src/GCodeGeneration.cpp",
+			"file_size": 16049,
+			"file_write_time": 131192033382355059,
+			"settings":
+			{
+				"buffer_size": 15674,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "test/calc-rd-ll1-01.gr",
+			"settings":
+			{
+				"buffer_size": 8633,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": ".gitignore",
+			"settings":
+			{
+				"buffer_size": 668,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 20,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include \"RegexBuilder.h\"\n#include <sstream>\nusing namespace CT;\n\nbool RegexBuilder::Eval()\n{\n	if(m_operators.size() > 0)\n	{\n		//consume an operator\n		Operators op = m_operators.top();\n		m_operators.pop();\n\n		switch(op)\n		{\n			case Operators::Star:\n				return Star();\n				break;\n			case Operators::Concat:\n				return Concat();\n				break;\n			case Operators::Plus:\n				return Plus();\n				break;\n			case Operators::Or:\n				return Or();\n				break;\n			case Operators::Optional:\n				return Optional();\n				break;\n		}\n	}\n	return false;\n}\n\nvoid RegexBuilder::pushOperand(char c)\n{\n	std::vector<Automata::StatePtr<char>> unit;\n\n	Automata::StatePtr<char> A = std::make_shared<Automata::State<char>>();\n	Automata::StatePtr<char> B = std::make_shared<Automata::State<char>>();\n\n	A->addTransition(Automata::StateInput<char>(c), B);\n\n	unit.push_back(A);\n	unit.push_back(B);\n\n	m_operands.push(unit);\n}\n\nbool RegexBuilder::popOperand(std::vector<Automata::StatePtr<char>>& result)\n{\n	if(!m_operands.empty())\n	{\n		result = m_operands.top();\n		m_operands.pop();\n		return true;\n	}\n	return false;\n}\n\nbool RegexBuilder::Star()\n{\n	//pop a last unit from operands stack\n	std::vector<Automata::StatePtr<char>> A;\n	//if no units found then return false and exit\n	if(!popOperand(A))\n		return false;\n\n	//Wiring the automata\n	//start and final of this unit\n	auto start = A.front();\n	auto final = A.back();\n\n	//connect the start and final with a epsilon transition for looping\n	final->addTransition(Automata::StateInput<char>::EPSILON(), start);\n\n	//new start and final dummy states fro skipping the start closure entirely \n	auto d1 = std::make_shared<Automata::State<char>>();\n	auto d2 = std::make_shared<Automata::State<char>>();\n\n	d1->addTransition(Automata::StateInput<char>::EPSILON(), start);\n	d1->addTransition(Automata::StateInput<char>::EPSILON(), d2);\n	final->addTransition(Automata::StateInput<char>::EPSILON(), d2);\n\n	//creates the new unit that contain this nfa\n	std::vector<Automata::StatePtr<char>> unit; /*= {d1,start,final,d2};*/\n	unit.push_back(d1);\n	appendUnit(unit, A);\n	unit.push_back(d2);\n	m_operands.push(unit);\n	return true;\n}\n\nbool RegexBuilder::Concat()\n{\n	std::vector<Automata::StatePtr<char>> A, B;\n	if(!popOperand(B) || !popOperand(A))\n		return false;\n\n	//Wiring the automata\n	auto a_start = A.front();\n	auto a_final = A.back();\n\n	auto b_start = B.front();\n	auto b_final = B.back();\n\n	a_final->addTransition(Automata::StateInput<char>::EPSILON(), b_start);\n\n	std::vector<Automata::StatePtr<char>> unit; /*= {a_start,a_final,b_start,b_final};*/\n	appendUnit(unit, A);\n	appendUnit(unit, B);\n	m_operands.push(unit);\n	return true;\n}\n\nbool RegexBuilder::Plus()\n{\n	//pops a single operand and clones it\n	std::vector<Automata::StatePtr<char>> A, clonedA;\n	if(!popOperand(A))\n		return false;\n	//cloning the automata\n	cloneUnit(A, clonedA);\n\n	//Wiring the automata\n	auto start = A.front();\n	auto final = A.back();\n	auto clone_start = clonedA.front();\n	auto clone_final = clonedA.back();\n\n	auto d1 = std::make_shared<Automata::State<char>>();\n	auto d4 = std::make_shared<Automata::State<char>>();\n\n	final->addTransition(Automata::StateInput<char>::EPSILON(), d1);\n\n	//d1 transitions\n	d1->addTransition(Automata::StateInput<char>::EPSILON(), d4);\n	d1->addTransition(Automata::StateInput<char>::EPSILON(), clone_start);\n\n	//clone final transitions\n	clone_final->addTransition(Automata::StateInput<char>::EPSILON(), clone_start);\n	clone_final->addTransition(Automata::StateInput<char>::EPSILON(), d4);\n\n	//creating the unit\n	std::vector<Automata::StatePtr<char>> unit;/* = {start, final, d1, clone_start, clone_final, d4};*/\n	appendUnit(unit, A);\n	unit.push_back(d1);\n	appendUnit(unit, clonedA);\n	unit.push_back(d4);\n\n	m_operands.push(unit);\n	return true;\n}\n\nbool RegexBuilder::Or()\n{\n	std::vector<Automata::StatePtr<char>> A, B;\n	if(!popOperand(B) || ! popOperand(A))\n		return false;\n\n	//Wiring the automata\n	auto d1 = std::make_shared<Automata::State<char>>();\n	auto d2 = std::make_shared<Automata::State<char>>();\n\n	auto a_start = A.front();\n	auto a_final = A.back();\n\n	auto b_start = B.front();\n	auto b_final = B.back();\n\n	d1->addTransition(Automata::StateInput<char>::EPSILON(), a_start);\n	d1->addTransition(Automata::StateInput<char>::EPSILON(), b_start);\n\n	a_final->addTransition(Automata::StateInput<char>::EPSILON(), d2);\n	b_final->addTransition(Automata::StateInput<char>::EPSILON(), d2);\n\n	//create the unit \n	std::vector<Automata::StatePtr<char>> unit; /*= { d1, a_start, a_final, b_start, b_final, d2 };*/\n	unit.push_back(d1);\n	appendUnit(unit, A);\n	appendUnit(unit, B);\n	unit.push_back(d2);\n	m_operands.push(unit);\n	\n	return true;\n}\n\nbool RegexBuilder::Optional()\n{\n	std::vector<Automata::StatePtr<char>> A;\n	if(!popOperand(A))\n		return false;\n\n	auto a_start = A.front();\n	auto a_final = A.back();\n\n	//add optional epsilon transition\n	a_start->addTransition(Automata::StateInput<char>::EPSILON(), a_final);\n\n	m_operands.push(A);\n	return true;\n}\n\n//checks whether a <= b\n// Star > Concat > Or > Optional\nbool RegexBuilder::precedence(Operators a, Operators b)\n{\n	//if the same operator\n	if(a == b)\n		return true;\n\n	if (a == Operators::Optional)\n		return false;\n	if (b == Operators::Optional)\n		return true;\n\n	//if a is star then it's always bigger than any other operator\n	if(a == Operators::Star)\n		return false;\n	if(b == Operators::Star)\n		return true;\n\n	//check the plus operator\n	if(a == Operators::Plus)\n		return false;\n	if(b == Operators::Plus)\n		return true;\n\n	//check the concat operator\n	if(a == Operators::Concat)\n		return false;\n	if(b == Operators::Concat)\n		return true;\n\n	//check the or operator\n	if(a == Operators::Or)\n		return false;\n\n	return true;\n\n}\n\nvoid RegexBuilder::clearStacks()\n{\n	while(!m_operators.empty())\n		m_operators.pop();\n\n	while(!m_operands.empty())\n		m_operands.pop();\n\n}\n\nbool RegexBuilder::isMetaChar(char c)\n{\n	return c == ')' || c == '(' || c == '*' || c == '+' || c == '|' || c == '\\\\' || c == '?';\n}\n\nbool RegexBuilder::addConcat() \n{\n	while (!m_operators.empty() && precedence(Operators::Concat, m_operators.top()))\n		if (!Eval())\n			return false;\n	m_operators.push(Operators::Concat);\n	return true;\n}\n\nvoid RegexBuilder::appendUnit(std::vector<Automata::StatePtr<char>>& original, const std::vector<Automata::StatePtr<char>>& appended) \n{\n	original.insert(original.end(), appended.begin(), appended.end());\n}\n\nvoid RegexBuilder::cloneUnit(const std::vector<Automata::StatePtr<char>>& original, std::vector<Automata::StatePtr<char>>& cloned)\n{\n	std::map<Automata::StatePtr<char>, Automata::StatePtr<char>> phonebook;\n	for(auto state: original)\n	{\n		auto cloned_state = std::make_shared<Automata::State<char>>();\n		phonebook[state] = cloned_state;\n		cloned.push_back(cloned_state);\n	}\n\n	for(int i=0; i<original.size(); i++)\n	{\n		for(auto transition: original[i]->getTransitions())\n		{\n			cloned[i]->addTransition(transition.first, phonebook[transition.second]);\n		}\n	}\n}\n\nstd::shared_ptr<Automata::NFA<char>> RegexBuilder::create(const std::string& string_exp)\n{\n	InputStream exp(string_exp);\n	clearStacks();\n\n	bool recommend_concat = false;\n	char c;\n\n	while(!exp.eof()){\n		c = exp.popLetter();\n		if(c == '\\0')\n			return nullptr;\n\n		if(isMetaChar(c))\n		{\n			if(c == '\\\\')\n			{\n				c = exp.popLetter();\n				if(c != '\\0')\n				{\n					pushOperand(c);\n					if (recommend_concat){\n						if (!addConcat())\n							return nullptr;\n						recommend_concat = false;\n					}\n					recommend_concat = true;\n				}\n			}else{\n				if(c == '*')\n				{\n					while (!m_operators.empty() && precedence(Operators::Star, m_operators.top()))\n						if (!Eval())\n							return nullptr;\n					m_operators.push(Operators::Star);\n					recommend_concat = true;\n				}else if(c == '+')\n				{\n					while (!m_operators.empty() && precedence(Operators::Plus, m_operators.top()))\n						if (!Eval())\n							return nullptr;\n					m_operators.push(Operators::Plus);\n					recommend_concat = true;\n				}else if(c == '|')\n				{\n					while (!m_operators.empty() && precedence(Operators::Or, m_operators.top()))\n						if (!Eval())\n							return nullptr;\n					m_operators.push(Operators::Or);\n					if(recommend_concat)\n						recommend_concat = false;\n				}else if(c == '?')\n				{\n					while (!m_operators.empty() && precedence(Operators::Optional, m_operators.top()))\n						if (!Eval())\n							return nullptr;\n					m_operators.push(Operators::Optional);\n					recommend_concat = true;\n				}else if(c == '(')\n				{\n					if (recommend_concat){\n						if (!addConcat())\n							return nullptr;\n						recommend_concat = false;\n					}\n					m_operators.push(Operators::LeftParan);\n				}else if(c == ')')\n				{\n					while(m_operators.top() != Operators::LeftParan)\n						if(!Eval())\n							return nullptr;\n					m_operators.pop();\n					recommend_concat = true;\n				}\n			}\n		}else\n		{\n			if (recommend_concat){\n				if (!addConcat())\n					return nullptr;\n				recommend_concat = false;\n			}\n			\n			//just macros here not real operators\n			//start range macro like a-z\n			auto dash = exp.popLetter();\n			auto end_point = exp.popLetter();\n			if(dash == '-' && end_point != '\\0')\n			{\n				std::stringstream unfold;\n				for(char char_it = c+1; char_it <= end_point; char_it++)\n				{\n					unfold << \"|\" << char_it;\n\n				}\n				auto unfold_str = unfold.str();\n				exp.push(unfold_str);\n			}\n			else {\n				if(dash != '\\0')\n					exp.rewindLetter();\n				if(end_point != '\\0')\n					exp.rewindLetter();\n			}\n			//end range macro\n\n			pushOperand(c);\n			recommend_concat = true;\n		}\n	}\n\n	while(!m_operators.empty())\n		if(!Eval())\n			return nullptr;\n\n	m_operands.top().back()->setIsFinal(true);\n	return std::make_shared<Automata::NFA<char>>(m_operands.top().front());\n}",
+			"file": "Compiler-Tools/src/RegexBuilder.cpp",
+			"file_size": 10034,
+			"file_write_time": 131164524124090505,
+			"settings":
+			{
+				"buffer_size": 9627,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include \"Token.h\"\n#include \"Utilities.h\"\nusing namespace CT;\nusing namespace CT::Lexer;\n\nconst Token Token::eof = eof_token();\nconst Token Token::invalid = invalid_token();\nstd::unordered_map<std::string, s64> Token::TOKEN_TAGS;\n\nToken::Token()\n	:isEOF(false), isInvalid(false)\n{}\n\nToken Lexer::eof_token()\n{\n	Token result;\n	result.isEOF = true;\n	result.isInvalid = false;\n	return result;\n}\n\nToken Lexer::invalid_token()\n{\n	Token result;\n	result.isInvalid = true;\n	result.isEOF = false;\n	return result;\n}\n\nbool Lexer::operator==(const Token& a, const Token& b)\n{\n	if(a.isEOF && b.isEOF)\n		return true;\n	else if(a.isInvalid && b.isInvalid)\n		return true;\n	else if((a.isEOF & b.isEOF) && (a.isEOF | b.isEOF))\n		return false;\n	else if((a.isInvalid & b.isInvalid) && (a.isInvalid | b.isInvalid))\n		return false;\n	else if(a.tag == b.tag && a.literal == b.literal)\n		return true;\n\n	return false;\n}\n\nbool Lexer::operator!=(const Token& a, const Token& b)\n{\n	return !(a==b);\n}\n\nAPI Token CT::Lexer::make_token(std::string tagName, std::function<bool(InputStreamPtr, Token&)> eventFunction)\n{\n	Token result;\n	result.tag = tagName;\n	result.event = eventFunction;\n	result.isEOF = false;\n	result.isInvalid = false;\n	return result;\n}\n",
+			"file": "Compiler-Tools/src/Token.cpp",
+			"file_size": 1281,
+			"file_write_time": 131191147470261125,
+			"settings":
+			{
+				"buffer_size": 1222,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "premake5.lua",
+			"settings":
+			{
+				"buffer_size": 1875,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/E/Applications/Selfishnet win 7/SelfishNetv0.2-beta_vista.exe",
+			"settings":
+			{
+				"buffer_size": 634880,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Compiler-Tools/inc/Chalcedony/Automata/State.hpp",
+			"settings":
+			{
+				"buffer_size": 3704,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#pragma once\n\n#include \"Defines.h\"\n#include \"Token.h\"\n#include \"NFA.hpp\"\n#include \"FilePosition.h\"\n#include \"InputStream.h\"\n#include <istream>\n#include <vector>\n#include <memory>\n#include <stack>\n#include <functional>\n\nnamespace CT\n{\n	namespace Lexer{\n\n		class API IScanner\n		{\n		protected:\n			std::function<void(InputStreamPtr)> m_errorFunction;\n			void callErrorFunction(InputStreamPtr input) {\n				if (m_errorFunction != nullptr)\n					m_errorFunction(input);\n			}\n		public:\n			virtual ~IScanner()\n			{\n			}\n			virtual Token scan(InputStreamPtr input) = 0;\n			virtual void registerToken(std::shared_ptr<Automata::NFA<char>> regexMachine,const Token& token) = 0;\n			virtual bool isIgnoreChar(char c) = 0;\n			virtual bool isDefinedToken(const std::string&) = 0;\n			void setErrorFunction(std::function<void(InputStreamPtr)> errorFunction){m_errorFunction = errorFunction;}\n		};\n		using IScannerPtr = std::shared_ptr<IScanner>;\n	}\n}",
+			"file": "Compiler-Tools/inc/Chalcedony/IScanner.h",
+			"file_size": 967,
+			"file_write_time": 131191973300031708,
+			"settings":
+			{
+				"buffer_size": 930,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#pragma once\n\n#include \"Defines.h\"\n#include \"InputStream.h\"\n#include \"StringMarker.h\"\n#include \"Utilities.h\"\n#include \"Log.h\"\n#include <functional>\n#include <istream>\n#include <string>\n#include <unordered_map>\n\nnamespace CT\n{\n	namespace Lexer\n	{\n		struct API Token;\n\n		API Token eof_token();\n		API Token invalid_token();\n		API bool operator==(const Token& a, const Token& b);\n		API bool operator!=(const Token& a, const Token& b);\n		API Token make_token(std::string name, std::function<bool(InputStreamPtr, Token&)> eventFunction = nullptr);\n\n		struct API Token\n		{\n		private:\n			bool isEOF;\n			bool isInvalid;\n			static std::unordered_map<std::string, s64> TOKEN_TAGS;\n			\n		public:\n			std::string tag;\n			StringMarker literal;\n\n			std::function<bool(InputStreamPtr, Token&)> event;\n\n			static const Token eof;\n			static const Token invalid;\n\n			Token();\n\n			friend API Token eof_token();\n			friend API Token invalid_token();\n			friend API Token make_token(std::string, std::function<bool(InputStreamPtr, Token&)> eventFunction);\n			friend API bool operator==(const Token& a, const Token& b);\n			friend API bool operator!=(const Token& a, const Token& b);\n		};\n	}\n}",
+			"file": "Compiler-Tools/inc/Chalcedony/Token.h",
+			"file_size": 1215,
+			"file_write_time": 131191126970688616,
+			"settings":
+			{
+				"buffer_size": 1166,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Compiler-Tools/inc/Chalcedony/Automata/NFA.hpp",
+			"settings":
+			{
+				"buffer_size": 2242,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include \"GLexer.h\"\n#include \"RegexBuilder.h\"\n#include \"InputStream.h\"\n#include \"Utilities.h\"\n#include \"Token.h\"\nusing namespace std;\nusing namespace CT;\nusing namespace CT::Lexer;\n\nvoid GLexer::init()\n{\n	CT::RegexBuilder builder;\n	registerToken(builder.create(\";\"), make_token(\"semicolon\"));\n	registerToken(builder.create(\"#name\"), make_token(\"name_directive\", [](CT::InputStreamPtr input, Token& token) -> bool {\n		//token.literal = \"\";\n		input->pushMarker();\n		char pc = input->peek();\n		while (pc != '\\n' && pc != ';')\n		{\n			input->popLetter();\n			pc = input->peek();\n		}\n\n		token.literal = input->popMarker();\n		//trim(token.literal);\n		return true;\n	}));\n\n	auto code_segment_action = [](CT::InputStreamPtr input, Token& token) -> bool {\n\n	};\n\n	registerToken(builder.create(\"#header\"), make_token(\"header_code\", [](CT::InputStreamPtr input, Token& token) -> bool {\n		//token.literal = \"\";\n		int i = 0;\n		while (true)\n		{\n			auto c = input->popLetter();\n			if (c == '{')\n			{\n				i++;\n				break;\n			}\n		}\n\n		input->pushMarker();\n		while (true)\n		{\n			auto c = input->popLetter();\n			if (c == '{')\n			{\n				i++;\n			}\n			else if (c == '}')\n			{\n				i--;\n			}\n			//else {\n			//	token.literal += c;\n			//}\n\n			if (i == 0) {\n				//back this last }\n				input->rewindLetter();\n				//pop the literal\n				token.literal = input->popMarker();\n				//consume the } back\n				input->popLetter();\n				break;\n			}\n		}\n		return true;\n	}));\n\n	registerToken(builder.create(\"#cpp\"), make_token(\"cpp_code\", [](CT::InputStreamPtr input, Token& token) -> bool {\n		//token.literal = \"\";\n		int i = 0;\n		while (true)\n		{\n			auto c = input->popLetter();\n			if (c == '{')\n			{\n				i++;\n				break;\n			}\n		}\n\n		input->pushMarker();\n		while (true)\n		{\n			auto c = input->popLetter();\n			if (c == '{')\n			{\n				i++;\n			}\n			else if (c == '}')\n			{\n				i--;\n			}\n			/*else {\n				token.literal += c;\n			}*/\n\n			if (i == 0)\n			{\n				//back this last }\n				input->rewindLetter();\n				//pop the literal\n				token.literal = input->popMarker();\n				//consume the } back\n				input->popLetter();\n				break;\n			}\n		}\n		return true;\n	}));\n\n	registerToken(builder.create(\"(A-Z)+\"), make_token(\"lex_id\"));\n	registerToken(builder.create(\":=\"), make_token(\"assign\"));\n\n	registerToken(builder.create(\"\\\"\"), make_token(\"regex\", [](CT::InputStreamPtr input, Token& token) -> bool {\n		//token.literal = \"\";\n		input->pushMarker();\n		char prev = '\\0';\n		while (true) {\n			char c = input->peek();\n			//if (c == '\"' && prev == '\\\\')\n			//	token.literal += c;\n			if (c == '\"')\n				break;\n\n			//token.literal += c;\n\n			prev = input->popLetter();\n		}\n		token.literal = input->popMarker();\n		//pop last quote\n		input->popLetter();\n		return true;\n	}));\n\n	registerToken(builder.create(\"{\"), make_token(\"action\", [](CT::InputStreamPtr input, Token& token) -> bool {\n		input->pushMarker(token.literal);\n		int counter = 1;\n		while (counter != 0)\n		{\n			char c = input->peek();\n			if (c == '{')\n				counter++;\n			else if (c == '}')\n				counter--;\n\n			//token.literal += c;\n			input->popLetter();\n		}\n		token.literal = input->popMarker();\n		return true;\n	}));\n\n	registerToken(builder.create(\"(a-z)+\"), make_token(\"parse_id\"));\n	registerToken(builder.create(\"\\\\|\"), make_token(\"or\"));\n	registerToken(builder.create(\"_start_\"), make_token(\"start_rule\"));\n\n}\n\nGLexer::GLexer()\n{\n	init();\n}\n\nCT::Lexer::GLexer::~GLexer()\n{\n}\n",
+			"file": "Compiler-Tools/src/GLexer.cpp",
+			"file_size": 3532,
+			"file_write_time": 131191283295469882,
+			"settings":
+			{
+				"buffer_size": 3359,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include \"Log.h\"\n#include <fstream>\n#include <sstream>\nusing namespace CT;\n\nstd::unordered_map<LOG_LEVEL, std::vector<LogEntry>, EnumClassHash> Log::m_logEntries;\nstd::unordered_map<LOG_LEVEL, std::vector<LogEntry>, EnumClassHash> Log::m_commitedEntries;\n\nstd::unordered_map<LOG_LEVEL, std::vector<LogEntry>, EnumClassHash> Log::getLogEntries()\n{\n	return m_logEntries;\n}\n\nstd::string Log::getLogText()\n{\n	std::stringstream stream;\n\n	for(auto item: m_logEntries)\n	{\n		switch (item.first)\n		{\n		case LOG_LEVEL::COUT:\n			for (auto entry : item.second)\n				stream << entry.message << std::endl;\n			break;\n		case LOG_LEVEL::LOG: \n			for (auto entry : item.second)\n			{\n				stream << \"[Log\";\n				if (entry.position.isValid)\n					stream << \", \" << entry.position.row << \", \" << entry.position.col;\n				stream << \"]: \";\n				stream << entry.message << std::endl;\n			}\n			break;\n		case LOG_LEVEL::ERROR:\n			for (auto entry : item.second)\n			{\n				stream << \"[Error\";\n				if (entry.position.isValid)\n					stream << \", \" << entry.position.row << \", \" << entry.position.col;\n				stream << \"]: \";\n				stream << entry.message << std::endl;\n			}\n			break;\n		case LOG_LEVEL::LDEBUG:\n			for (auto entry : item.second)\n			{\n				stream << \"[Debug\";\n				if (entry.position.isValid)\n					stream << \", \" << entry.position.row << \", \" << entry.position.col;\n				stream << \"]: \";\n				stream << entry.message << std::endl;\n			}\n			break;\n		default: \n		break;\n		}\n	}\n	return stream.str();\n}\n\nstd::string Log::filterLog(LOG_LEVEL level) {\n	std::stringstream stream;\n\n	for (auto item : m_logEntries)\n	{\n		if (item.first == level) {\n			switch (item.first)\n			{\n			case LOG_LEVEL::COUT:\n				for (auto entry : item.second)\n					stream << entry.message << std::endl;\n				break;\n			case LOG_LEVEL::LOG:\n				for (auto entry : item.second)\n				{\n					stream << \"[Log\";\n					if (entry.position.isValid)\n						stream << \", \" << entry.position.row << \", \" << entry.position.col;\n					stream << \"]: \";\n					stream << entry.message << std::endl;\n				}\n				break;\n			case LOG_LEVEL::ERROR:\n				for (auto entry : item.second)\n				{\n					stream << \"[Error\";\n					if (entry.position.isValid)\n						stream << \", \" << entry.position.row << \", \" << entry.position.col;\n					stream << \"]: \";\n					stream << entry.message << std::endl;\n				}\n				break;\n			case LOG_LEVEL::LDEBUG:\n				for (auto entry : item.second)\n				{\n					stream << \"[Debug\";\n					if (entry.position.isValid)\n						stream << \", \" << entry.position.row << \", \" << entry.position.col;\n					stream << \"]: \";\n					stream << entry.message << std::endl;\n				}\n				break;\n			default:\n				break;\n			}\n		}\n	}\n	return stream.str();\n}\n\nvoid Log::dumpLogEntriesToFile(std::string filename)\n{\n	std::ofstream file(filename);\n	if(file.is_open())\n	{\n		file << getLogText();\n		file.close();\n	}\n}\n\nvoid Log::log(LOG_LEVEL level,const std::string& message, FilePosition position)\n{\n	LogEntry entry;\n	entry.message = message;\n	entry.level = level;\n	entry.position = position;\n	m_logEntries[level].push_back(entry);\n}\n\nvoid CT::Log::commitEntry(LOG_LEVEL level, const std::string & message, FilePosition position)\n{\n	LogEntry entry;\n	entry.message = message;\n	entry.level = level;\n	entry.position = position;\n	m_commitedEntries[level].push_back(entry);\n}\n\nvoid CT::Log::pushEntries()\n{\n	m_logEntries.insert(m_commitedEntries.begin(), m_commitedEntries.end());\n	m_commitedEntries.clear();\n}\n\nvoid CT::Log::discardCommittedEntries()\n{\n	m_commitedEntries.clear();\n}\n",
+			"file": "Compiler-Tools/src/Log.cpp",
+			"file_size": 3612,
+			"file_write_time": 131191093820792551,
+			"settings":
+			{
+				"buffer_size": 3462,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include \"InputStream.h\"\n#include <fstream>\nusing namespace CT;\n\nInputStream::InputStream(const std::string& input)\n:m_input(input), m_index(0), m_lastLineCount(0)\n{}\n\nstd::string InputStream::getString() const\n{\n	return m_input;\n}\n\nchar InputStream::popLetter()\n{\n	if(m_index >= m_input.size())\n		return '\\0';\n	if(m_input[m_index] == '\\n'){\n		m_position.row++;\n		m_lastLineCount = m_position.col;\n		m_position.col = 0;\n	}else{\n		m_position.col++;\n	}\n	return m_input[m_index++];\n}\n\nchar InputStream::peek()\n{\n	if(m_index >= m_input.size())\n		return '\\0';\n	return m_input[m_index];\n}\n\nvoid InputStream::rewindLetter(){\n	if(m_index > 0){\n		if(m_input[m_index] == '\\n')\n		{\n			m_position.row--;\n			m_position.col = m_lastLineCount;\n		}else{\n			m_position.col--;\n		}\n		m_index--;\n	}\n}\n\nvoid InputStream::reset(){\n	m_index=0;\n	m_position = FilePosition();\n	m_lastLineCount = 0;\n	while (!m_markerStack.empty())\n		m_markerStack.pop();\n}\n\nvoid CT::InputStream::clear()\n{\n	m_input.clear();\n	reset();\n}\n\nbool InputStream::eof(){\n	return m_index >= m_input.size();\n}\n\nvoid InputStream::append(const std::string& str)\n{\n	m_input += str;\n}\n\nvoid InputStream::push(const std::string& str)\n{\n	m_input.insert(m_index,str);\n}\n\nFilePosition InputStream::getPosition() const{\n	return m_position;\n}\n\nvoid CT::InputStream::pushMarker(StringMarker marker)\n{\n	if (marker == StringMarker::invalid) {\n		marker.inputStream = shared_from_this();\n		marker.start = m_index;\n		marker.end = -1;\n		m_markerStack.push(marker);\n	}\n	else {\n		marker.end = -1;\n		m_markerStack.push(marker);\n	}\n}\n\nStringMarker CT::InputStream::popMarker()\n{\n	auto marker = m_markerStack.top();\n	marker.end = m_index;\n	m_markerStack.pop();\n	return marker;\n}\n\nStringMarker CT::InputStream::topMarker()\n{\n	auto marker = m_markerStack.top();\n	marker.end = m_index;\n	return marker;\n}\n\nstd::string CT::InputStream::requestString(StringMarker marker)\n{\n	if (marker.start < marker.end)\n	{\n		return m_input.substr(marker.start, marker.end - marker.start);\n	}\n	return std::string();\n}\n\nAPI InputStreamPtr CT::open_file(const std::string& filename)\n{\n	std::ifstream file(filename, std::ios_base::in | std::ios_base::ate);\n	auto size = file.tellg();\n	file.seekg(0, std::ios_base::beg);\n	file.clear();\n	std::string str(size, '\\0');\n	file.read(&str[0], size);\n	file.close();\n	return std::make_shared<InputStream>(str);\n}\n\nAPI InputStreamPtr CT::read_stream(std::istream& stream)\n{\n	auto result = std::make_shared<InputStream>(\"\");\n	std::string line(1024, '\\0');\n	bool addNewLine = false;\n	while(std::getline(stream, line))\n	{\n		if (addNewLine)\n			result->append(\"\\n\" + line);\n		else\n		{\n			result->append(line);\n			addNewLine = true;\n		}\n	}\n	return result;\n}\n\nAPI bool CT::write_file(const std::string& filename, const std::string& content)\n{\n	std::ofstream file(filename);\n	if(file.is_open())\n	{\n		file << content;\n	}else{\n		return false;\n	}\n	file.close();\n	return true;\n}",
+			"file": "Compiler-Tools/src/InputStream.cpp",
+			"file_size": 3063,
+			"file_write_time": 131191448426590195,
+			"settings":
+			{
+				"buffer_size": 2905,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include \"GParser.h\"\n#include \"InputStream.h\"\n#include \"Log.h\"\n#include \"Token.h\"\n#include <iostream>\nusing namespace CT;\nusing namespace Parser;\n\nIParseNodePtr GParser::parse(Lexer::IScannerPtr scanner, InputStreamPtr input)\n{\n	auto cachedScanner = std::dynamic_pointer_cast<Lexer::CachedScanner>(scanner);\n	auto program = parseProgram(cachedScanner, input);\n	return program;\n}\n\nGParseNodePtr GParser::parseProgram(Lexer::CachedScannerPtr scanner, InputStreamPtr input)\n{\n	GParseNodePtr program = std::make_shared<GParseNode>(), statement = nullptr;\n	\n	statement = parseStatement(scanner, input);\n	while(statement != nullptr)\n	{\n		program->children.push_back(statement);\n		auto semicolon = scanner->scan(input);\n		if(semicolon.tag != \"semicolon\")\n		{\n			Log::log(LOG_LEVEL::ERROR, \"expected a semicolon but found'\"+semicolon.tag+\"'\", input->getPosition());\n			return nullptr;\n		}\n\n		statement = parseStatement(scanner, input);\n	}\n\n	if(program->children.empty())\n	{\n		return nullptr;\n	}\n	return program;\n}\n\nGParseNodePtr GParser::parseStatement(Lexer::CachedScannerPtr scanner, InputStreamPtr input)\n{\n	auto token = scanner->scan(input);\n	if(token.tag == \"name_directive\")\n	{\n		scanner->rewindToken();\n		auto statement = parseNameDirective(scanner, input);\n		return statement;\n	}else if(token.tag == \"lex_id\")\n	{\n		scanner->rewindToken();\n		auto statement = parseLexRule(scanner, input);\n		return statement;\n	}else if(token.tag == \"parse_id\")\n	{\n		scanner->rewindToken();\n		auto statement = parseParseRule(scanner, input);\n		return statement;\n	}\n	else if (token.tag == \"start_rule\")\n	{\n		scanner->rewindToken();\n		auto statement = parseStartRule(scanner, input);\n		return statement;\n	}\n	else if (token.tag == \"header_code\")\n	{\n		std::shared_ptr<GHeaderSegment> result = std::make_shared<GHeaderSegment>();\n		result->code = token.literal;\n		return result;\n	}\n	else if (token.tag == \"cpp_code\")\n	{\n		std::shared_ptr<GCPPSegment> result = std::make_shared<GCPPSegment>();\n		result->code = token.literal;\n		return result;\n	}\n\n	return nullptr;\n}\n\nGParseNodePtr GParser::parseNameDirective(Lexer::CachedScannerPtr scanner, InputStreamPtr input)\n{\n	std::shared_ptr<GNameDirective> result = std::make_shared<GNameDirective>();\n\n	auto token = scanner->scan(input);\n	if(token.tag == \"name_directive\")\n	{\n		result->directiveValue = token.literal;\n		return result;\n	}\n\n	return nullptr;\n}\n\nGParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStreamPtr input)\n{\n	std::shared_ptr<GLexRule> result = std::make_shared<GLexRule>();\n\n	auto lex_id_token = scanner->scan(input);\n	auto assign_token = scanner->scan(input);\n	auto regex_token = scanner->scan(input);\n	if (lex_id_token.tag == \"lex_id\" &&\n		assign_token.tag == \"assign\" &&\n		regex_token.tag == \"regex\")\n	{\n		auto action_token = scanner->scan(input);\n		bool foundAction = true;\n		if(action_token.tag != \"action\")\n		{\n			scanner->rewindToken();\n			foundAction = false;\n		}\n		result->tokenName = lex_id_token.literal;\n		result->regex = regex_token.literal;\n		if (foundAction)\n			result->action = action_token.literal;\n		else\n			result->action = StringMarker::invalid;\n		return result;\n	}else{\n		scanner->rewindToken();\n		scanner->rewindToken();\n		scanner->rewindToken();\n		return nullptr;\n	}\n}\n\nGParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStreamPtr input)\n{\n	std::shared_ptr<GParseRule> result = std::make_shared<GParseRule>();\n	std::shared_ptr<GParseRulesTreeNode> rules_root = std::make_shared<GParseRulesTreeNode>(true);\n	result->rules = rules_root;\n	auto rules_tree_it = rules_root;\n\n	auto parse_id_token = scanner->scan(input);\n	auto assign_token = scanner->scan(input);\n	if (parse_id_token.tag == \"parse_id\" &&\n		assign_token.tag == \"assign\")\n	{\n		result->name = parse_id_token.literal;\n		//std::vector<Lexer::Token> rule;\n		//rule.reserve(10);\n		auto rule_token = scanner->scan(input);\n		bool foundOr = false;\n		while(true)\n		{\n			if(rule_token.tag == \"semicolon\")\n			{\n				//rewind the semicolon\n				scanner->rewindToken();\n				if(foundOr){\n					Log::log(LOG_LEVEL::ERROR, \"expected a rule after the '|' but found a semicolon\", input->getPosition());\n					return nullptr;\n				}\n				rules_tree_it->isLeaf = true;\n				break;\n			}\n			if (rule_token.tag == \"lex_id\" ||\n				rule_token.tag == \"parse_id\")\n			{\n				//insert a node to the tree\n				rules_tree_it = rules_tree_it->insertNode(rule_token);\n				auto action_token = scanner->scan(input);\n				if (action_token.tag == \"action\")\n				{\n					rules_tree_it->action = action_token.literal;\n				}\n				else\n				{\n					scanner->rewindToken();\n				}\n				foundOr = false;\n			}else if(rule_token.tag == \"or\")\n			{\n				//set back the it to the root\n				rules_tree_it->isLeaf = true;\n				rules_tree_it = rules_root;\n				foundOr = true;\n			}\n			rule_token = scanner->scan(input);\n		}\n		return result;\n	}\n	return nullptr;\n}\n\nGParseNodePtr CT::Parser::GParser::parseStartRule(CT::Lexer::CachedScannerPtr scanner, CT::InputStreamPtr input)\n{\n	std::shared_ptr<GStartRule> result = std::make_shared<GStartRule>();\n\n	auto start_token = scanner->scan(input);\n	auto assign_token = scanner->scan(input);\n	auto start_rule = scanner->scan(input);\n	if (start_token.tag == \"start_rule\" &&\n		assign_token.tag == \"assign\" &&\n		start_rule.tag == \"parse_id\")\n	{\n		result->startRule = start_rule.literal;\n	}\n	else {\n		scanner->rewindToken();\n		scanner->rewindToken();\n		scanner->rewindToken();\n		CT::Log::log(CT::LOG_LEVEL::ERROR, \"cannot parse a start rule expected: start_rule assign parse_id\", input->getPosition());\n		return nullptr;\n	}\n\n	return result;\n}",
+			"file": "Compiler-Tools/src/GParser.cpp",
+			"file_size": 5787,
+			"file_write_time": 131191386777081137,
+			"settings":
+			{
+				"buffer_size": 5578,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include \"CachedScanner.h\"\nusing namespace CT::Lexer;\n\nbool CT::Lexer::CachedScanner::hasCachedTokens()\n{\n	if(m_index >= m_cache.size() || m_cache.empty())\n		return false;\n	return true;\n}\n\nCT::Lexer::CachedScanner::CachedScanner()\n	:m_index(m_cache.size())\n{\n	m_cache.reserve(500);\n}\n\nCT::Lexer::CachedScanner::~CachedScanner()\n{\n	m_cache.clear();\n}\n\nToken CT::Lexer::CachedScanner::scan(InputStreamPtr input)\n{\n	if (!hasCachedTokens())\n	{\n		auto token = Scanner::scan(input);\n		m_cache.push_back(token);\n		m_index = m_cache.size();\n		return token;\n	}\n	else {\n		return m_cache[m_index++];\n	}\n}\n\nToken CT::Lexer::CachedScanner::rewindToken()\n{\n	if (m_index > 0)\n	{\n		m_index--;\n		return m_cache[m_index];\n	}\n	return Token::invalid;\n}\n\nvoid CT::Lexer::CachedScanner::clear()\n{\n	m_cache.clear();\n	m_index = m_cache.size();\n}\n",
+			"file": "Compiler-Tools/src/CachedScanner.cpp",
+			"file_size": 872,
+			"file_write_time": 131191958630745228,
+			"settings":
+			{
+				"buffer_size": 822,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include \"Scanner.h\"\n#include \"Log.h\"\n#include \"State.hpp\"\n#include \"Token.h\"\n#include <stack>\n#include <iostream>\n#include <sstream>\nusing namespace CT;\nusing namespace CT::Lexer;\nusing namespace CT::Automata;\n\nScanner::~Scanner()\n{\n	m_scanningMachines.clear();\n}\n\nToken Scanner::scan(InputStreamPtr input)\n{\n	//reset the current scanning machines;\n	reset();\n	std::string literal = \"\";\n	//input->pushMarker();\n	std::stack<Lexer::Token> token_stack;\n\n	bool is_first_encounter = true;\n	//process input\n	while(!input->eof())\n	{\n		//get the next char\n		char c = input->peek();\n		if (c == '\\0')\n		{\n			return Token::eof;\n		}else if(isIgnoreChar(c))\n		{\n			if(is_first_encounter){\n				input->popLetter();\n				continue;\n			}else{\n				if (!token_stack.empty())\n				{\n					auto token = token_stack.top();\n					token.literal = input->popMarker();\n					if (token.event != nullptr)\n					{\n						auto eventResult = token.event(input, token);\n						if (!eventResult)\n							callErrorFunction(input);\n					}\n					auto inspect = token.literal.getString();\n					return token;\n				}\n			}\n		}\n\n		if (is_first_encounter)\n			input->pushMarker();\n		int i=0;\n		std::vector<int> m_scheduledForDeletion;\n		bool isOk = false;\n		//go through machines providing input and check states\n		for(auto& machineTagPair: m_currentMachines)\n		{\n			Automata::FSMState state = machineTagPair.first->consume(StateInput<char>(c));\n			if(state == FSMState::FINAL)\n			{\n				if (!isOk && !machineTagPair.first->hasFurtherTransitions())\n				{\n					//create token and return\n					Lexer::Token result;\n					result.tag = machineTagPair.second.tag;\n					result.event = machineTagPair.second.event;\n					//result.literal = literal + c;\n					\n\n					//consume the char\n					input->popLetter();\n\n					result.literal = input->popMarker();\n					//invoke the event function\n					if (machineTagPair.second.event != nullptr) {\n\n						auto eventResult = machineTagPair.second.event(input, result);\n						if (!eventResult)\n							callErrorFunction(input);\n					}\n					auto inspect = result.literal.getString();\n					return result;\n				}\n				else {\n					//create token and return\n					Lexer::Token result;\n					result.tag = machineTagPair.second.tag;\n					result.event = machineTagPair.second.event;\n					//result.literal = literal + c;\n					result.literal = input->topMarker();\n					auto inspect = result.literal.getString();\n					token_stack.push(result);\n				}\n	\n			}else if(state == FSMState::OK)\n			{\n				//continue scanning\n				isOk = true;\n\n			}else if(state == FSMState::DEADEND)\n			{\n				//schedule this machine for deletion\n				m_scheduledForDeletion.push_back(i);\n			}\n			i++;\n		}\n		is_first_encounter = false;\n\n		if(m_scheduledForDeletion.size() == m_currentMachines.size())\n		{\n			if (!token_stack.empty())\n			{\n				auto token = token_stack.top();\n				token.literal = input->popMarker();\n				if (token.event != nullptr)\n				{\n\n					auto eventResult = token.event(input, token);\n					if (!eventResult)\n						callErrorFunction(input);\n				}\n				auto inspect = token.literal.getString();\n				return token;\n			}\n			//error scanning report and return nullptr\n			Log::log(LOG_LEVEL::ERROR, \"unable to recognize string='\"+literal+c+\"'\", input->getPosition());\n			callErrorFunction(input);\n			return Token::invalid;\n		}\n		else\n		{\n			std::vector<std::pair<std::shared_ptr<Automata::NFA<char>>, Token>> newCurrent;\n			//delete the dead machines\n\n			for (int i = 0; i < m_currentMachines.size(); i++)\n			{\n				if (std::find(m_scheduledForDeletion.begin(), m_scheduledForDeletion.end(), i) == m_scheduledForDeletion.end())\n				{\n					newCurrent.push_back(m_currentMachines[i]);\n				}\n			}\n\n			m_currentMachines = newCurrent;\n		}\n\n		literal += c;\n		input->popLetter();\n	}\n	if (!token_stack.empty()) {\n		auto token = token_stack.top();\n		token.literal = input->popMarker();\n		if (token.event != nullptr)\n		{\n			auto eventResult = token.event(input, token);\n			if (!eventResult)\n				callErrorFunction(input);\n		}\n		return token;\n	}\n	return Token::eof;\n}\n\nvoid Scanner::registerToken(std::shared_ptr<NFA<char>> regexMachine, const Token& token)\n{\n	std::stringstream stream;\n	stream << *regexMachine;\n	Log::log(CT::LOG_LEVEL::LDEBUG, stream.str(), CT::FilePosition::invalid);\n	m_scanningMachines.push_back(std::make_pair(regexMachine, token));\n}\n\nvoid Scanner::reset()\n{\n	m_currentMachines.clear();\n	for(auto machine: m_scanningMachines)\n	{\n		machine.first->reset();\n	}\n	m_currentMachines.insert(m_currentMachines.end(), m_scanningMachines.begin(), m_scanningMachines.end());\n}\n\nbool Scanner::isIgnoreChar(char c)\n{\n	return c == '\\n' || c == ' ' || c == '\\t' || c == '\\r' || c == '\\f' || c == '\\v';\n}\n\nbool Scanner::isDefinedToken(const std::string& token)\n{\n	for(auto machine: m_scanningMachines)\n	{\n		if(token == machine.second.tag)\n			return true;\n	}\n	return false;\n}",
+			"file": "Compiler-Tools/src/Scanner.cpp",
+			"file_size": 5006,
+			"file_write_time": 131192066975456475,
+			"settings":
+			{
+				"buffer_size": 4807,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#include \"GParseTree.h\"\nusing namespace CT::Parser;\n\nGParseNode::GParseNode(GParseNodeTypes fType)\n: type(fType)\n{\n	children.reserve(10);\n}\n\nGParseNode::~GParseNode()\n{\n	children.clear();\n}\n\nGDirectiveNode::GDirectiveNode(GParseNodeTypes fType)\n: GParseNode(fType)\n{}\n\nGDirectiveNode::~GDirectiveNode()\n{\n}\n\nGNameDirective::GNameDirective(GParseNodeTypes fType)\n: GDirectiveNode(fType)\n{}\n\nGLexRule::GLexRule(GParseNodeTypes fType)\n: GParseNode(fType)\n{}\n\nGLexRule::~GLexRule()\n{\n}\n\nGParseRule::GParseRule(GParseNodeTypes fType)\n: GParseNode(fType)\n{\n\n}\n\nGParseRule::~GParseRule()\n{\n	rules = nullptr;\n}\n\nCT::Parser::GParseRulesTreeNode::GParseRulesTreeNode(bool root)\n{\n	isRoot = root;\n	isLeaf = false;\n	token = CT::Lexer::Token::invalid;\n	action = StringMarker::invalid;\n}\n\nCT::Parser::GParseRulesTreeNode::~GParseRulesTreeNode()\n{\n	next.clear();\n}\n\nstd::shared_ptr<GParseRulesTreeNode> CT::Parser::GParseRulesTreeNode::insertNode(const CT::Lexer::Token & token)\n{\n	for (auto node : next)\n		if (node && node->token == token)\n			return node;\n	auto new_node = std::make_shared<GParseRulesTreeNode>();\n	new_node->token = token;\n	next.push_back(new_node);\n	return new_node;\n}\n\nCT::Parser::GStartRule::GStartRule(GParseNodeTypes fType)\n	: GParseNode(fType)\n{\n}\n\nCT::Parser::GStartRule::~GStartRule()\n{\n}\n\nCT::Parser::GCPPSegment::GCPPSegment(GParseNodeTypes fType)\n	: GParseNode(fType)\n{\n}\n\nCT::Parser::GCPPSegment::~GCPPSegment()\n{\n}\n\nCT::Parser::GHeaderSegment::GHeaderSegment(GParseNodeTypes fType)\n	:GParseNode(fType)\n{\n}\n\nCT::Parser::GHeaderSegment::~GHeaderSegment()\n{\n}\n",
+			"file": "Compiler-Tools/src/GParseTree.cpp",
+			"file_size": 1668,
+			"file_write_time": 131191386609118153,
+			"settings":
+			{
+				"buffer_size": 1573,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 109.0,
+		"last_filter": "c++",
+		"selected_items":
+		[
+			[
+				"c++",
+				"Set Syntax: C++"
+			],
+			[
+				"host",
+				"Remote: Host Session"
+			],
+			[
+				"hos",
+				"Remote: Host Session"
+			],
+			[
+				"dis",
+				"Remote: Disconnect from Session"
+			],
+			[
+				"conn",
+				"Remote: Connect to Session"
+			],
+			[
+				"Disc",
+				"Remote: Disconnect from Session"
+			],
+			[
+				"disconn",
+				"Remote: Disconnect from Session"
+			],
+			[
+				"Host",
+				"Remote: Host Session"
+			],
+			[
+				"ho",
+				"Remote: Host Session"
+			],
+			[
+				"remote",
+				"Remote: Disconnect from Session"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"re",
+				"Package Control: Remove Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			]
+		],
+		"width": 440.0
+	},
+	"console":
+	{
+		"height": 136.0,
+		"history":
+		[
+			"sublime.log_commands(False)",
+			"sublime.log_commands(True)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/E/Projects/Compiler-Tools-v1.0",
+		"/E/Projects/Compiler-Tools-v1.0/bin",
+		"/E/Projects/Compiler-Tools-v1.0/bin/DebugShared",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src",
+		"/E/Projects/Compiler-Tools-v1.0/test"
+	],
+	"file_history":
+	[
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/GParser.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/GParseTree.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Scanner.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/CachedScanner.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/CPPScanner.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/GCodeGeneration.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Log.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/IGCodeGeneration.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/IScanner.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Token.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/InputStream.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/State.hpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/NFA.hpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/RegexBuilder.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/StringMarker.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/CompilerTools.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/GLexer.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/IParser.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/FilePosition.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Utilities.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Defines.h",
+		"/E/Applications/mingw-w64-install.exe",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/SimpleCalcParser.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/SimpleCalcParser.h",
+		"/E/Projects/Compiler-Tools-v1.0/test/calc-rd-ll1-01.gr",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/SimpleCalcLexer.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/SimpleCalcLexer.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/ SimpleCalcLexer.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/ SimpleCalcLexer.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/ SimpleCalcParser.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/ SimpleCalcParser.h",
+		"/E/Libraries/mstch-1.0.2/README.md",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Parser.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Parser.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Scanner.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/IScanner.cpp",
+		"/C/ANTLR/grun.bat",
+		"/C/ANTLR/ANTLR.bat",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/log.txt",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/debug_log.txt",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/src/main.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Token.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/InputStream.hpp",
+		"/C/Users/Mostafa/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/E/Projects/Compiler-Tools-v1.0/.gitignore",
+		"/C/Program Files/Sublime Text 3/Packages/Default.sublime-package",
+		"/E/Projects/Compiler-Tools-v1.0/premake5.lua"
+	],
+	"find":
+	{
+		"height": 43.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			">& ",
+			"generateToken",
+			"generateTokenTag",
+			"\\",
+			"();\n",
+			"letterType",
+			"getChar",
+			"char",
+			"pop"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"char"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 13,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Compiler-Tools/src/Utilities.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 183,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								167,
+								167
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Compiler-Tools/src/FilePosition.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 319,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								319,
+								319
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Compiler-Test/src/main.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3937,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 22,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "scratch",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1376,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								314,
+								314
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 21,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "test/scan-test-01.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 217,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								217,
+								217
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 20,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "build/Compiler-Tools.sln",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3816,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 18,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "Compiler-Tools/src/GCodeGeneration.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15674,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3795.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "test/calc-rd-ll1-01.gr",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8633,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5370,
+								5370
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3004.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": ".gitignore",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 668,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 23,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "README.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 20,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20,
+								20
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 24,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "Compiler-Tools/src/RegexBuilder.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9627,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								248,
+								248
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 19,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "Compiler-Tools/src/Token.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1222,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 109.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "premake5.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1875,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								424,
+								424
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 180.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "/E/Applications/Selfishnet win 7/SelfishNetv0.2-beta_vista.exe",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 634880,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "Compiler-Tools/inc/Chalcedony/Automata/State.hpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3704,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								281,
+								281
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "Compiler-Tools/inc/Chalcedony/IScanner.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 930,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								499,
+								499
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "Compiler-Tools/inc/Chalcedony/Token.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1166,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								480,
+								480
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "Compiler-Tools/inc/Chalcedony/Automata/NFA.hpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2242,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "Compiler-Tools/src/GLexer.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3359,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "Compiler-Tools/src/Log.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3462,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1144.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 20,
+					"file": "Compiler-Tools/src/InputStream.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2905,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1525,
+								1525
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 904.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 21,
+					"file": "Compiler-Tools/src/GParser.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5578,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								735,
+								735
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 22,
+					"file": "Compiler-Tools/src/CachedScanner.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 822,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								453,
+								453
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 17,
+					"type": "text"
+				},
+				{
+					"buffer": 23,
+					"file": "Compiler-Tools/src/Scanner.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4807,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2878,
+								2878
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1411.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 24,
+					"file": "Compiler-Tools/src/GParseTree.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1573,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 29.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": false,
+	"output.CppYCM.2":
+	{
+		"height": 0.0
+	},
+	"output.exec":
+	{
+		"height": 98.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "Compiler-Tools.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"prem",
+				"premake5.lua"
+			],
+			[
+				"token",
+				"Compiler-Tools\\inc\\Chalcedony\\Token.h"
+			],
+			[
+				"isc",
+				"Compiler-Tools\\inc\\Chalcedony\\IScanner.h"
+			],
+			[
+				"stat",
+				"Compiler-Tools\\inc\\Chalcedony\\Automata\\State.hpp"
+			],
+			[
+				"n",
+				"Compiler-Tools\\inc\\Chalcedony\\Automata\\NFA.hpp"
+			],
+			[
+				"sc",
+				"Compiler-Tools\\src\\Scanner.cpp"
+			],
+			[
+				"sca",
+				"Compiler-Tools\\inc\\Scanner.h"
+			],
+			[
+				"cal",
+				"test\\calc-rd-ll1-01.gr"
+			],
+			[
+				"gcod",
+				"Compiler-Tools\\src\\GCodeGeneration.cpp"
+			],
+			[
+				"",
+				"Compiler-Tools\\src\\GCodeGeneration.cpp"
+			],
+			[
+				"g",
+				"Compiler-Tools\\inc\\GCodeGeneration.h"
+			],
+			[
+				"gc",
+				"Compiler-Tools\\inc\\GCodeGeneration.h"
+			],
+			[
+				"gcode",
+				"Compiler-Tools\\inc\\GCodeGeneration.h"
+			],
+			[
+				"parser",
+				"Compiler-Tools\\src\\Parser.cpp"
+			],
+			[
+				"ip",
+				"Compiler-Tools\\inc\\IParser.h"
+			],
+			[
+				"par",
+				"Compiler-Tools\\inc\\Parser.h"
+			],
+			[
+				"calc",
+				"test\\calc-rd-ll1-01.gr"
+			],
+			[
+				"scann",
+				"Compiler-Tools\\src\\Scanner.cpp"
+			],
+			[
+				"gl",
+				"Compiler-Tools\\inc\\GLexer.h"
+			],
+			[
+				"toke",
+				"Compiler-Tools\\src\\Token.cpp"
+			],
+			[
+				"scan",
+				"Compiler-Tools\\inc\\Scanner.h"
+			],
+			[
+				"u",
+				"Compiler-Tools\\src\\Utilities.cpp"
+			],
+			[
+				"utit",
+				"Compiler-Tools\\inc\\Utilities.h"
+			],
+			[
+				"uti",
+				"Compiler-Tools\\src\\Utilities.cpp"
+			],
+			[
+				"prema",
+				"premake5.lua"
+			],
+			[
+				"gco",
+				"Compiler-Tools\\inc\\GCodeGeneration.h"
+			],
+			[
+				"scanner",
+				"Compiler-Tools\\src\\Scanner.cpp"
+			],
+			[
+				"in",
+				"Compiler-Tools\\src\\InputStream.cpp"
+			],
+			[
+				"inp",
+				"Compiler-Tools\\src\\InputStream.cpp"
+			],
+			[
+				"pars",
+				"Compiler-Tools\\src\\Parser.cpp"
+			],
+			[
+				"premake",
+				"premake5.lua"
+			],
+			[
+				"gpar",
+				"Compiler-Tools\\src\\GParseTree.cpp"
+			],
+			[
+				"gtr",
+				"Compiler-Tools\\src\\GParseTree.cpp"
+			],
+			[
+				"gp",
+				"Compiler-Tools\\inc\\GParseTree.h"
+			],
+			[
+				"ca",
+				"Compiler-Tools\\inc\\CachedScanner.h"
+			],
+			[
+				"compiler-tools.h",
+				"Compiler-Tools\\inc\\CompilerTools.h"
+			],
+			[
+				"is",
+				"Compiler-Tools\\src\\IScanner.cpp"
+			],
+			[
+				"iscann",
+				"Compiler-Tools\\inc\\IScanner.h"
+			],
+			[
+				"cach",
+				"Compiler-Tools\\inc\\CachedScanner.h"
+			],
+			[
+				"s",
+				"Compiler-Tools\\src\\Scanner.cpp"
+			],
+			[
+				"pa",
+				"Compiler-Tools\\inc\\Parser.h"
+			],
+			[
+				"log",
+				"Compiler-Tools\\src\\Log.cpp"
+			],
+			[
+				"cpp",
+				"Compiler-Tools\\inc\\CPPScanner.h"
+			],
+			[
+				".gr",
+				"test\\calc-rd-ll1-01.gr"
+			],
+			[
+				"cp",
+				"Compiler-Tools\\inc\\CPPScanner.h"
+			],
+			[
+				"tok",
+				"Compiler-Tools\\src\\Token.cpp"
+			],
+			[
+				"i",
+				"Compiler-Tools\\src\\InputStream.cpp"
+			],
+			[
+				"t",
+				"Compiler-Tools\\inc\\Token.h"
+			],
+			[
+				"rege",
+				"Compiler-Tools\\src\\RegexBuilder.cpp"
+			],
+			[
+				"p",
+				"Compiler-Tools\\src\\Position.cpp"
+			],
+			[
+				"com",
+				"Compiler-Tools\\inc\\CompilerTools.h"
+			],
+			[
+				"st",
+				"Compiler-Tools\\inc\\State.hpp"
+			],
+			[
+				"def",
+				"Compiler-Tools\\inc\\Defines.h"
+			],
+			[
+				"nf",
+				"Compiler-Tools\\inc\\NFA.hpp"
+			],
+			[
+				"re",
+				"Compiler-Tools\\src\\RegexBuilder.cpp"
+			],
+			[
+				"inputs",
+				"Compiler-Tools\\inc\\InputStream.h"
+			],
+			[
+				"r",
+				"Compiler-Tools\\inc\\regexbuilder.h"
+			],
+			[
+				"main",
+				"Compiler-Test\\src\\main.cpp"
+			],
+			[
+				"po",
+				"Compiler-Tools\\src\\Position.cpp"
+			],
+			[
+				"pos",
+				"Compiler-Tools\\inc\\Position.h"
+			],
+			[
+				"lo",
+				"Compiler-Tools\\inc\\Log.h"
+			],
+			[
+				"l",
+				"Compiler-Tools\\inc\\Log.h"
+			],
+			[
+				"ps",
+				"Compiler-Tools\\src\\Position.cpp"
+			],
+			[
+				"posi",
+				"Compiler-Tools\\src\\Position.cpp"
+			],
+			[
+				"de",
+				"Compiler-Tools\\inc\\Defines.h"
+			],
+			[
+				"inpt",
+				"Compiler-Tools\\inc\\InputStream.hpp"
+			],
+			[
+				".",
+				".gitignore"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 271.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

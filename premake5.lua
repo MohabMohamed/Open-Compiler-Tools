@@ -2,6 +2,7 @@ workspace "Compiler-Tools"
 	configurations {"DebugShared", "ReleaseShared", "DebugStatic", "ReleaseStatic"}
 	platforms {"x86", "x86_64"}
 	location "build"
+	startproject "Compiler-Test"
 
 
 project "Compiler-Test"
@@ -13,6 +14,43 @@ project "Compiler-Test"
 	files {"Compiler-Test/inc/**.h", "Compiler-Test/src/**.cpp"}
 
 	includedirs {"Compiler-Tools/inc/", "Compiler-Test/inc/"}
+
+	links {"Compiler-Tools"}
+
+	configuration {"linux", "gmake"}
+		buildoptions{"-std=c++11"}
+
+	filter "configurations:DebugShared"
+		defines {"DEBUG"}
+		flags {"Symbols"}
+
+	filter "configurations:ReleaseShared"
+		defines {"NDEBUG"}
+		optimize "On"
+
+	filter "configurations:DebugStatic"
+		defines {"DEBUG", "STATIC_LIB"}
+		flags {"Symbols"}
+
+	filter "configurations:ReleaseStatic"
+		defines {"NDEBUG", "STATIC_LIB"}
+		optimize "On"
+
+	filter "platforms:x86"
+		architecture "x32"
+		
+	filter "platforms:x86_64"
+		architecture "x64"
+
+project "Chalcedony"
+	language "C++"
+	kind "ConsoleApp"
+	targetdir "bin/%{cfg.buildcfg}"
+	location "Chalcedony"
+
+	files {"Chalcedony/inc/**.h", "Chalcedony/src/**.cpp"}
+
+	includedirs {"Compiler-Tools/inc/", "Chalcedony/inc/"}
 
 	links {"Compiler-Tools"}
 
