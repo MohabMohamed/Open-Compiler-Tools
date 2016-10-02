@@ -115,7 +115,7 @@ void GLexer::init()
 		return true;
 	}));
 
-	registerToken(builder.create("(A-Z)(A-Z|_)+"), make_token("lex_id"));
+	registerToken(builder.create("(A-Z)(A-Z|_|a-z)+"), make_token("lex_id"));
 	registerToken(builder.create(":="), make_token("assign"));
 
 	registerToken(builder.create("\""), make_token("regex", [](CT::InputStreamPtr input, Token& token) -> bool {
@@ -173,7 +173,7 @@ void GLexer::init()
 		return true;
 	}));
 
-	registerToken(builder.create("(a-z)(a-z|_)+"), make_token("parse_id"));
+	registerToken(builder.create("(a-z)(a-z|_|A-Z)+"), make_token("parse_id"));
 	registerToken(builder.create("\\|"), make_token("or"));
 	registerToken(builder.create("&&"), make_token("and"));
 	registerToken(builder.create("_start_"), make_token("start_rule"));

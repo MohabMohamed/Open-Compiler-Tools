@@ -19,7 +19,6 @@ namespace CT
 		std::string getString() const;
 		std::string getString();
 		~StringMarker();
-
 	};
 
 	API std::ostream& operator<<(std::ostream& out, const StringMarker& marker);

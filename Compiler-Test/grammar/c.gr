@@ -1,5 +1,111 @@
 #name C;
 
+Auto 				:= "auto";
+Break 				:= "break";
+Case 				:= "case";
+Char 				:= "char";
+Const 				:= "const";
+Continue			:= "continue";
+Default 			:= "default";
+Double 				:= "double";
+Do					:= "do";
+Else				:= "else";
+Enum				:= "enum";
+Extern				:= "extern";
+Float				:= "float";
+For					:= "for";
+Goto				:= "goto";
+If 					:= "if";
+Inline 				:= "inline";
+Int 				:= "int";
+Long 				:= "long";
+Register 			:= "register";
+Restrict			:= "restrict";
+Return 				:= "return";
+Short 				:= "short";
+Signed 				:= "signed";
+Sizeof 				:= "sizeof";
+Static 				:= "static";
+Struct 				:= "struct";
+Switch 				:= "switch";
+Typedef 			:= "typedef";
+Union 				:= "union";
+Unsigned 			:= "unsigned";
+Void 				:= "void";
+Volatile 			:= "volatile";
+While 				:= "while";
+
+Alignas 			:= "_Alignas";
+Alignof 			:= "_Alignof";
+Atomic 				:= "_Atomic";
+Bool 				:= "_Bool";
+Complex				:= "_Complex";
+Generic 			:= "_Generic";
+Imaginary 			:= "_Imaginary";
+Noreturn 			:= "_Noreturn";
+StaticAssert 		:= "_Static_assert";
+ThreadLocal	 		:= "_Thread_local";
+
+LeftParen 			:= "\\(";
+RightParen 			:= "\\)";
+LeftBracket 		:= "[";
+RightBracket 		:= "]";
+LeftBrace 			:= "{";
+RightBrace 			:= "}";
+
+StarAssign 			:= "\\*=";
+DivAssign 			:= "/=";
+ModAssign 			:= "%=";
+PlusAssign 			:= "\\+=";
+MinusAssign			:= "\\-=";
+LeftShiftAssign 	:= "<<=";
+RightShiftAssign 	:= ">>=";
+AndAssign 			:= "&=";
+XorAssign 			:= "\\|=";
+Equal 				:= "==";
+NotEqual 			:= "!=";
+Assign 				:= "=";
+
+LeftShift 			:= "<<";
+RightShift 			:= ">>";
+LessEqual 			:= "<=";
+Less 				:= "<";
+GreaterEqual		:= ">=";
+Greater 			:= ">";
+
+PlusPlus 			:= "\\+\\+";
+Plus 				:= "\\+";
+Arrow 				:= "\\->";
+Ellipsis 			:= "...";
+Dot 				:= ".";
+MinusMinus 			:= "\\-\\-";
+Minus 				:= "\\-";
+Star 				:= "\\*";
+Div 				:= "/";
+Mod 				:= "%";
+
+AndAnd 				:= "&&";
+And 				:= "&";
+OrOr 				:= "\\|\\|";
+Or 					:= "\\|";
+Caret 				:= "^";
+Not 				:= "!";
+Tilde 				:= "~";
+
+Question			:= "?";
+Colon 				:= ":";
+Semi 				:= ";";
+Comma 				:= ",";
+Hash 				:= "#";
+Pragma 				:= "pragma";
+Include 			:= "include";
+
+Digit				:= "(0-9)";
+Identifier 			:= Digit "(a-z)" Digit "|" Digit;
+
+
+
+
 SINGLE_LINE_COMMENT := "//" ->
 {
 	while (ct_input->peek() != '\n')
@@ -31,5 +137,5 @@ HASH := "#";
 INCLUDE := "include";
 
 
-program := MULTI_LINE_COMMENT;
+program := Auto;
 _start_ := program;

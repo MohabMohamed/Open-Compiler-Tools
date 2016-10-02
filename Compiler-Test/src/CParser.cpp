@@ -7,15 +7,15 @@ using namespace CT::Parser;
 IParseNodePtr CParser::parseprogram(CT::Lexer::CachedScannerPtr ct_scanner, CT::InputStreamPtr ct_input)
 {
 	std::vector<CT::Parser::ParsingElement> ct_elements;
-	auto MULTI_LINE_COMMENTToken = ct_scanner->scan(ct_input);
-	if(MULTI_LINE_COMMENTToken.tag == "MULTI_LINE_COMMENT")
+	auto AutoToken = ct_scanner->scan(ct_input);
+	if(AutoToken.tag == "Auto")
 	{
-		CT::Parser::ParsingElement tokenElement; tokenElement.token = MULTI_LINE_COMMENTToken;
+		CT::Parser::ParsingElement tokenElement; tokenElement.token = AutoToken;
 		ct_elements.push_back(tokenElement);
 		return std::make_shared<IParseNode>();
 	}
 	ct_scanner->rewindToken();
-	CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {MULTI_LINE_COMMENT} but found none", ct_input->getPosition());
+	CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {Auto} but found none", ct_input->getPosition());
 	return nullptr;
 }
 IParseNodePtr CParser::parse(CT::Lexer::IScannerPtr ct_scanner, CT::InputStreamPtr ct_input)

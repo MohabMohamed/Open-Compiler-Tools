@@ -132,11 +132,21 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 
 	auto lex_id_token = scanner->scan(input);
 	auto assign_token = scanner->scan(input);
-	auto regex_token = scanner->scan(input);
+	auto regex_or_lex_token = scanner->scan(input);
 	if (lex_id_token.tag == "lex_id" &&
 		assign_token.tag == "assign" &&
-		regex_token.tag == "regex")
+		(regex_or_lex_token.tag == "lex_id" || regex_or_lex_token.tag == "regex"))
 	{
+		result->regex.reserve(5);
+		result->regex.push_back(regex_or_lex_token);
+		regex_or_lex_token = scanner->scan(input);
+		while (regex_or_lex_token.tag == "lex_id" || regex_or_lex_token.tag == "regex")
+		{
+			result->regex.push_back(regex_or_lex_token);
+			regex_or_lex_token = scanner->scan(input);
+		}
+		scanner->rewindToken();
+
 		auto action_token = scanner->scan(input);
 		bool foundAction = true;
 		if(action_token.tag != "action")
@@ -145,7 +155,6 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 			foundAction = false;
 		}
 		result->tokenName = lex_id_token.literal;
-		result->regex = regex_token.literal;
 		if (foundAction)
 			result->action = action_token.literal;
 		else

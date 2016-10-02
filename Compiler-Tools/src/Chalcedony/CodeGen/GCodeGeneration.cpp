@@ -1,6 +1,7 @@
 #include <Chalcedony/CodeGen/GCodeGeneration.h>
 #include <Chalcedony/Log.h>
 #include <sstream>
+#include <iostream>
 using namespace std;
 using namespace CT;
 using namespace CT::CodeGen;
@@ -13,6 +14,53 @@ std::string LLKRD::indent(u64 level)
 	for(int i=0;i<level;i++)
 		result += "\t";
 	return result;
+}
+
+std::string CT::CodeGen::LLKRD::evalLexRule(std::shared_ptr<CT::Parser::GLexRule> lex_rule,
+	std::map<std::string, std::shared_ptr<CT::Parser::GLexRule>>& lex_rules_map,
+	std::string& output,
+	std::map<std::shared_ptr<CT::Parser::GLexRule>, std::string>& visited)
+{
+	auto visited_it = visited.find(lex_rule);
+	if (visited_it != visited.end())
+	{
+		if (!(visited_it->second.empty())) {
+			output += visited_it->second;
+			return output;
+		}
+
+		CT::Log::log(CT::LOG_LEVEL::ERROR, "you made a cyclic reference of this lex rule " + lex_rule->tokenName.getString(), CT::FilePosition::invalid);
+		return "";
+	}
+	//set as visited
+	visited[lex_rule] = "";
+	//if null then return empty string
+	if (!lex_rule)
+		return output;
+
+	std::string local_rule_eval = "";
+	for (auto regex_component : lex_rule->regex)
+	{
+		if (regex_component.tag == "lex_id")
+		{
+			auto rule_it = lex_rules_map.find(regex_component.literal.getString());
+			if (rule_it != lex_rules_map.end())
+			{
+				evalLexRule(rule_it->second,
+					lex_rules_map, local_rule_eval, visited);
+			}
+			else {
+				CT::Log::log(CT::LOG_LEVEL::ERROR, "didn't find a lex rule with the name " + regex_component.literal.getString()+" referenced in lex rule "+lex_rule->tokenName.getString(), CT::FilePosition::invalid);
+				return output;
+			}
+		}
+		else if(regex_component.tag == "regex") {
+			local_rule_eval += regex_component.literal.getString();
+		}
+	}
+	visited[lex_rule] = local_rule_eval;
+	output += local_rule_eval;
+	return output;
 }
 
 std::string LLKRD::generateLexerHeader(const std::string& name)
@@ -34,9 +82,13 @@ std::string LLKRD::generateLexerHeader(const std::string& name)
 	return lexer_header.str();
 }
 
-std::string CT::CodeGen::LLKRD::generateLexerCPP(const std::string& lexer_name, const std::vector<GParseNodePtr>& lex_rules)
+std::string CT::CodeGen::LLKRD::generateLexerCPP(const std::string& lexer_name, const std::vector<std::shared_ptr<CT::Parser::GLexRule>>& lex_rules)
 {
 	stringstream lexer_cpp;
+
+	std::map<std::string, std::shared_ptr<GLexRule>> lex_rules_map;
+	for (auto child : lex_rules)
+		lex_rules_map.insert(std::make_pair(child->tokenName.getString(), child));
 
 	lexer_cpp << indent(0) << "#include \"" << lexer_name << "Lexer.h\"\n";
 	lexer_cpp << indent(0) << "#include <Chalcedony/Automata/RegexBuilder.h>\n";
@@ -52,10 +104,14 @@ std::string CT::CodeGen::LLKRD::generateLexerCPP(const std::string& lexer_name, 
 	lexer_cpp << indent(1) << "CT::RegexBuilder builder;\n";
 	for (auto child : lex_rules)
 	{
-		auto lex_rule = std::dynamic_pointer_cast<GLexRule>(child);
+		auto lex_rule = child;
 		if (lex_rule)
 		{
-			lexer_cpp << indent(1) << "registerToken(builder.create(\"" << lex_rule->regex.getString() << "\"), CT::Lexer::make_token(\"" << lex_rule->tokenName.getString() << "\"";
+			lexer_cpp << indent(1) << "registerToken(builder.create(\"";
+			std::string output = "";
+			std::map<std::shared_ptr<GLexRule>, std::string> visited;
+			lexer_cpp << evalLexRule(lex_rule, lex_rules_map, output, visited);
+			lexer_cpp << "\"), CT::Lexer::make_token(\"" << lex_rule->tokenName.getString() << "\"";
 			if (lex_rule->action != StringMarker::invalid)
 			{
 				lexer_cpp << ", [](CT::InputStreamPtr ct_input, Token& ct_token) -> bool\n";
@@ -361,7 +417,7 @@ std::string CT::CodeGen::LLKRD::generateParserCPP(const std::string& parser_name
 	return parser_cpp.str();
 }
 
-std::tuple<std::string, std::string> CT::CodeGen::LLKRD::generateLexer(const std::string& lexer_name, const std::vector<GParseNodePtr>& lex_rules)
+std::tuple<std::string, std::string> CT::CodeGen::LLKRD::generateLexer(const std::string& lexer_name, const std::vector<std::shared_ptr<CT::Parser::GLexRule>>& lex_rules)
 {
 
 	return std::make_tuple(generateLexerHeader(lexer_name), generateLexerCPP(lexer_name, lex_rules));
@@ -394,7 +450,7 @@ CodeGenOutput CT::CodeGen::LLKRD::generate(GParseNodePtr program)
 	std::vector<GParseNodePtr> directives;
 	directives.reserve(5);
 	//lex rules contianer
-	std::vector<GParseNodePtr> lex_rules;
+	std::vector<std::shared_ptr<GLexRule>> lex_rules;
 	lex_rules.reserve(250);
 
 	//parse rules container;
@@ -429,7 +485,12 @@ CodeGenOutput CT::CodeGen::LLKRD::generate(GParseNodePtr program)
 			directives.push_back(child);
 			break;
 		case GParseNodeTypes::LEX_RULE:
-			lex_rules.push_back(child);
+			{
+				auto lex_rule_node = std::dynamic_pointer_cast<GLexRule>(child);
+				if (lex_rule_node) {
+					lex_rules.push_back(lex_rule_node);
+				}
+			}
 			break;
 		case GParseNodeTypes::PARSE_RULE:
 			parse_rules.push_back(child);

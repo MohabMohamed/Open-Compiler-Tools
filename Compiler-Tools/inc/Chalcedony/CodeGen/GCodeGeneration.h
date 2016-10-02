@@ -6,6 +6,8 @@
 #include <memory>
 #include <ostream>
 #include <unordered_map>
+#include <map>
+#include <string>
 #include <set>
 
 namespace CT
@@ -17,8 +19,16 @@ namespace CT
 		{
 		protected:
 			inline std::string indent(u64 level);
+
+			std::string evalLexRule(std::shared_ptr<CT::Parser::GLexRule>,
+				std::map<std::string, std::shared_ptr<CT::Parser::GLexRule>>&,
+				std::string&,
+				std::map<std::shared_ptr<CT::Parser::GLexRule>, std::string>&);
+
 			std::string generateLexerHeader(const std::string& lexer_name);
-			std::string generateLexerCPP(const std::string& lexer_name, const std::vector<CT::Parser::GParseNodePtr>& lex_rules);
+
+			std::string generateLexerCPP(const std::string& lexer_name,
+				const std::vector<std::shared_ptr<CT::Parser::GLexRule>>& lex_rules);
 
 			void generateRuleFunctionBody(std::shared_ptr<CT::Parser::GParseRulesTreeNode> rule_tree, std::ostream& stream, int indentValue);
 
@@ -33,7 +43,9 @@ namespace CT
 				const std::vector<CT::Parser::GParseNodePtr>& parse_rules,
 				const std::vector<std::shared_ptr<CT::Parser::GPredicate>>& predicates);
 
-			std::tuple<std::string, std::string> generateLexer(const std::string& lexer_name, const std::vector<CT::Parser::GParseNodePtr>& lex_rules);
+			std::tuple<std::string, std::string> generateLexer(const std::string& lexer_name,
+				const std::vector<std::shared_ptr<CT::Parser::GLexRule>>& lex_rules);
+
 			std::tuple<std::string, std::string> generateParser(const std::string& parser_name,
 				const std::string& start_rule,
 				std::shared_ptr<CT::Parser::GHeaderSegment> header_code,
