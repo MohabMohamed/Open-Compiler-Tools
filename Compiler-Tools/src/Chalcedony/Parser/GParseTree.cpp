@@ -47,6 +47,7 @@ CT::Parser::GParseRulesTreeNode::GParseRulesTreeNode(bool root)
 {
 	isRoot = root;
 	isLeaf = false;
+	immediateActionsCounter = 0;
 	token = CT::Lexer::Token::invalid;
 	action = StringMarker::invalid;
 	predicate = StringMarker::invalid;
@@ -54,7 +55,22 @@ CT::Parser::GParseRulesTreeNode::GParseRulesTreeNode(bool root)
 
 CT::Parser::GParseRulesTreeNode::~GParseRulesTreeNode()
 {
+	immediateActions.clear();
 	next.clear();
+}
+
+CT::StringMarker CT::Parser::GParseRulesTreeNode::getImmediateAction()
+{
+	if (immediateActionsCounter < immediateActions.size())
+	{
+		return immediateActions[immediateActionsCounter++];
+	}
+	return CT::StringMarker::invalid;
+}
+
+void CT::Parser::GParseRulesTreeNode::resetImmediateActionCounter()
+{
+	immediateActionsCounter = 0;
 }
 
 std::shared_ptr<GParseRulesTreeNode> CT::Parser::GParseRulesTreeNode::insertNode(const CT::Lexer::Token & token)

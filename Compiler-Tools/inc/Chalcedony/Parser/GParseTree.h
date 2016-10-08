@@ -62,12 +62,17 @@ namespace CT
 			std::vector<std::shared_ptr<GParseRulesTreeNode>> next;
 			CT::Lexer::Token token;
 			StringMarker predicate;
+			std::vector<StringMarker> immediateActions;
 			StringMarker action;
+			u32 immediateActionsCounter;
 			bool isRoot;
 			bool isLeaf;
 
 			GParseRulesTreeNode(bool root = false);
 			~GParseRulesTreeNode();
+
+			StringMarker getImmediateAction();
+			void resetImmediateActionCounter();
 
 			std::shared_ptr<GParseRulesTreeNode> insertNode(const CT::Lexer::Token& token);
 		};

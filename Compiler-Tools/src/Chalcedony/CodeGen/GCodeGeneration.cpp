@@ -205,6 +205,13 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement nodeElement; nodeElement.node = node" << rule_tree_node->token.literal.getString() << ";\n";
 			stream << indent(indentValue + 1) << "ct_elements.push_back(nodeElement);\n";
 
+			//this is the immediate action
+			if (!rule_tree_node->immediateActions.empty())
+			{
+				auto immediate_action = rule_tree_node->getImmediateAction();
+				if (immediate_action != CT::StringMarker::invalid)
+					stream << indent(indentValue + 1) << immediate_action.getString() << "\n";
+			}
 
 			for (int i = 0; i < rule_tree_node->next.size(); i++) {
 				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
@@ -222,8 +229,18 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 			stream << indent(indentValue) << "auto any_token = ct_scanner->scan(ct_input);\n";
 			stream << indent(indentValue) << "if(any_token != CT::Lexer::Token::invalid && any_token != CT::Lexer::Token::eof)\n";
 			stream << indent(indentValue) << "{\n";
+
 			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = any_token;\n";
 			stream << indent(indentValue + 1) << "ct_elements.push_back(tokenElement);\n";
+
+			//this is the immediate action
+			if (!rule_tree_node->immediateActions.empty())
+			{
+				auto immediate_action = rule_tree_node->getImmediateAction();
+				if (immediate_action != CT::StringMarker::invalid)
+					stream << indent(indentValue + 1) << immediate_action.getString() << "\n";
+			}
+
 			for (int i = 0; i < rule_tree_node->next.size(); i++) {
 				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
 			}
@@ -247,6 +264,14 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 
 			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = " << rule_tree_node->token.literal.getString() << "Token;\n";
 			stream << indent(indentValue + 1) << "ct_elements.push_back(tokenElement);\n";
+
+			//this is the immediate action
+			if (!rule_tree_node->immediateActions.empty())
+			{
+				auto immediate_action = rule_tree_node->getImmediateAction();
+				if (immediate_action != CT::StringMarker::invalid)
+					stream << indent(indentValue + 1) << immediate_action.getString() << "\n";
+			}
 
 			for (int i = 0; i < rule_tree_node->next.size(); i++) {
 				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
@@ -287,6 +312,14 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement nodeElement; nodeElement.node = node" << rule_tree_node->token.literal.getString() << ";\n";
 			stream << indent(indentValue + 1) << "ct_elements.push_back(nodeElement);\n";
 
+			//this is the immediate action
+			if (!rule_tree_node->immediateActions.empty())
+			{
+				auto immediate_action = rule_tree_node->getImmediateAction();
+				if (immediate_action != CT::StringMarker::invalid)
+					stream << indent(indentValue + 1) << immediate_action.getString() << "\n";
+			}
+
 			std::string list_nodes = "";
 			for (int i = 0; i < rule_tree_node->next.size(); i++) {
 				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
@@ -318,6 +351,15 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 			stream << indent(indentValue) << "{\n";
 			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = any_token;\n";
 			stream << indent(indentValue + 1) << "ct_elements.push_back(tokenElement);\n";
+
+			//this is the immediate action
+			if (!rule_tree_node->immediateActions.empty())
+			{
+				auto immediate_action = rule_tree_node->getImmediateAction();
+				if (immediate_action != CT::StringMarker::invalid)
+					stream << indent(indentValue + 1) << immediate_action.getString() << "\n";
+			}
+
 			for (int i = 0; i < rule_tree_node->next.size(); i++) {
 				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
 			}
@@ -341,6 +383,14 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 
 			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = " << rule_tree_node->token.literal.getString() << "Token;\n";
 			stream << indent(indentValue + 1) << "ct_elements.push_back(tokenElement);\n";
+
+			//this is the immediate action
+			if (!rule_tree_node->immediateActions.empty())
+			{
+				auto immediate_action = rule_tree_node->getImmediateAction();
+				if (immediate_action != CT::StringMarker::invalid)
+					stream << indent(indentValue + 1) << immediate_action.getString() << "\n";
+			}
 
 			std::string list_nodes = "";
 			for (int i = 0; i < rule_tree_node->next.size(); i++) {
@@ -635,7 +685,7 @@ bool LeftRecursionChecker::check(const std::string& rule_name, CT::Parser::GPars
 	return false;
 }
 
-bool LeftRecursionChecker::process(std::vector<CT::Parser::GParseNodePtr> parse_rules)
+bool LeftRecursionChecker::process(std::vector<CT::Parser::GParseNodePtr>& parse_rules)
 {
 	m_validRules.clear();
 	m_rulesTable.clear();

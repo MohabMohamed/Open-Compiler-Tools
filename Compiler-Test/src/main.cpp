@@ -155,15 +155,19 @@ int main(int argc, char* argv[]) {
 	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GenericParser>();
 	parser->parse(scanner, ss2);*/
 
-	//std::string grammar_filename = "grammar/c.gr";
-	//CT::Lexer::IScannerPtr scanner = std::make_shared<CT::Lexer::GLexer>();
-	//CT::InputStreamPtr ss = CT::open_file(grammar_filename);
-	//auto c_token = scanner->scan(ss);
-	//while (c_token != CT::Lexer::Token::eof)
-	//{
-	//	std::cout << c_token.tag << ": <" << c_token.literal.getString() << ">" <<std::endl;
-	//	c_token = scanner->scan(ss);
-	//}
+	/*std::string grammar_filename = "grammar/c.gr";
+	CT::Lexer::IScannerPtr scanner = std::make_shared<CT::Lexer::GLexer>();
+	CT::InputStreamPtr ss = CT::open_file(grammar_filename);*/
+	/*auto c_token = scanner->scan(ss);
+	while (c_token != CT::Lexer::Token::eof)
+	{
+		std::cout << c_token.tag << ": <" << c_token.literal.getString() << ">" <<std::endl;
+		c_token = scanner->scan(ss);
+	}*/
+	/*CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GParser>();
+	auto program = parser->parse(scanner, ss);
+	CT::CodeGen::LLKRD compiler_generator;
+	auto generated_code = compiler_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(program));*/
 
 	//cpp model
 	/*string src = "x 334";
@@ -176,7 +180,7 @@ int main(int argc, char* argv[]) {
 		std::cout << match[i].str() << std::endl;
 	}*/
 
-	CT::InputStreamPtr file_input = CT::open_file(input_filename);
+	CT::InputStreamPtr file_input = CT::open_file("test/c_test_02.c");
 	auto lexer_ptr = std::make_shared<C::CLexer>();
 	//auto c_token = lexer_ptr->scan(file_input);
 	//while (c_token != CT::Lexer::Token::eof)

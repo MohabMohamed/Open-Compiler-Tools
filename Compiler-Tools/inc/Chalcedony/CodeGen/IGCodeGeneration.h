@@ -29,7 +29,7 @@ namespace CT
 		class API IGrammarProcessor
 		{
 		public:
-			virtual bool process(std::vector<CT::Parser::GParseNodePtr> grammar) = 0;
+			virtual bool process(std::vector<CT::Parser::GParseNodePtr>& grammar) = 0;
 		};
 	}
 }

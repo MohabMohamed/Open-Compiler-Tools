@@ -250,7 +250,16 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 				auto action_token = scanner->scan(input);
 				if (action_token.tag == "action")
 				{
-					rules_tree_it->action = action_token.literal;
+					auto look_up_immediate = scanner->scan(input);
+					//checks the next token if it's at the end of the rule which is indicated by ; or |
+					//then this is an action
+					if (look_up_immediate.tag == "or" || look_up_immediate.tag == "semicolon")
+						rules_tree_it->action = action_token.literal;
+					//else if the rule continues then this is immediate action
+					else if (look_up_immediate.tag == "lex_id" || look_up_immediate.tag == "parse_id" || look_up_immediate.tag == "any_token")
+						rules_tree_it->immediateActions.push_back(action_token.literal);
+					//rewind the look up token
+					scanner->rewindToken();
 				}else
 				{
 					scanner->rewindToken();

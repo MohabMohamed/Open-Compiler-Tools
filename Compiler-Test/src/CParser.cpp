@@ -80,6 +80,9 @@ IParseNodePtr CParser::parseprogramStar(CT::Lexer::CachedScannerPtr ct_scanner, 
 			ct_elements.push_back(nodeElement);
 			return std::make_shared<IParseNode>();
 		}
+		{
+				std::cout<< "found a single program" <<std::endl;
+			}
 		return std::make_shared<IParseNode>();
 	}
 	CT::Log::commitEntry(CT::LOG_LEVEL::ERROR, "parser was expecting one of this nodes {program} but found none", ct_input->getPosition());

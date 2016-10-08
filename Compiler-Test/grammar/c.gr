@@ -274,7 +274,10 @@ program := Hash Include Less ->
 		;
 
 programStar := program programStar
-			| program
+			| program -> 
+			{
+				std::cout<< "found a single program" <<std::endl;
+			}
 			;
 
 ct_start := programStar;

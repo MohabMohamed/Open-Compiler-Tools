@@ -59,6 +59,8 @@ namespace CT
 			virtual CodeGenOutput generate(CT::Parser::GParseNodePtr program) override;
 		};
 
+		//detects a left recursion that never consumes any token
+		//exp	:= exp Plus exp; [this will loop forever]
 		class API LeftRecursionChecker: public IGrammarProcessor
 		{
 		protected:
@@ -68,7 +70,7 @@ namespace CT
 
 			bool check(const std::string& rule_name, CT::Parser::GParseRulesTreeNodePtr rule_node);
 		public:
-			bool process(std::vector<CT::Parser::GParseNodePtr> parse_rules) override;
+			bool process(std::vector<CT::Parser::GParseNodePtr>& parse_rules) override;
 		};
 	}
 }
