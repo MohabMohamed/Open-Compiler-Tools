@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <map>
 #include <string>
+#include <vector>
 #include <set>
 
 namespace CT
@@ -18,6 +19,8 @@ namespace CT
 		class API LLKRD: public IGCodeGeneration
 		{
 		protected:
+			std::set<std::string> m_referencedLexRules;
+
 			inline std::string indent(u64 level);
 
 			std::string evalLexRule(std::shared_ptr<CT::Parser::GLexRule>,

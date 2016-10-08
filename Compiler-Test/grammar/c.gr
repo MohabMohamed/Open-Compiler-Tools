@@ -1,4 +1,14 @@
 #name C;
+#cpp{
+	#include <iostream>
+};
+
+skip Newline 		:= "\n";
+skip CarrReturn		:= "\r";
+skip Space 			:= " ";
+skip Tab 			:= "\t";
+skip VerticalSpace	:= "\v";
+skip FThing			:= "\f";
 
 Auto 				:= "auto";
 Break 				:= "break";
@@ -17,6 +27,7 @@ For					:= "for";
 Goto				:= "goto";
 If 					:= "if";
 Inline 				:= "inline";
+InlineGCC 			:= "__inline__";
 Int 				:= "int";
 Long 				:= "long";
 Register 			:= "register";
@@ -45,79 +56,34 @@ Imaginary 			:= "_Imaginary";
 Noreturn 			:= "_Noreturn";
 StaticAssert 		:= "_Static_assert";
 ThreadLocal	 		:= "_Thread_local";
-
-LeftParen 			:= "\\(";
-RightParen 			:= "\\)";
-LeftBracket 		:= "[";
-RightBracket 		:= "]";
-LeftBrace 			:= "{";
-RightBrace 			:= "}";
-
-StarAssign 			:= "\\*=";
-DivAssign 			:= "/=";
-ModAssign 			:= "%=";
-PlusAssign 			:= "\\+=";
-MinusAssign			:= "\\-=";
-LeftShiftAssign 	:= "<<=";
-RightShiftAssign 	:= ">>=";
-AndAssign 			:= "&=";
-XorAssign 			:= "\\|=";
-Equal 				:= "==";
-NotEqual 			:= "!=";
-Assign 				:= "=";
-
-LeftShift 			:= "<<";
-RightShift 			:= ">>";
-LessEqual 			:= "<=";
-Less 				:= "<";
-GreaterEqual		:= ">=";
-Greater 			:= ">";
-
-PlusPlus 			:= "\\+\\+";
-Plus 				:= "\\+";
-Arrow 				:= "\\->";
-Ellipsis 			:= "...";
-Dot 				:= ".";
-MinusMinus 			:= "\\-\\-";
-Minus 				:= "\\-";
-Star 				:= "\\*";
-Div 				:= "/";
-Mod 				:= "%";
-
-AndAnd 				:= "&&";
-And 				:= "&";
-OrOr 				:= "\\|\\|";
-Or 					:= "\\|";
-Caret 				:= "^";
-Not 				:= "!";
-Tilde 				:= "~";
-
-Question			:= "?";
-Colon 				:= ":";
-Semi 				:= ";";
-Comma 				:= ",";
-Hash 				:= "#";
-Pragma 				:= "pragma";
-Include 			:= "include";
-
-Digit				:= "(0-9)";
-Identifier 			:= Digit "(a-z)" Digit "|" Digit;
+Extension			:= "__extension__";
+BuiltInVaArg 		:= "__builtin_va_arg";
+BuiltInOffsetOf 	:= "__builtin_offsetof";
+SIMDNoType 			:= "__m128";
+SIMDDType 			:= "__m128d";
+SIMDIType 			:= "__m128i";
+TypeOf				:= "__typeof__";
+StdCall 			:= "__stdcall";
+DeclSpec 			:= "__declspec";
+Asm 				:= "__asm";
+Attribute 			:= "__attribute__";
 
 
 
-
-SINGLE_LINE_COMMENT := "//" ->
+skip SINGLE_LINE_COMMENT := "//" ->
 {
+	ct_input->pushMarker(ct_token.literal);
 	while (ct_input->peek() != '\n')
 	{
 		ct_input->popLetter();
 	}
-	ct_token.literal = CT::StringMarker::invalid;
+	ct_token.literal = ct_input->popMarker();
 	return true;
 };
 
-MULTI_LINE_COMMENT := "/*" ->
+skip MULTI_LINE_COMMENT := "/\\*" ->
 {
+	ct_input->pushMarker(ct_token.literal);
 	char prev = '\0';
 	while(true)
 	{
@@ -129,13 +95,186 @@ MULTI_LINE_COMMENT := "/*" ->
 			break;
 		prev = c;
 	}
-	ct_token.literal = CT::StringMarker::invalid;
+	ct_token.literal = ct_input->popMarker();
 	return true;
 };
 
-HASH := "#";
-INCLUDE := "include";
+LeftParen 			:= "\\(";
+RightParen 			:= "\\)";
+LeftBracket 		:= "[";
+RightBracket 		:= "]";
+LeftBrace 			:= "{";
+RightBrace 			:= "}";
+
+LeftShift 			:= "<<";
+RightShift 			:= ">>";
+LessEqual 			:= "<=";
+GreaterEqual		:= ">=";
+
+StarAssign 			:= "\\*=";
+DivAssign 			:= "/=";
+ModAssign 			:= "%=";
+PlusAssign 			:= "\\+=";
+MinusAssign			:= "\\-=";
+LeftShiftAssign 	:= "<<=";
+RightShiftAssign 	:= ">>=";
+AndAssign 			:= "&=";
+XorAssign 			:= "^=";
+OrAssign 			:= "\\|=";
+Equal 				:= "==";
+NotEqual 			:= "!=";
+Assign 				:= "=";
+
+PlusPlus 			:= "\\+\\+";
+Arrow 				:= "\\->";
+Ellipsis 			:= "...";
+MinusMinus 			:= "\\-\\-";
 
 
-program := Auto;
-_start_ := program;
+AndAnd 				:= "&&";
+OrOr 				:= "\\|\\|";
+Caret 				:= "^";
+Not 				:= "!";
+Tilde 				:= "~";
+
+Greater 			:= ">";
+Less 				:= "<";
+And 				:= "&";
+Or 					:= "\\|";
+Minus 				:= "\\-";
+Star 				:= "\\*";
+Div 				:= "/";
+Mod 				:= "%";
+Plus 				:= "\\+";
+Dot 				:= ".";
+
+Question			:= "\\?";
+Colon 				:= ":";
+Semi 				:= ";";
+Comma 				:= ",";
+Hash 				:= "#";
+Pragma 				:= "pragma";
+Include 			:= "include";
+Define 				:= "define";
+
+Identifier 			:= IdentifierNonDigit "(" IdentifierNonDigit "|" Digit ")*";
+IdentifierNonDigit 	:= Nondigit "|" UniversalCharName;
+
+UniversalCharName 	:= "(" "\\\\u" HexQuad ")" "|"
+					   "(" "\\\\U" HexQuad ")";
+HexQuad		 		:= HexDigit HexDigit HexDigit HexDigit;
+
+Constant 			:= "(" IntegerConstant "|" FloatingConstant ")";
+
+IntegerConstant 	:=  "(" DecimalConstant IntegerSuffix "?" ")" "|"
+						"("	OctalConstant IntegerSuffix "?" ")" "|"
+						"("	HexConstant IntegerSuffix "?" ")" "|"
+							BinaryConstant;
+
+DecimalConstant 	:= NonZeroDigit Digit "*";
+OctalConstant 		:= "0" OctalDigit "*";
+HexConstant			:= HexPrefix HexDigit "+";
+
+IntegerSuffix 		:= "(" UnsignedSuffix LongSuffix "?" ")" "|"
+					   "(" UnsignedSuffix LongLongSuffix ")" "|"
+					   "(" LongSuffix UnsignedSuffix "?" ")" "|"
+					   "(" LongLongSuffix UnsignedSuffix "?" ")";
+
+FloatingConstant 	:= DecimalFloatingConstant "|" HexFloatConstant;
+
+DecimalFloatingConstant := "(" FractionalConstant ExponentPart "?" FloatingSuffix "?" ")" "|"
+						   "(" DigitSequence ExponentPart FloatingSuffix "?" ")";
+
+HexFloatConstant	:= "(" HexPrefix HexFractionalConstant BinaryExponentPart FloatingSuffix "?" ")" "|"
+					   "(" HexPrefix HexDigitSequence BinaryExponentPart FloatingSuffix "?" ")";
+
+FractionalConstant 	:= "(" DigitSequence "?" "." DigitSequence ")" "|"
+					   "(" DigitSequence "." ")";
+
+ExponentPart 		:= "(" "e" Sign "?" DigitSequence ")" "|"
+					   "(" "E" Sign "?" DigitSequence ")";
+
+Sign 				:= "(\\+ | \\-)";
+
+DigitSequence 		:= Digit "+";
+
+HexFractionalConstant := "(" HexDigitSequence "?" "." HexDigitSequence ")" "|"
+					   	 "(" HexDigitSequence "." ")";
+
+BinaryExponentPart 	:= "(" "(p|P)" Sign "?" DigitSequence ")";
+
+HexDigitSequence 	:= HexDigit "+";
+
+FloatingSuffix 		:= "(f|l|F|L)";
+
+StringConstant 		:= EncodingPrefix "?" "\"" ->
+{
+	ct_input->pushMarker(ct_token.literal);
+	char prev = '\0';
+	auto c = ct_input->peek();
+	while(true)
+	{
+		bool ignore = false;
+		if(prev == '\\')
+			ignore = true;
+		if(c == '"' && !ignore)
+			break;
+		//pop peeked letter
+		ct_input->popLetter();
+		prev = c;
+		c = ct_input->peek();
+	}
+	ct_input->popLetter();
+	ct_token.literal = ct_input->popMarker();
+	return true;
+};
+
+CharConstant 		:= "'" ->
+{
+	ct_input->pushMarker(ct_token.literal);
+	char val = ct_input->popLetter();
+	char close_quote = ct_input->popLetter();
+	if(close_quote != '\''){
+		ct_input->rewindLetter();
+		ct_input->rewindLetter();
+		return false;
+	}
+	ct_token.literal = ct_input->popMarker();
+	return true;
+};
+
+EncodingPrefix 		:= "(u8)|(u|U|L)";
+
+Nondigit 			:= "(a-z|A-Z|_)";
+Digit 				:= "(0-9)";
+BinaryConstant 		:= "0 (b|B) (0|1)+";
+HexPrefix 			:= "0(x|X)";
+NonZeroDigit 		:= "(1-9)";
+OctalDigit 			:= "(0-7)";
+HexDigit 			:= "(0-9|a-f|A-F)";
+UnsignedSuffix		:= "(u|U)";
+LongSuffix 			:= "(l|L)";
+LongLongSuffix 		:= "(ll|LL)";
+
+
+program := Hash Include Less ->
+		{
+			std::string incFile = "";
+			while(ct_input->peek() != '>')
+				incFile += ct_input->popLetter();
+			std::cout<<"include: "<<incFile<<std::endl;
+			ct_input->popLetter();
+		}
+		| Hash Include StringConstant ->
+		{
+			auto val_str = ct_elements[2].token.literal.getString();
+			std::cout<<"include: "<<val_str.substr(1,val_str.size()-2)<<std::endl;
+		}
+		| ct_any
+		;
+
+programStar := program programStar
+			| program
+			;
+
+ct_start := programStar;

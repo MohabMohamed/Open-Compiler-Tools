@@ -49,7 +49,14 @@ GParseNodePtr GParser::parseStatement(Lexer::CachedScannerPtr scanner, InputStre
 		scanner->rewindToken();
 		auto statement = parseNameDirective(scanner, input);
 		return statement;
-	}else if(token.tag == "lex_id")
+	}
+	else if (token.tag == "skip")
+	{
+		scanner->rewindToken();
+		auto statement = parseLexRule(scanner, input);
+		return statement;
+	}
+	else if (token.tag == "lex_id")
 	{
 		auto maybe_action_token = scanner->scan(input);
 		if (maybe_action_token.tag == "action")
@@ -129,14 +136,22 @@ GParseNodePtr GParser::parseNameDirective(Lexer::CachedScannerPtr scanner, Input
 GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	std::shared_ptr<GLexRule> result = std::make_shared<GLexRule>();
+	auto skip_token = scanner->scan(input);
+	auto lex_id_token = CT::Lexer::Token::invalid;
+	if (skip_token.tag == "skip")
+		lex_id_token = scanner->scan(input);
+	else
+		lex_id_token = skip_token;
 
-	auto lex_id_token = scanner->scan(input);
 	auto assign_token = scanner->scan(input);
 	auto regex_or_lex_token = scanner->scan(input);
 	if (lex_id_token.tag == "lex_id" &&
 		assign_token.tag == "assign" &&
 		(regex_or_lex_token.tag == "lex_id" || regex_or_lex_token.tag == "regex"))
 	{
+		if (skip_token.tag == "skip")
+			result->isSkip = true;
+
 		result->regex.reserve(5);
 		result->regex.push_back(regex_or_lex_token);
 		regex_or_lex_token = scanner->scan(input);
@@ -149,7 +164,7 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 
 		auto action_token = scanner->scan(input);
 		bool foundAction = true;
-		if(action_token.tag != "action")
+		if (action_token.tag != "action")
 		{
 			scanner->rewindToken();
 			foundAction = false;
@@ -160,10 +175,13 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 		else
 			result->action = StringMarker::invalid;
 		return result;
-	}else{
+	}
+	else {
 		scanner->rewindToken();
 		scanner->rewindToken();
 		scanner->rewindToken();
+		if (skip_token.tag == "skip")
+			scanner->rewindToken();
 		return nullptr;
 	}
 }
@@ -202,7 +220,8 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 				break;
 			}
 			if (rule_token.tag == "lex_id" ||
-				rule_token.tag == "parse_id")
+				rule_token.tag == "parse_id" ||
+				rule_token.tag == "any_token")
 			{
 				//insert a node to the tree
 				rules_tree_it = rules_tree_it->insertNode(rule_token);

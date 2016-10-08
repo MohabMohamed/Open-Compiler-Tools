@@ -15,8 +15,12 @@ namespace CT
 			std::vector<std::pair<std::shared_ptr<Automata::NFA<char>>, Token>> m_scanningMachines;
 			// <nfa, token>
 			std::vector<std::pair<std::shared_ptr<Automata::NFA<char>>, Token>> m_currentMachines;
+			//token stack
+			std::stack<std::pair<Token, CT::Automata::FSMState>> m_tokenStack;
 
+			std::set<char> m_ignoreCharSet;
 			void reset();
+			Token popToken(InputStreamPtr input);
 		public:
 			virtual ~Scanner();
 

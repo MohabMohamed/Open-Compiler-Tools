@@ -3,14 +3,44 @@
 #include <stdlib.h>
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <memory>
+#include <regex>
 #include <Chalcedony\Chalcedony.h>
 #include <CLexer.h>
 #include <CParser.h>
 
 using namespace std;
+class InputParser {
+public:
+	InputParser(int &argc, char **argv) {
+		for (int i = 1; i < argc; ++i)
+			this->tokens.push_back(std::string(argv[i]));
+	}
+	/// @author iain
+	const std::string& getCmdOption(const std::string &option) const {
+		std::vector<std::string>::const_iterator itr;
+		itr = std::find(this->tokens.begin(), this->tokens.end(), option);
+		if (itr != this->tokens.end() && ++itr != this->tokens.end()) {
+			return *itr;
+		}
+		return "";
+	}
+	/// @author iain
+	bool cmdOptionExists(const std::string &option) const {
+		return std::find(this->tokens.begin(), this->tokens.end(), option)
+			!= this->tokens.end();
+	}
+private:
+	std::vector <std::string> tokens;
+};
 
-int main() {
+int main(int argc, char* argv[]) {
+	InputParser input(argc, argv);
+	std::string input_filename = "";
+	if (input.cmdOptionExists("-in")) {
+		input_filename = input.getCmdOption("-in");
+	}
 
 	/*
 	/*int x = 0;
@@ -125,11 +155,44 @@ int main() {
 	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GenericParser>();
 	parser->parse(scanner, ss2);*/
 
-	CT::InputStreamPtr file_input = CT::open_file("test/c_test.c");
+	//std::string grammar_filename = "grammar/c.gr";
+	//CT::Lexer::IScannerPtr scanner = std::make_shared<CT::Lexer::GLexer>();
+	//CT::InputStreamPtr ss = CT::open_file(grammar_filename);
+	//auto c_token = scanner->scan(ss);
+	//while (c_token != CT::Lexer::Token::eof)
+	//{
+	//	std::cout << c_token.tag << ": <" << c_token.literal.getString() << ">" <<std::endl;
+	//	c_token = scanner->scan(ss);
+	//}
+
+	//cpp model
+	/*string src = "x 334";
+	std::regex num("x");
+	std::smatch match;
+	std::cout << std::regex_search(src, match, num, std::regex_constants::match_continuous) << std::endl;
+	std::cout << match.size() << std::endl;
+	for (int i = 0; i<match.size(); i++)
+	{
+		std::cout << match[i].str() << std::endl;
+	}*/
+
+	CT::InputStreamPtr file_input = CT::open_file(input_filename);
 	auto lexer_ptr = std::make_shared<C::CLexer>();
+	//auto c_token = lexer_ptr->scan(file_input);
+	//while (c_token != CT::Lexer::Token::eof)
+	//{
+	//	if (c_token == CT::Lexer::Token::eof)
+	//		out << "EOF" << std::endl;
+	//	else if (c_token == CT::Lexer::Token::invalid)
+	//		out << "invalid" << std::endl;
+	//	else {
+	//		out << c_token.tag << ": <" << c_token.literal.getString() << ">" << std::endl;
+	//	}
+	//	c_token = lexer_ptr->scan(file_input);
+	//}
+	//return 0;
 	auto parser_ptr = std::make_shared<C::CParser>();
 	auto program = parser_ptr->parse(lexer_ptr, file_input);
 	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
-
 	return 0;
 }

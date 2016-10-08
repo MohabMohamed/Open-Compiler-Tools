@@ -25,7 +25,7 @@ GNameDirective::GNameDirective(GParseNodeTypes fType)
 {}
 
 GLexRule::GLexRule(GParseNodeTypes fType)
-: GParseNode(fType)
+	: GParseNode(fType), isSkip(false)
 {}
 
 GLexRule::~GLexRule()

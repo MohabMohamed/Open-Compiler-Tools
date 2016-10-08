@@ -49,6 +49,7 @@ namespace CT
 			StringMarker tokenName;
 			std::vector<Lexer::Token> regex;
 			StringMarker action;
+			bool isSkip;
 
 			GLexRule(GParseNodeTypes fType = GParseNodeTypes::LEX_RULE);
 			virtual ~GLexRule();

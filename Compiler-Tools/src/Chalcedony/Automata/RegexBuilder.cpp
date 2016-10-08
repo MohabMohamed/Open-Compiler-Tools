@@ -283,7 +283,8 @@ void RegexBuilder::cloneUnit(const std::vector<Automata::StatePtr<char>>& origin
 	{
 		for(auto transition: original[i]->getTransitions())
 		{
-			cloned[i]->addTransition(transition.first, phonebook[transition.second]);
+			if(!transition.second.expired())
+				cloned[i]->addTransition(transition.first, phonebook[transition.second.lock()]);
 		}
 	}
 }
@@ -404,5 +405,5 @@ std::shared_ptr<Automata::NFA<char>> RegexBuilder::create(const std::string& str
 			return nullptr;
 
 	m_operands.top().back()->setIsFinal(true);
-	return std::make_shared<Automata::NFA<char>>(m_operands.top().front());
+	return std::make_shared<Automata::NFA<char>>(m_operands.top().front(), m_operands.top());
 }

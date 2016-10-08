@@ -38,7 +38,7 @@ std::string CT::CodeGen::LLKRD::evalLexRule(std::shared_ptr<CT::Parser::GLexRule
 	if (!lex_rule)
 		return output;
 
-	std::string local_rule_eval = "";
+	std::string local_rule_eval = "(";
 	for (auto regex_component : lex_rule->regex)
 	{
 		if (regex_component.tag == "lex_id")
@@ -58,6 +58,7 @@ std::string CT::CodeGen::LLKRD::evalLexRule(std::shared_ptr<CT::Parser::GLexRule
 			local_rule_eval += regex_component.literal.getString();
 		}
 	}
+	local_rule_eval += ")";
 	visited[lex_rule] = local_rule_eval;
 	output += local_rule_eval;
 	return output;
@@ -85,7 +86,20 @@ std::string LLKRD::generateLexerHeader(const std::string& name)
 std::string CT::CodeGen::LLKRD::generateLexerCPP(const std::string& lexer_name, const std::vector<std::shared_ptr<CT::Parser::GLexRule>>& lex_rules)
 {
 	stringstream lexer_cpp;
+	//fill the refereced_rules
+	std::cout << lex_rules.size() << std::endl;
+	for (auto child : lex_rules) {
+		std::cout << child->regex.size() << std::endl;
+		for (auto token : child->regex) {
+			if (token.tag == "lex_id") {
+				m_referencedLexRules.insert(token.literal.getString());
+				std::cout << token.literal.getString() << std::endl;
+			}
+		}
 
+	}
+
+	//fill the lex_rules_map
 	std::map<std::string, std::shared_ptr<GLexRule>> lex_rules_map;
 	for (auto child : lex_rules)
 		lex_rules_map.insert(std::make_pair(child->tokenName.getString(), child));
@@ -105,16 +119,23 @@ std::string CT::CodeGen::LLKRD::generateLexerCPP(const std::string& lexer_name, 
 	for (auto child : lex_rules)
 	{
 		auto lex_rule = child;
-		if (lex_rule)
+		if (lex_rule && m_referencedLexRules.find(lex_rule->tokenName.getString()) == m_referencedLexRules.end())
 		{
 			lexer_cpp << indent(1) << "registerToken(builder.create(\"";
 			std::string output = "";
 			std::map<std::shared_ptr<GLexRule>, std::string> visited;
 			lexer_cpp << evalLexRule(lex_rule, lex_rules_map, output, visited);
-			lexer_cpp << "\"), CT::Lexer::make_token(\"" << lex_rule->tokenName.getString() << "\"";
+			lexer_cpp << "\"), ";
+			if(lex_rule->isSkip)
+				lexer_cpp << "CT::Lexer::make_token(";
+			else
+				lexer_cpp << "CT::Lexer::make_token(\"" << lex_rule->tokenName.getString() << "\"";
 			if (lex_rule->action != StringMarker::invalid)
 			{
-				lexer_cpp << ", [](CT::InputStreamPtr ct_input, Token& ct_token) -> bool\n";
+				if (!lex_rule->isSkip)
+					lexer_cpp << ", ";
+
+				lexer_cpp << "[](CT::InputStreamPtr ct_input, Token& ct_token) -> bool\n";
 				lexer_cpp << indent(1) << lex_rule->action.getString() << "\n\t));\n";
 			}
 			else
@@ -195,7 +216,23 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 			stream << indent(indentValue + 1) << "return std::make_shared<IParseNode>();\n";
 			stream << indent(indentValue) << "}\n";
 
-		}else{
+		}
+		else if (rule_tree_node->token.tag == "any_token")
+		{
+			stream << indent(indentValue) << "auto any_token = ct_scanner->scan(ct_input);\n";
+			stream << indent(indentValue) << "if(any_token != CT::Lexer::Token::invalid && any_token != CT::Lexer::Token::eof)\n";
+			stream << indent(indentValue) << "{\n";
+			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = any_token;\n";
+			stream << indent(indentValue + 1) << "ct_elements.push_back(tokenElement);\n";
+			for (int i = 0; i < rule_tree_node->next.size(); i++) {
+				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
+			}
+			if (rule_tree_node->action != StringMarker::invalid)
+				stream << indent(indentValue + 1) << rule_tree_node->action.getString() << "\n";
+
+			stream << indent(indentValue + 1) << "return std::make_shared<IParseNode>();\n";
+			stream << indent(indentValue) << "}\n";
+		}else {
 
 			stream << indent(indentValue) << "auto " << rule_tree_node->token.literal.getString() << "Token = ct_scanner->scan(ct_input);\n";
 			//predicate
@@ -273,7 +310,23 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 			stream << indent(indentValue + 1) << "return nullptr;\n";
 			stream << indent(indentValue) << "}\n";
 
-		}else{
+		}
+		else if (rule_tree_node->token.tag == "any_token")
+		{
+			stream << indent(indentValue) << "auto any_token = ct_scanner->scan(ct_input);\n";
+			stream << indent(indentValue) << "if(any_token != CT::Lexer::Token::invalid && any_token != CT::Lexer::Token::eof)\n";
+			stream << indent(indentValue) << "{\n";
+			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = any_token;\n";
+			stream << indent(indentValue + 1) << "ct_elements.push_back(tokenElement);\n";
+			for (int i = 0; i < rule_tree_node->next.size(); i++) {
+				generateRuleFunctionBody(rule_tree_node->next[i], stream, indentValue + 1);
+			}
+			if (rule_tree_node->action != StringMarker::invalid)
+				stream << indent(indentValue + 1) << rule_tree_node->action.getString() << "\n";
+			stream << indent(indentValue + 1) << "return std::make_shared<IParseNode>();\n";
+			stream << indent(indentValue) << "}\n";
+		}
+		else {
 
 			stream << indent(indentValue) << "auto " << rule_tree_node->token.literal.getString() << "Token = ct_scanner->scan(ct_input);\n";
 			//predicate
@@ -566,7 +619,7 @@ bool LeftRecursionChecker::check(const std::string& rule_name, CT::Parser::GPars
 		m_validRules[rule_name] = result;
 		return result;
 	}else{
-		if (rule_node->token.tag == "lex_id")
+		if (rule_node->token.tag == "lex_id" || rule_node->token.tag == "any_token")
 		{
 			m_validRules[rule_name] = true;
 			return true;

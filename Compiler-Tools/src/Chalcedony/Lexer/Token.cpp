@@ -5,10 +5,11 @@ using namespace CT::Lexer;
 
 const Token Token::eof = eof_token();
 const Token Token::invalid = invalid_token();
+const Token Token::skip = skip_token();
 std::unordered_map<std::string, s64> Token::TOKEN_TAGS;
 
 Token::Token()
-	:isEOF(false), isInvalid(false)
+	:isEOF(false), isInvalid(false), isSkip(false)
 {}
 
 Token Lexer::eof_token()
@@ -16,6 +17,7 @@ Token Lexer::eof_token()
 	Token result;
 	result.isEOF = true;
 	result.isInvalid = false;
+	result.isSkip = false;
 	return result;
 }
 
@@ -24,6 +26,16 @@ Token Lexer::invalid_token()
 	Token result;
 	result.isInvalid = true;
 	result.isEOF = false;
+	result.isSkip = false;
+	return result;
+}
+
+API Token CT::Lexer::skip_token()
+{
+	Token result;
+	result.isInvalid = false;
+	result.isEOF = false;
+	result.isSkip = true;
 	return result;
 }
 
@@ -55,5 +67,13 @@ API Token CT::Lexer::make_token(std::string tagName, std::function<bool(InputStr
 	result.event = eventFunction;
 	result.isEOF = false;
 	result.isInvalid = false;
+	result.isSkip = false;
+	return result;
+}
+
+API Token CT::Lexer::make_token(std::function<bool(InputStreamPtr, Token&)> eventFunction)
+{
+	Token result = Token::skip;
+	result.event = eventFunction;
 	return result;
 }

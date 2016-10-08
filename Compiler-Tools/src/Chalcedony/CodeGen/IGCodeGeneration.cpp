@@ -4,7 +4,7 @@ using namespace CT::CodeGen;
 
 const CodeGenOutput CodeGenOutput::invalid;
 
-bool CT::CodeGen::operator==(const CodeGenOutput & a, const CodeGenOutput & b)
+API bool CT::CodeGen::operator==(const CodeGenOutput & a, const CodeGenOutput & b)
 {
 	return (a.lexer_cpp == b.lexer_cpp) &&
 		(a.lexer_cpp_filename == b.lexer_cpp_filename) &&
@@ -16,7 +16,7 @@ bool CT::CodeGen::operator==(const CodeGenOutput & a, const CodeGenOutput & b)
 		(a.parser_h_filename == b.parser_h_filename);
 }
 
-bool CT::CodeGen::operator!=(const CodeGenOutput & a, const CodeGenOutput & b)
+API bool CT::CodeGen::operator!=(const CodeGenOutput & a, const CodeGenOutput & b)
 {
 	return !(a == b);
 }

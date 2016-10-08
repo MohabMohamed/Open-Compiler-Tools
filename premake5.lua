@@ -84,13 +84,6 @@ project "Compiler-Tools"
 	targetdir "bin/%{cfg.buildcfg}"
 	location "Compiler-Tools"
 
-	configuration "*Static"
-		kind "StaticLib"
-
-	configuration "*Shared"
-		kind "SharedLib"
-
-
 	files {"Compiler-Tools/inc/**.h", "Compiler-Tools/inc/**.hpp", 
 		   "Compiler-Tools/src/**.cpp"}
 
@@ -124,4 +117,11 @@ project "Compiler-Tools"
 
 	filter "platforms:x86_64"
 		architecture "x64"
+
+	configuration "*Static"
+		kind "StaticLib"
+
+	configuration "*Shared"
+		kind "SharedLib"
+
 

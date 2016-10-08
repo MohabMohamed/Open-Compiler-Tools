@@ -106,6 +106,46 @@ StringMarker CT::InputStream::topMarker()
 	return marker;
 }
 
+bool CT::InputStream::moveToMarkerEnd(const StringMarker & marker)
+{
+	if (marker == StringMarker::invalid)
+		return false;
+
+	if (m_index > marker.end)
+	{
+		while (m_index > marker.end)
+			rewindLetter();
+		return true;
+	}
+	else if (m_index < marker.end)
+	{
+		while (m_index < marker.end)
+			popLetter();
+		return true;
+	}
+	return false;
+}
+
+bool CT::InputStream::moveToMarkerStart(const StringMarker & marker)
+{
+	if (marker == StringMarker::invalid)
+		return false;
+
+	if (m_index > marker.start)
+	{
+		while (m_index > marker.start)
+			rewindLetter();
+		return true;
+	}
+	else if (m_index < marker.start)
+	{
+		while (m_index < marker.start)
+			popLetter();
+		return true;
+	}
+	return false;
+}
+
 std::string CT::InputStream::requestString(StringMarker marker)
 {
 	if (marker.start < marker.end)

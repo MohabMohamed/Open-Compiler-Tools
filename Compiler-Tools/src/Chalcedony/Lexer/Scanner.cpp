@@ -4,6 +4,7 @@
 #include "Chalcedony/Lexer/Token.h"
 #include <deque>
 #include <iostream>
+#include <stack>
 #include <sstream>
 using namespace CT;
 using namespace CT::Lexer;
@@ -16,160 +17,157 @@ Scanner::~Scanner()
 
 Token Scanner::scan(InputStreamPtr input)
 {
-	//reset the current scanning machines;
+	//reset the scanning state
 	reset();
 	std::string literal = "";
-	//input->pushMarker();
-	std::stack<Lexer::Token> token_stack;
-	std::deque<Lexer::Token> token_stack_buffer;
-
-	bool is_first_encounter = true;
-	//process input
-	while(!input->eof())
+	//buffer to reverse the stack token
+	std::deque<std::pair<Token, CT::Automata::FSMState>> token_stack_buffer;
+	
+	bool first_encounter = true;
+	while (!input->eof())
 	{
-		//get the next char
 		char c = input->peek();
 		if (c == '\0')
+			break;
+
+		//push the literal marker
+		if (first_encounter)
+			input->pushMarker();
+		first_encounter = false;
+		
+		bool skippable_token = false;
+		std::set<int> ToBeRemovedIndices;
+		//check the state of each scanning machine after consuming this letter and take action according to thier state
+		for (int i=0;i<m_currentMachines.size();i++)
 		{
-			return Token::eof;
-		}else if(isIgnoreChar(c))
-		{
-			if(is_first_encounter){
-				input->popLetter();
-				continue;
-			}else{
-				if (!token_stack.empty())
+			auto state = m_currentMachines[i].first->consume(c);
+			if (state == CT::Automata::FSMState::OK)
+			{
+				//check if skippable token then skip
+				if (m_currentMachines[i].second != CT::Lexer::Token::skip)
 				{
-					auto token = token_stack.top();
-					token.literal = input->popMarker();
-					if (token.event != nullptr)
-					{
-						auto eventResult = token.event(input, token);
-						if (!eventResult)
-							callErrorFunction(input);
-					}
-					auto inspect = token.literal.getString();
-					return token;
+					//create a token of the current ok machine and save it
+					Token result;
+					result.tag = m_currentMachines[i].second.tag;
+					result.event = m_currentMachines[i].second.event;
+					result.literal = input->topMarker();
+					token_stack_buffer.push_front(std::make_pair(result,state));
 				}
 			}
-		}
-
-		if (is_first_encounter)
-			input->pushMarker();
-		int i=0;
-		std::vector<int> m_scheduledForDeletion;
-		bool isOk = false;
-		
-		token_stack_buffer.clear();
-		//go through machines providing input and check states
-		for(auto& machineTagPair: m_currentMachines)
-		{
-			Automata::FSMState state = machineTagPair.first->consume(StateInput<char>(c));
-			if(state == FSMState::FINAL)
+			else if (state == CT::Automata::FSMState::FINAL)
 			{
-				if (!isOk && !machineTagPair.first->hasFurtherTransitions())
+				//check if skippable token then skip
+				if (m_currentMachines[i].second != CT::Lexer::Token::skip)
 				{
-					//create token and return
-					Lexer::Token result;
-					result.tag = machineTagPair.second.tag;
-					result.event = machineTagPair.second.event;
-					//result.literal = literal + c;
-					
-
-					//consume the char
+					//add the final token to the token stack
+					//consume the letter to add it to the marker
 					input->popLetter();
-
-					result.literal = input->popMarker();
-					//invoke the event function
-					if (machineTagPair.second.event != nullptr) {
-
-						auto eventResult = machineTagPair.second.event(input, result);
-						if (!eventResult)
-							callErrorFunction(input);
-					}
-					auto inspect = result.literal.getString();
-					return result;
-				}
-				else {
-					//create token and return
-					Lexer::Token result;
-					result.tag = machineTagPair.second.tag;
-					result.event = machineTagPair.second.event;
-					//result.literal = literal + c;
+					Token result;
+					result.tag = m_currentMachines[i].second.tag;
+					result.event = m_currentMachines[i].second.event;
 					result.literal = input->topMarker();
-					auto inspect = result.literal.getString();
-					token_stack_buffer.push_front(result);
+					token_stack_buffer.push_front(std::make_pair(result, state));
+					//rewind the letter to continue scanning
+					input->rewindLetter();
 				}
-	
-			}else if(state == FSMState::OK)
+				//else found a true skippable token then check if there's a token in token stack then return it it not then reset the marker
+				else {
+					if (!token_stack_buffer.empty())
+					{
+						//get a token of the stack and return it
+						auto token = token_stack_buffer.back().first;
+						token.literal = input->popMarker();
+						if (token.event) {
+							//if event has an error then call error function
+							if (!token.event(input, token))
+							{
+								callErrorFunction(input);
+								CT::Log::log(CT::LOG_LEVEL::ERROR, "error while performing token " + token.tag + " event", input->getPosition());
+								return Token::invalid;
+							}
+						}
+						return token;
+					}
+					else {
+						//check if there's an action to process
+						if (m_currentMachines[i].second.event)
+						{
+							Token result;
+							result.tag = m_currentMachines[i].second.tag;
+							result.literal = input->popMarker();
+							result.event = m_currentMachines[i].second.event;
+							m_currentMachines[i].second.event(input, result);
+							//since this is a skip token we will process it and will do nothing about it
+						}
+						else
+						{
+							//reset marker
+							input->popMarker();
+							//pop the ignore letter
+							input->popLetter();
+						}
+						//push fresh marker
+						input->pushMarker();
+						//reset the scan machines
+						reset();
+						skippable_token = true;
+						//break out of the for loop
+						break;
+					}
+				}
+			}
+			else if (state == CT::Automata::FSMState::DEADEND)
 			{
-				//continue scanning
-				isOk = true;
+				ToBeRemovedIndices.insert(i);
+			}
+		}
+		//if found skippable token then continue the while loop
+		if (skippable_token)
+			continue;
 
-			}else if(state == FSMState::DEADEND)
+		//add the buffered tokens to the token stack
+		for (auto& token : token_stack_buffer)
+			m_tokenStack.push(token);
+		token_stack_buffer.clear();
+
+		//remove the deadend machines
+		int i = 0;
+		m_currentMachines.erase(std::remove_if(m_currentMachines.begin(), m_currentMachines.end(), [&i, &ToBeRemovedIndices](const std::pair<std::shared_ptr<Automata::NFA<char>>, Token>& element)->bool {
+			if (ToBeRemovedIndices.find(i) != ToBeRemovedIndices.end())
 			{
-				//schedule this machine for deletion
-				m_scheduledForDeletion.push_back(i);
+				i++;
+				return true;
 			}
 			i++;
-		}
-		//add tokens from buffer to stack to reserve the order of the scanning machines
-		for (auto& token : token_stack_buffer)
-			token_stack.push(token);
-		is_first_encounter = false;
+			return false;
+		}), m_currentMachines.end());
 
-		if(m_scheduledForDeletion.size() == m_currentMachines.size())
-		{
-			if (!token_stack.empty())
+		//if there's no machines left check the stack if empty then return invalid token and check the error function
+		if (m_currentMachines.empty()) {
+			if (m_tokenStack.empty())
 			{
-				auto token = token_stack.top();
-				token.literal = input->popMarker();
-				if (token.event != nullptr)
-				{
-
-					auto eventResult = token.event(input, token);
-					if (!eventResult)
-						callErrorFunction(input);
-				}
-				auto inspect = token.literal.getString();
-				return token;
+				//then there's an error
+				callErrorFunction(input);
+				CT::Log::log(CT::LOG_LEVEL::ERROR, "unable to recognize string='" + literal + c + "'", input->getPosition());
+				return Token::invalid;
 			}
-			//error scanning report and return nullptr
-			Log::log(LOG_LEVEL::ERROR, "unable to recognize string='"+literal+c+"'", input->getPosition());
-			callErrorFunction(input);
-			return Token::invalid;
-		}
-		else
-		{
-			std::vector<std::pair<std::shared_ptr<Automata::NFA<char>>, Token>> newCurrent;
-			//delete the dead machines
-
-			for (int i = 0; i < m_currentMachines.size(); i++)
-			{
-				if (std::find(m_scheduledForDeletion.begin(), m_scheduledForDeletion.end(), i) == m_scheduledForDeletion.end())
-				{
-					newCurrent.push_back(m_currentMachines[i]);
-				}
+			else {
+				//get a token of the stack and return it
+				return popToken(input);
 			}
-
-			m_currentMachines = newCurrent;
 		}
 
+		//add c to literal
 		literal += c;
 		input->popLetter();
 	}
-	if (!token_stack.empty()) {
-		auto token = token_stack.top();
-		token.literal = input->popMarker();
-		if (token.event != nullptr)
-		{
-			auto eventResult = token.event(input, token);
-			if (!eventResult)
-				callErrorFunction(input);
-		}
-		return token;
-	}
-	return Token::eof;
+
+	//check if the token stack not empty then return the top token
+	auto stack_result = popToken(input);
+	if (stack_result == Token::invalid)
+		return Token::eof;
+	else
+		return stack_result;
 }
 
 void Scanner::registerToken(std::shared_ptr<NFA<char>> regexMachine, const Token& token)
@@ -182,6 +180,9 @@ void Scanner::registerToken(std::shared_ptr<NFA<char>> regexMachine, const Token
 
 void Scanner::reset()
 {
+	while (!m_tokenStack.empty())
+		m_tokenStack.pop();
+
 	m_currentMachines.clear();
 	for(auto machine: m_scanningMachines)
 	{
@@ -190,9 +191,52 @@ void Scanner::reset()
 	m_currentMachines.insert(m_currentMachines.end(), m_scanningMachines.begin(), m_scanningMachines.end());
 }
 
+Token CT::Lexer::Scanner::popToken(InputStreamPtr input)
+{
+	if (m_tokenStack.empty())
+		return Token::invalid;
+	auto token = m_tokenStack.top().first;
+	auto state = m_tokenStack.top().second;
+	bool found_final_token = state == CT::Automata::FSMState::FINAL;
+	//search for the latest final state in the stack
+	while (state == CT::Automata::FSMState::OK)
+	{
+		m_tokenStack.pop();
+		if (m_tokenStack.empty())
+		{
+			//this is an error
+			//this is ambiguty we didn't find a final token in the stack
+			//then there's an error
+			callErrorFunction(input);
+			CT::Log::log(CT::LOG_LEVEL::ERROR, "cannot scan string='" + token.literal.getString() + "' as a " + token.tag, input->getPosition());
+			return Token::invalid;
+		}
+		//pop the new token from the stack
+		token = m_tokenStack.top().first;
+		//rewind the input to the poped token
+		input->moveToMarkerEnd(token.literal);
+
+		state = m_tokenStack.top().second;
+		found_final_token = state == CT::Automata::FSMState::FINAL;
+	}
+
+	token.literal = input->popMarker();
+	if (token.event)
+	{
+		if (!token.event(input, token))
+		{
+			callErrorFunction(input);
+			CT::Log::log(CT::LOG_LEVEL::ERROR, "error while performing token " + token.tag + " event", input->getPosition());
+			return Token::invalid;
+		}
+	}
+	return token;
+}
+
 bool Scanner::isIgnoreChar(char c)
 {
-	return c == '\n' || c == ' ' || c == '\t' || c == '\r' || c == '\f' || c == '\v';
+	return m_ignoreCharSet.find(c) != m_ignoreCharSet.end();
+	//return c == '\n' || c == ' ' || c == '\t' || c == '\r' || c == '\f' || c == '\v';
 }
 
 bool Scanner::isDefinedToken(const std::string& token)

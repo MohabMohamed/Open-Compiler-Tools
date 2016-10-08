@@ -14,8 +14,8 @@ namespace CT
 		class NFA{
 		public:
 
-			NFA(StatePtr<tokenType> startToken)
-			:m_startState(startToken)
+			NFA(StatePtr<tokenType> startToken, std::vector<StatePtr<tokenType>> allStates)
+			:m_startState(startToken), m_allStates(allStates)
 			{
 				reset();
 			}
@@ -23,6 +23,7 @@ namespace CT
 			~NFA(){
 				m_startState = nullptr;
 				m_currentStates.clear();
+				m_allStates.clear();
 			}
 
 			//resets the nfa to start position
@@ -88,6 +89,7 @@ namespace CT
 				return out;
 			}
 		private:
+			std::vector<StatePtr<tokenType>> m_allStates;
 			std::vector<StatePtr<tokenType>> m_currentStates;
 			StatePtr<tokenType> m_startState;
 		};

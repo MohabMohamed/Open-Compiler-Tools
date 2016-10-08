@@ -21,12 +21,14 @@ namespace CT
 		API bool operator==(const Token& a, const Token& b);
 		API bool operator!=(const Token& a, const Token& b);
 		API Token make_token(std::string name, std::function<bool(InputStreamPtr, Token&)> eventFunction = nullptr);
+		API Token make_token(std::function<bool(InputStreamPtr, Token&)> eventFunction = nullptr);
 
 		struct API Token
 		{
 		private:
 			bool isEOF;
 			bool isInvalid;
+			bool isSkip;
 			static std::unordered_map<std::string, s64> TOKEN_TAGS;
 			
 		public:
@@ -37,12 +39,15 @@ namespace CT
 
 			static const Token eof;
 			static const Token invalid;
+			static const Token skip;
 
 			Token();
 
 			friend API Token eof_token();
 			friend API Token invalid_token();
+			friend API Token skip_token();
 			friend API Token make_token(std::string, std::function<bool(InputStreamPtr, Token&)> eventFunction);
+			friend API Token make_token(std::function<bool(InputStreamPtr, Token&)> eventFunction);
 			friend API bool operator==(const Token& a, const Token& b);
 			friend API bool operator!=(const Token& a, const Token& b);
 		};

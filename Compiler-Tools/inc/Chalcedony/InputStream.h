@@ -46,6 +46,10 @@ namespace CT
 
 		StringMarker topMarker();
 
+		bool moveToMarkerEnd(const StringMarker& marker);
+
+		bool moveToMarkerStart(const StringMarker& marker);
+
 		std::string requestString(StringMarker marker);
 	};
 	using InputStreamPtr = std::shared_ptr<InputStream>;
