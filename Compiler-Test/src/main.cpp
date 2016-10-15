@@ -6,7 +6,7 @@
 #include <fstream>
 #include <memory>
 #include <regex>
-#include <Chalcedony\Chalcedony.h>
+#include <Chalcedony/Chalcedony.h>
 #include <CLexer.h>
 #include <CParser.h>
 
@@ -179,8 +179,52 @@ int main(int argc, char* argv[]) {
 	{
 		std::cout << match[i].str() << std::endl;
 	}*/
+	
+	//CT::FSMConverter converter;
+	//CT::RegexBuilder builder;
+	//auto nfa = builder.create("(0-9)*.(0-9)+");
+	//auto dfa = converter.convert(nfa);
+	//std::string inputStr = "013.1f2345";
 
-	CT::InputStreamPtr file_input = CT::open_file("test/c_test_02.c");
+	//for (auto character: inputStr)
+	//{
+	//	auto state = dfa->consume(CT::Automata::StateInput<char>(character));
+	//	switch (state)
+	//	{
+	//	case CT::Automata::FSMState::OK:
+	//		std::cout << "OK" << std::endl;
+	//		break;
+	//	case CT::Automata::FSMState::FINAL:
+	//		std::cout << "FINAL" << std::endl;
+	//		break;
+	//	case CT::Automata::FSMState::DEADEND:
+	//		std::cout << "DEADEND" << std::endl;
+	//		break;
+	//	default:
+	//		break;
+	//	}
+	//}
+	//return 0;
+
+	CT::Automata::RegExVM vm;
+	vm.pushCode(CT::Automata::RegExIns::Try);
+	vm.pushCode('A');
+	vm.pushCode(CT::Automata::RegExIns::JIS);
+	vm.pushCode<CT::s32>(-4);
+	vm.pushCode(CT::Automata::RegExIns::Success);
+	CT::InputStreamPtr input_str = std::make_shared<CT::InputStream>("");
+	auto vm_res = vm.exec(input_str);
+
+	CT::Regex::Compiler regex_compiler;
+	auto vm_program = regex_compiler.compile("abc|d");
+	vm.reset();
+	input_str = std::make_shared<CT::InputStream>("dj");
+	vm.setCode(vm_program);
+	auto vm_eyres = vm.exec(input_str);
+	vm_eyres = vm.exec(input_str);
+	return 0;
+
+	CT::InputStreamPtr file_input = CT::open_file(input_filename);
 	auto lexer_ptr = std::make_shared<C::CLexer>();
 	//auto c_token = lexer_ptr->scan(file_input);
 	//while (c_token != CT::Lexer::Token::eof)

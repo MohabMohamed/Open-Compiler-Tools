@@ -10,7 +10,7 @@ namespace CT
 {
 	class API InputStream: public std::enable_shared_from_this<InputStream>
 	{
-	private:
+	public:
 		std::string m_input;
 		std::size_t m_index;
 		FilePosition m_position;
@@ -23,6 +23,8 @@ namespace CT
 		std::string getString() const;
 
 		char popLetter();
+
+		void advance(u64 value);
 
 		char peek();
 
@@ -51,6 +53,18 @@ namespace CT
 		bool moveToMarkerStart(const StringMarker& marker);
 
 		std::string requestString(StringMarker marker);
+
+		std::string::iterator currentPositionIt();
+
+		std::string::iterator end();
+
+		std::string::iterator begin();
+
+		std::string::const_iterator currentPositionConstIt() const;
+
+		std::string::const_iterator cend() const;
+
+		std::string::const_iterator cbegin() const;
 	};
 	using InputStreamPtr = std::shared_ptr<InputStream>;
 

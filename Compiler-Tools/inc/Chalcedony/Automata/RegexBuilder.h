@@ -2,14 +2,44 @@
 
 #include "Chalcedony/Defines.h"
 #include "Chalcedony/Automata/NFA.hpp"
+#include "Chalcedony/Automata/DFA.hpp"
 #include "Chalcedony/InputStream.h"
 #include <string>
 #include <stack>
 #include <vector>
 #include <memory>
+#include <unordered_map>
+#include <deque>
 
 namespace CT
 {
+	namespace Regex {
+		class API Compiler {
+		private:
+
+			// presedence
+			// CONCAT > OR
+			constexpr static u8 OR = 0;
+			constexpr static u8 CONCAT = 1;
+
+			using CodeBlock = std::deque<u32>;
+			std::stack<CodeBlock> m_operands;
+			std::stack<u8> m_operators;
+
+			//resets the stacks
+			void resetStacks();
+
+			bool popOperand(CodeBlock& block);
+
+			bool Eval();
+
+			bool Concat();
+			bool Or();
+		public:
+			std::vector<u32> compile(const std::string& regex);
+		};
+	}
+	
 	class API RegexBuilder
 	{
 	private:
@@ -65,5 +95,19 @@ namespace CT
 	public:
 		//creates an nfa that represents this expression
 		std::shared_ptr<Automata::NFA<char>> create(const std::string& string_exp);
+		std::shared_ptr<Automata::DFA<char>> createDFA(const std::string& string_exp);
+	};
+
+	class API FSMConverter
+	{
+	private:
+		std::set<u64> getIds(const std::vector<Automata::StatePtr<char>>& states);
+		bool exists(const std::deque<std::tuple<bool, std::set<u64>, std::set<Automata::StatePtr<char>>>>& corpus, const std::set<u64>& searchTerm);
+		int indexOf(const std::deque<std::tuple<bool, std::set<u64>, std::set<Automata::StatePtr<char>>>>& corpus, const std::set<u64>& searchTerm);
+		std::tuple<bool, std::set<u64>, std::set<Automata::StatePtr<char>>> getUnmarkedNFASet(std::deque<std::tuple<bool, std::set<u64>, std::set<Automata::StatePtr<char>>>>& corpus);
+		bool hasFinal(const std::vector<Automata::StatePtr<char>>& states);
+
+	public:
+		std::shared_ptr<Automata::DFA<char>> convert(std::shared_ptr<Automata::NFA<char>> nfa);
 	};
 }

@@ -25,6 +25,12 @@ char InputStream::popLetter()
 	return m_input[m_index++];
 }
 
+void CT::InputStream::advance(u64 value)
+{
+	while (--value)
+		popLetter();
+}
+
 char InputStream::peek()
 {
 	if(m_index >= m_input.size())
@@ -153,6 +159,36 @@ std::string CT::InputStream::requestString(StringMarker marker)
 		return m_input.substr(marker.start, marker.end - marker.start);
 	}
 	return std::string();
+}
+
+std::string::iterator CT::InputStream::currentPositionIt()
+{
+	return m_input.begin()+m_index;
+}
+
+std::string::iterator CT::InputStream::end()
+{
+	return m_input.end();
+}
+
+std::string::iterator CT::InputStream::begin()
+{
+	return m_input.begin();
+}
+
+std::string::const_iterator CT::InputStream::currentPositionConstIt() const
+{
+	return m_input.begin() + m_index;
+}
+
+std::string::const_iterator CT::InputStream::cend() const
+{
+	return m_input.end();
+}
+
+std::string::const_iterator CT::InputStream::cbegin() const
+{
+	return m_input.begin();
 }
 
 API InputStreamPtr CT::open_file(const std::string& filename)

@@ -11,9 +11,10 @@ namespace CT
 {
 	namespace Automata
 	{
+		struct API IStateInput { virtual ~IStateInput() {} };
 		//token of transitions for the state class
 		template<typename letterType>
-		struct StateInput
+		struct StateInput: IStateInput
 		{
 			bool isEpsilon;
 			letterType letter;
@@ -39,6 +40,11 @@ namespace CT
 				return result;
 			}
 
+			friend bool operator<(const StateInput<letterType>& a, const StateInput<letterType>& b)
+			{
+				return a.letter < b.letter;
+			}
+
 			friend std::ostream& operator<<(std::ostream& out, const StateInput<letterType>& input)
 			{
 				if (input.isEpsilon)
@@ -49,13 +55,13 @@ namespace CT
 			}
 		};
 
-		template<typename letterType>
-		struct StateInputComparator{
-			bool operator()(const StateInput<letterType>& a, const StateInput<letterType>& b) const
-			{
-				return a.letter < b.letter;
-			}
-		};
+		//template<typename letterType>
+		//struct StateInputComparator{
+		//	bool operator()(const StateInput<letterType>& a, const StateInput<letterType>& b) const
+		//	{
+		//		return a.letter < b.letter;
+		//	}
+		//};
 
 		template<typename letterType>
 		class State
@@ -115,13 +121,23 @@ namespace CT
 				return found;
 			}
 
+			std::shared_ptr<State<letterType>> transit(StateInput<letterType> c)
+			{
+				for(auto it = m_transitions.lower_bound(c); it != m_transitions.upper_bound(c); it++)
+				{
+					if(!it->second.expired())
+						return it->second.lock();
+				}
+				return nullptr;
+			}
+
 			void epsilonTransit(std::vector<std::shared_ptr<State<letterType>>>& result)
 			{
 				std::set<u64> visited_set;
 				epsilonTransitAux(result, visited_set);
 			}
 
-			std::multimap<StateInput<letterType>, std::weak_ptr<State<letterType>>, StateInputComparator<letterType>>
+			std::multimap<StateInput<letterType>, std::weak_ptr<State<letterType>>>
 			getTransitions() const
 			{
 				return m_transitions;
@@ -156,7 +172,7 @@ namespace CT
 				return out;
 			}
 		private:
-			std::multimap<StateInput<letterType>, std::weak_ptr<State<letterType>>, StateInputComparator<letterType>> m_transitions;
+			std::multimap<StateInput<letterType>, std::weak_ptr<State<letterType>>> m_transitions;
 			bool m_final;
 			u64 m_id;
 		};

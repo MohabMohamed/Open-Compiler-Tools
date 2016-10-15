@@ -2,7 +2,7 @@
 
 #include "Chalcedony/Defines.h"
 #include "Chalcedony/Lexer/Token.h"
-#include "Chalcedony/Automata/NFA.hpp"
+#include "Chalcedony/Automata/FSM.hpp"
 #include "Chalcedony/FilePosition.h"
 #include "Chalcedony/InputStream.h"
 #include <istream>
@@ -28,7 +28,7 @@ namespace CT
 			{
 			}
 			virtual Token scan(InputStreamPtr input) = 0;
-			virtual void registerToken(std::shared_ptr<Automata::NFA<char>> regexMachine,const Token& token) = 0;
+			virtual void registerToken(std::shared_ptr<Automata::FSM<char>> regexMachine,const Token& token) = 0;
 			virtual bool isIgnoreChar(char c) = 0;
 			virtual bool isDefinedToken(const std::string&) = 0;
 			void setErrorFunction(std::function<void(InputStreamPtr)> errorFunction){m_errorFunction = errorFunction;}

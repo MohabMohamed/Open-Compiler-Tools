@@ -132,7 +132,7 @@ Token Scanner::scan(InputStreamPtr input)
 
 		//remove the deadend machines
 		int i = 0;
-		m_currentMachines.erase(std::remove_if(m_currentMachines.begin(), m_currentMachines.end(), [&i, &ToBeRemovedIndices](const std::pair<std::shared_ptr<Automata::NFA<char>>, Token>& element)->bool {
+		m_currentMachines.erase(std::remove_if(m_currentMachines.begin(), m_currentMachines.end(), [&i, &ToBeRemovedIndices](const std::pair<std::shared_ptr<Automata::FSM<char>>, Token>& element)->bool {
 			if (ToBeRemovedIndices.find(i) != ToBeRemovedIndices.end())
 			{
 				i++;
@@ -170,10 +170,10 @@ Token Scanner::scan(InputStreamPtr input)
 		return stack_result;
 }
 
-void Scanner::registerToken(std::shared_ptr<NFA<char>> regexMachine, const Token& token)
+void Scanner::registerToken(std::shared_ptr<FSM<char>> regexMachine, const Token& token)
 {
 	std::stringstream stream;
-	stream << *regexMachine;
+	//stream << *regexMachine;
 	Log::log(CT::LOG_LEVEL::LDEBUG, stream.str(), CT::FilePosition::invalid);
 	m_scanningMachines.push_back(std::make_pair(regexMachine, token));
 }

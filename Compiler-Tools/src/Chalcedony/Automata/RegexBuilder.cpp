@@ -1,6 +1,134 @@
 #include "Chalcedony/Automata/RegexBuilder.h"
+#include "Chalcedony/Automata/RegExVM.h"
 #include <sstream>
 using namespace CT;
+
+void Regex::Compiler::resetStacks()
+{
+	while(!m_operators.empty())
+		m_operators.pop();
+	while(!m_operands.empty())
+		m_operands.pop();
+}
+
+bool Regex::Compiler::popOperand(CodeBlock& block)
+{
+	if(m_operands.empty())
+		return false;
+
+	block = m_operands.top();
+	m_operands.pop();
+	return true;
+}
+
+bool Regex::Compiler::Eval()
+{
+	if(m_operators.empty())
+		return false;
+
+	u8 op = m_operators.top();
+	m_operators.pop();
+	switch(op)
+	{
+		case CONCAT:
+			return Concat();
+		case OR:
+			return Or();
+		default:
+			return false;
+	}
+}
+
+bool Regex::Compiler::Concat()
+{
+	CodeBlock A, B;
+	if(!popOperand(B) || !popOperand(A))
+		return false;
+
+	A.insert(A.end(), B.begin(), B.end());
+	m_operands.push(A);
+	return true;
+}
+
+bool Regex::Compiler::Or()
+{
+	CodeBlock A, B;
+	if (!popOperand(B) || !popOperand(A))
+		return false;
+
+	A.push_front(static_cast<u32>(CT::Automata::RegExIns::Try));
+	A.push_back(static_cast<u32>(CT::Automata::RegExIns::EndTry));
+	A.push_back(static_cast<u32>(CT::Automata::RegExIns::JIS));
+	A.push_back(static_cast<u32>(B.size()));
+	A.insert(A.end(), B.begin(), B.end());
+	m_operands.push(A);
+	return true;
+}
+
+std::vector<u32> Regex::Compiler::compile(const std::string& regex)
+{
+	resetStacks();
+	std::vector<u32> code;
+
+	//to indicate the precense of ignore slash '\'
+	bool ignore = false;
+	//recommend_concat after a certain char
+	bool recommend_concat = false;
+	for(auto c: regex)
+	{
+		//if ignore the meta meaning of this char then treat it as a normal char
+		if(ignore){
+			CodeBlock block;
+
+			block.push_back(static_cast<u32>(CT::Automata::RegExIns::Match));
+			block.push_back(static_cast<u32>(c));
+
+			m_operands.push(block);
+			ignore = false;
+		}
+		else
+		{
+			if(c == '|')
+			{
+				while(!m_operators.empty() && m_operators.top() >= OR)
+					if(!Eval())
+						return std::vector<u32>();
+
+				m_operators.push(OR);
+				recommend_concat = false;
+			}else
+			{
+				if (recommend_concat)
+				{
+					while (!m_operators.empty() && m_operators.top() >= CONCAT)
+						if (!Eval())
+							return std::vector<u32>();
+					m_operators.push(CONCAT);
+					recommend_concat = false;
+				}
+
+				CodeBlock block;
+				block.push_back(static_cast<u32>(CT::Automata::RegExIns::Match));
+				block.push_back(static_cast<u32>(c));
+				m_operands.push(block);
+				recommend_concat = true;
+			}
+		}
+
+		if(c == '\\')
+			ignore = true;
+	}
+
+	//Eval remaining exp
+	while (!m_operators.empty())
+		if (!Eval())
+			return std::vector<u32>();
+
+	if(!m_operands.empty())
+		code.insert(code.end(), m_operands.top().begin(), m_operands.top().end());
+	code.push_back(static_cast<u32>(CT::Automata::RegExIns::Success));
+	return code;
+}
 
 bool RegexBuilder::Eval()
 {
@@ -292,6 +420,7 @@ void RegexBuilder::cloneUnit(const std::vector<Automata::StatePtr<char>>& origin
 std::shared_ptr<Automata::NFA<char>> RegexBuilder::create(const std::string& string_exp)
 {
 	InputStream exp(string_exp);
+	std::set<Automata::StateInput<char>> input_set;
 	clearStacks();
 
 	bool recommend_concat = false;
@@ -396,6 +525,7 @@ std::shared_ptr<Automata::NFA<char>> RegexBuilder::create(const std::string& str
 			//end range macro
 
 			pushOperand(c);
+			input_set.insert(Automata::StateInput<char>(c));
 			recommend_concat = true;
 		}
 	}
@@ -405,5 +535,140 @@ std::shared_ptr<Automata::NFA<char>> RegexBuilder::create(const std::string& str
 			return nullptr;
 
 	m_operands.top().back()->setIsFinal(true);
-	return std::make_shared<Automata::NFA<char>>(m_operands.top().front(), m_operands.top());
+	return std::make_shared<Automata::NFA<char>>(m_operands.top().front(), m_operands.top(), input_set);
+}
+
+std::shared_ptr<Automata::DFA<char>> CT::RegexBuilder::createDFA(const std::string & string_exp)
+{
+	CT::FSMConverter converter;
+	return converter.convert(create(string_exp));
+}
+
+std::set<u64> CT::FSMConverter::getIds(const std::vector<Automata::StatePtr<char>>& states)
+{
+	std::set<u64> result;
+	for (auto state : states)
+		result.insert(state->getID());
+	return result;
+}
+
+bool CT::FSMConverter::exists(const std::deque<std::tuple<bool, std::set<u64>, std::set<Automata::StatePtr<char>>>>& corpus, const std::set<u64>& searchTerm)
+{
+	for (auto id_set_tuple : corpus)
+	{
+		auto id_set = std::get<1>(id_set_tuple);
+		if (searchTerm.size() == id_set.size())
+		{
+			bool found = true;
+			for (auto id_set_it = id_set.begin(), search_term_it = searchTerm.begin();
+				id_set_it != id_set.end();id_set_it++,search_term_it++)
+			{
+				if ((*id_set_it) != (*search_term_it)) {
+					found = false;
+					break;
+				}
+			}
+			if (found)
+				return true;
+		}
+	}
+	return false;
+}
+
+int CT::FSMConverter::indexOf(const std::deque<std::tuple<bool, std::set<u64>, std::set<Automata::StatePtr<char>>>>& corpus, const std::set<u64>& searchTerm)
+{
+	int i = 0;
+	for (auto id_set_tuple : corpus)
+	{
+		auto id_set = std::get<1>(id_set_tuple);
+		if (searchTerm.size() == id_set.size())
+		{
+			bool found = true;
+			for (auto id_set_it = id_set.begin(), search_term_it = searchTerm.begin();
+				id_set_it != id_set.end(); id_set_it++, search_term_it++)
+			{
+				if ((*id_set_it) != (*search_term_it)) {
+					found = false;
+					break;
+				}
+			}
+			if (found)
+				return i;
+		}
+		i++;
+	}
+	return -1;
+}
+
+std::tuple<bool, std::set<u64>, std::set<Automata::StatePtr<char>>> CT::FSMConverter::getUnmarkedNFASet(std::deque<std::tuple<bool, std::set<u64>, std::set<Automata::StatePtr<char>>>>& corpus)
+{
+	for (auto& nfa_set_tuple : corpus)
+	{
+		if (!std::get<0>(nfa_set_tuple))
+		{
+			std::get<0>(nfa_set_tuple) = true;
+			return nfa_set_tuple;
+		}
+	}
+	return std::make_tuple(false, std::set<u64>(), std::set<Automata::StatePtr<char>>());
+}
+
+bool CT::FSMConverter::hasFinal(const std::vector<Automata::StatePtr<char>>& states)
+{
+	for (auto state : states)
+		if (state->isFinal())
+			return true;
+	return false;
+}
+
+std::shared_ptr<Automata::DFA<char>> CT::FSMConverter::convert(std::shared_ptr<Automata::NFA<char>> nfa)
+{
+	std::deque<std::tuple<bool, std::set<u64>, std::set<Automata::StatePtr<char>>>> nfa_set_stack;
+	std::vector<Automata::StatePtr<char>> dfa_states;
+
+	nfa->reset();
+	auto current_states = nfa->getCurrentStates();
+	std::set<Automata::StatePtr<char>> nfa_state_set;
+	nfa_state_set.insert(current_states.begin(), current_states.end());
+	nfa_set_stack.push_back(std::make_tuple(false, getIds(current_states), nfa_state_set));
+	dfa_states.push_back(std::make_shared<Automata::State<char>>());
+	auto dfa_start = dfa_states.back();
+	dfa_start->setIsFinal(hasFinal(current_states));
+	auto input_set = nfa->getInputSet();
+	while (true)
+	{
+		auto nfa_set = getUnmarkedNFASet(nfa_set_stack);
+		if (std::get<0>(nfa_set) == false)
+			break;
+		auto dfa_state_index = indexOf(nfa_set_stack, std::get<1>(nfa_set));
+
+		for (auto input_symbol : input_set)
+		{
+			for (auto nfa_state : std::get<2>(nfa_set)) {
+				nfa->resetToState(nfa_state);
+				auto status = nfa->consume(input_symbol);
+				if (status == Automata::FSMState::FINAL || status == Automata::FSMState::OK)
+				{
+					auto current_states = nfa->getCurrentStates();
+					auto current_states_ids = getIds(nfa->getCurrentStates());
+					if (!exists(nfa_set_stack, current_states_ids))
+					{
+						auto nfa_state_subset = std::set<Automata::StatePtr<char>>();
+						nfa_state_subset.insert(current_states.begin(), current_states.end());
+						nfa_set_stack.push_back(std::make_tuple(false, current_states_ids, nfa_state_subset));
+						dfa_states.push_back(std::make_shared<Automata::State<char>>());
+						dfa_states.back()->setIsFinal(status == Automata::FSMState::FINAL);
+						dfa_states[dfa_state_index]->addTransition(input_symbol, dfa_states.back());
+					}
+					else {
+						auto transition_to_index = indexOf(nfa_set_stack, current_states_ids);
+						dfa_states[dfa_state_index]->addTransition(input_symbol, dfa_states[transition_to_index]);
+					}
+				}
+			}
+		}
+	}
+	
+
+	return std::make_shared<Automata::DFA<char>>(dfa_start,dfa_states,input_set);
 }
