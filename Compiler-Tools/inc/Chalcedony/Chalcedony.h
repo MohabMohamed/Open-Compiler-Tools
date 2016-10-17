@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Chalcedony/Automata/Automata.h"
+#include "Chalcedony/Regex/Regex.h"
 #include "Chalcedony/Lexer/Lexer.h"
 #include "Chalcedony/Parser/Parser.h"
 #include "Chalcedony/CodeGen/CodeGen.h"

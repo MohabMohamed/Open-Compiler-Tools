@@ -20,6 +20,13 @@ API StringMarker CT::make_string_marker(s64 start, s64 end, InputStreamPtr input
 	return result;
 }
 
+s64 CT::StringMarker::getSize() const
+{
+	if(end > start)
+		return end - start;
+	return -1;
+}
+
 CT::StringMarker::operator std::string()
 {
 	return getString();

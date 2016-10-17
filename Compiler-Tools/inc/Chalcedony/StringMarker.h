@@ -14,6 +14,7 @@ namespace CT
 		s64 start;
 		s64 end;
 		std::shared_ptr<InputStream> inputStream;
+		s64 getSize() const;
 		operator std::string();
 		operator std::string() const;
 		std::string getString() const;
