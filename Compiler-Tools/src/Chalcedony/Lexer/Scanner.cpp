@@ -32,10 +32,8 @@ Token Scanner::scan(InputStreamPtr input)
 		StringMarker match = m_vm.exec(std::get<0>(program), input);
 		if (match != StringMarker::invalid)
 		{
-			Token result;
+			Token result = std::get<1>(program);
 			result.literal = match;
-			result.tag = std::get<1>(program).tag;
-			result.event = std::get<1>(program).event;
 
 			all_matches.push_back(std::make_tuple(match, result));
 			match_size = std::max(match_size, match.getSize());
@@ -57,9 +55,15 @@ Token Scanner::scan(InputStreamPtr input)
 			if (token.event)
 				token.event(input, token);
 
-			return token;
+			if (token != Token::skip)
+				return token;
+			else
+				break;
 		}
 	}
+
+	if (!all_matches.empty())
+		return Scanner::scan(input);
 
 	return Token::invalid;
 }

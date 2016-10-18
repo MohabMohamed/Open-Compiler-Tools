@@ -41,9 +41,11 @@ API Token CT::Lexer::skip_token()
 
 bool Lexer::operator==(const Token& a, const Token& b)
 {
-	if(a.isEOF && b.isEOF)
+	if (a.isEOF && b.isEOF)
 		return true;
-	else if(a.isInvalid && b.isInvalid)
+	else if (a.isInvalid && b.isInvalid)
+		return true;
+	else if (a.isSkip && b.isSkip)
 		return true;
 	else if((a.isEOF & b.isEOF) && (a.isEOF | b.isEOF))
 		return false;

@@ -7,6 +7,8 @@
 #include <memory>
 #include <regex>
 #include <Chalcedony/Chalcedony.h>
+#include "CLexer.h"
+#include "CParser.h"
 
 using namespace std;
 class InputParser {
@@ -39,31 +41,19 @@ int main(int argc, char* argv[]) {
 	if (input.cmdOptionExists("-in")) {
 		input_filename = input.getCmdOption("-in");
 	}
+	//test grammar
 
-	CT::Regex::Compiler compiler;
-	CT::Regex::ProgramPtr regex_program = compiler.compile("( +)");
-	CT::Regex::VM vm;
-	auto input_stream = std::make_shared<CT::InputStream>("    ");
-	CT::Regex::VM::printProgram(regex_program, std::cout);
-	auto match = vm.exec(regex_program, input_stream);
-	return 0;
-	//CT::InputStreamPtr file_input = CT::open_file(input_filename);
-	//auto lexer_ptr = std::make_shared<C::CLexer>();
-	////auto c_token = lexer_ptr->scan(file_input);
-	////while (c_token != CT::Lexer::Token::eof)
-	////{
-	////	if (c_token == CT::Lexer::Token::eof)
-	////		out << "EOF" << std::endl;
-	////	else if (c_token == CT::Lexer::Token::invalid)
-	////		out << "invalid" << std::endl;
-	////	else {
-	////		out << c_token.tag << ": <" << c_token.literal.getString() << ">" << std::endl;
-	////	}
-	////	c_token = lexer_ptr->scan(file_input);
-	////}
-	////return 0;
-	//auto parser_ptr = std::make_shared<C::CParser>();
-	//auto program = parser_ptr->parse(lexer_ptr, file_input);
+	//CT::InputStreamPtr file_input = CT::open_file("grammar/c.gr");
+	//auto grammar_scanner = std::make_shared<CT::Lexer::GLexer>();
+	//CT::Parser::GParser grammar_parser;
+	//auto koko = grammar_parser.parse(grammar_scanner, file_input);
+	//CT::CodeGen::LLKRD code_generator;
+	//code_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(koko));
+
+	CT::InputStreamPtr file_input = CT::open_file("test/c_test_02.c");
+	auto lexer_ptr = std::make_shared<C::CLexer>();
+	auto parser_ptr = std::make_shared<C::CParser>();
+	auto program = parser_ptr->parse(lexer_ptr, file_input);
 	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
 	return 0;
 }

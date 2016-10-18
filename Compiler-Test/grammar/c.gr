@@ -101,8 +101,8 @@ skip MULTI_LINE_COMMENT := "/\\*" ->
 
 LeftParen 			:= "\\(";
 RightParen 			:= "\\)";
-LeftBracket 		:= "[";
-RightBracket 		:= "]";
+LeftBracket 		:= "\\[";
+RightBracket 		:= "\\]";
 LeftBrace 			:= "{";
 RightBrace 			:= "}";
 
@@ -115,7 +115,7 @@ StarAssign 			:= "\\*=";
 DivAssign 			:= "/=";
 ModAssign 			:= "%=";
 PlusAssign 			:= "\\+=";
-MinusAssign			:= "\\-=";
+MinusAssign			:= "-=";
 LeftShiftAssign 	:= "<<=";
 RightShiftAssign 	:= ">>=";
 AndAssign 			:= "&=";
@@ -126,9 +126,9 @@ NotEqual 			:= "!=";
 Assign 				:= "=";
 
 PlusPlus 			:= "\\+\\+";
-Arrow 				:= "\\->";
-Ellipsis 			:= "...";
-MinusMinus 			:= "\\-\\-";
+Arrow 				:= "->";
+Ellipsis 			:= "\\.\\.\\.";
+MinusMinus 			:= "--";
 
 
 AndAnd 				:= "&&";
@@ -141,12 +141,12 @@ Greater 			:= ">";
 Less 				:= "<";
 And 				:= "&";
 Or 					:= "\\|";
-Minus 				:= "\\-";
+Minus 				:= "-";
 Star 				:= "\\*";
 Div 				:= "/";
 Mod 				:= "%";
 Plus 				:= "\\+";
-Dot 				:= ".";
+Dot 				:= "\\.";
 
 Question			:= "\\?";
 Colon 				:= ":";
@@ -243,15 +243,15 @@ CharConstant 		:= "'" ->
 	return true;
 };
 
-EncodingPrefix 		:= "(u8)|(u|U|L)";
+EncodingPrefix 		:= "u8|[uUL]";
 
-Nondigit 			:= "(a-z|A-Z|_)";
-Digit 				:= "(0-9)";
-BinaryConstant 		:= "0 (b|B) (0|1)+";
+Nondigit 			:= "[a-zA-Z_]";
+Digit 				:= "[0-9]";
+BinaryConstant 		:= "0(b|B)(0|1)+";
 HexPrefix 			:= "0(x|X)";
-NonZeroDigit 		:= "(1-9)";
-OctalDigit 			:= "(0-7)";
-HexDigit 			:= "(0-9|a-f|A-F)";
+NonZeroDigit 		:= "[1-9]";
+OctalDigit 			:= "[0-7]";
+HexDigit 			:= "[0-9a-fA-F]";
 UnsignedSuffix		:= "(u|U)";
 LongSuffix 			:= "(l|L)";
 LongLongSuffix 		:= "(ll|LL)";

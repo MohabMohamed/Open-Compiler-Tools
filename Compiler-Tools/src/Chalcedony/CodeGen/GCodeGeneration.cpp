@@ -105,23 +105,25 @@ std::string CT::CodeGen::LLKRD::generateLexerCPP(const std::string& lexer_name, 
 		lex_rules_map.insert(std::make_pair(child->tokenName.getString(), child));
 
 	lexer_cpp << indent(0) << "#include \"" << lexer_name << "Lexer.h\"\n";
-	lexer_cpp << indent(0) << "#include <Chalcedony/Automata/RegexBuilder.h>\n";
+	lexer_cpp << indent(0) << "#include <Chalcedony/Regex/Compiler.h>\n";
+	lexer_cpp << indent(0) << "#include <Chalcedony/Regex/Program.h>\n";
 	lexer_cpp << indent(0) << "#include <Chalcedony/InputStream.h>\n";
 	lexer_cpp << indent(0) << "#include <Chalcedony/Utilities.h>\n";
 	lexer_cpp << indent(0) << "#include <Chalcedony/Lexer/Token.h>\n";
 	lexer_cpp << indent(0) << "using namespace std;\n";
 	lexer_cpp << indent(0) << "using namespace CT;\n";
 	lexer_cpp << indent(0) << "using namespace CT::Lexer;\n";
+	lexer_cpp << indent(0) << "using namespace CT::Regex;\n";
 	lexer_cpp << indent(0) << "using namespace " << lexer_name << ";\n";
 	lexer_cpp << indent(0) << "void " << lexer_name << "Lexer::init()\n";
 	lexer_cpp << indent(0) << "{\n";
-	lexer_cpp << indent(1) << "CT::RegexBuilder builder;\n";
+	lexer_cpp << indent(1) << "CT::Regex::Compiler compiler;\n";
 	for (auto child : lex_rules)
 	{
 		auto lex_rule = child;
 		if (lex_rule && m_referencedLexRules.find(lex_rule->tokenName.getString()) == m_referencedLexRules.end())
 		{
-			lexer_cpp << indent(1) << "registerToken(builder.create(\"";
+			lexer_cpp << indent(1) << "registerToken(compiler.compile(\"";
 			std::string output = "";
 			std::map<std::shared_ptr<GLexRule>, std::string> visited;
 			lexer_cpp << evalLexRule(lex_rule, lex_rules_map, output, visited);
