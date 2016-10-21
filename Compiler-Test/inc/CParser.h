@@ -9,8 +9,7 @@ namespace C
 	class CParser: public CT::Parser::IParser
 	{
 	private:
-		CT::Parser::IParseNodePtr parseprogram(CT::Lexer::CachedScannerPtr ct_scanner, CT::InputStreamPtr ct_input);
-		CT::Parser::IParseNodePtr parseprogramStar(CT::Lexer::CachedScannerPtr ct_scanner, CT::InputStreamPtr ct_input);
+		CT::Parser::IParseNodePtr parsekoko(CT::Lexer::CachedScannerPtr ct_scanner, CT::InputStreamPtr ct_input);
 	public:
 		CT::Parser::IParseNodePtr parse(CT::Lexer::IScannerPtr ct_scanner, CT::InputStreamPtr ct_input) override;
 	};

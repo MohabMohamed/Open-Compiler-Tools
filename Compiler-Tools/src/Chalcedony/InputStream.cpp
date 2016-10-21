@@ -55,8 +55,7 @@ void InputStream::reset(){
 	m_index=0;
 	m_position = FilePosition();
 	m_lastLineCount = 0;
-	while (!m_markerStack.empty())
-		m_markerStack.pop();
+	m_markerStack.clear();
 }
 
 void CT::InputStream::clear()
@@ -67,6 +66,11 @@ void CT::InputStream::clear()
 
 bool InputStream::eof(){
 	return m_index >= m_input.size();
+}
+
+bool CT::InputStream::empty()
+{
+	return m_input.empty();
 }
 
 void InputStream::append(const std::string& str)
@@ -89,25 +93,25 @@ void CT::InputStream::pushMarker(StringMarker marker)
 		marker.inputStream = shared_from_this();
 		marker.start = m_index;
 		marker.end = -1;
-		m_markerStack.push(marker);
+		m_markerStack.push_back(marker);
 	}
 	else {
 		marker.end = -1;
-		m_markerStack.push(marker);
+		m_markerStack.push_back(marker);
 	}
 }
 
 StringMarker CT::InputStream::popMarker()
 {
-	auto marker = m_markerStack.top();
+	auto marker = m_markerStack.back();
 	marker.end = m_index;
-	m_markerStack.pop();
+	m_markerStack.pop_back();
 	return marker;
 }
 
 StringMarker CT::InputStream::topMarker()
 {
-	auto marker = m_markerStack.top();
+	auto marker = m_markerStack.back();
 	marker.end = m_index;
 	return marker;
 }
@@ -117,18 +121,13 @@ bool CT::InputStream::moveToMarkerEnd(const StringMarker & marker)
 	if (marker == StringMarker::invalid)
 		return false;
 
-	if (m_index > marker.end)
+	if (m_index != marker.end)
 	{
-		while (m_index > marker.end)
-			rewindLetter();
+		m_index = marker.end;
 		return true;
 	}
-	else if (m_index < marker.end)
-	{
-		while (m_index < marker.end)
-			popLetter();
-		return true;
-	}
+	else
+		return false;
 	return false;
 }
 
@@ -137,18 +136,13 @@ bool CT::InputStream::moveToMarkerStart(const StringMarker & marker)
 	if (marker == StringMarker::invalid)
 		return false;
 
-	if (m_index > marker.start)
+	if (m_index != marker.start)
 	{
-		while (m_index > marker.start)
-			rewindLetter();
+		m_index = marker.start;
 		return true;
 	}
-	else if (m_index < marker.start)
-	{
-		while (m_index < marker.start)
-			popLetter();
-		return true;
-	}
+	else
+		return false;
 	return false;
 }
 

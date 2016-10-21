@@ -14,71 +14,75 @@ Scanner::~Scanner()
 	m_regexPrograms.clear();
 }
 
-Token Scanner::scan(InputStreamPtr input)
+CT::Handle<Token> Scanner::scan(InputStreamPtr input)
 {
-	if (input->eof())
-		return Token::eof;
+	while (true) {
+		if (input->eof())
+			return Token::eof;
 
-	reset();
-	std::vector<std::tuple<StringMarker, Token>> all_matches;
-	all_matches.reserve(m_regexPrograms.size());
+		reset();
+		std::vector<std::pair<StringMarker, CT::Handle<Token>>> all_matches;
 
-	s64 match_size = 0;
-	for (auto program : m_regexPrograms)
-	{
-		//to mark the starting of the matching
-		input->pushMarker();
-		//execute the program
-		StringMarker match = m_vm.exec(std::get<0>(program), input);
-		if (match != StringMarker::invalid)
+		s64 match_size = 0;
+		for (auto& program : m_regexPrograms)
 		{
-			Token result = std::get<1>(program);
-			result.literal = match;
+			//to mark the starting of the matching
+			input->pushMarker();
+			//execute the program
+			StringMarker match = m_vm.exec(program.first, input);
+			if (match != StringMarker::invalid)
+			{
+				CT::Handle<Token> result = Token::getMemory().allocate(*program.second);
+				//Token result = std::get<1>(program);
+				result->literal = match;
 
-			all_matches.push_back(std::make_tuple(match, result));
-			match_size = std::max(match_size, match.getSize());
+				all_matches.push_back(std::make_pair(match, result));
+				match_size = std::max(match_size, match.getSize());
+			}
+			auto start_marker = input->popMarker();
+			input->moveToMarkerStart(start_marker);
 		}
-		auto start_marker = input->popMarker();
-		input->moveToMarkerStart(start_marker);
-	}
 
-	for (auto match : all_matches)
-	{
-		//find the first match with the maximum size
-		if (std::get<0>(match).getSize() == match_size)
+		for (auto& match : all_matches)
 		{
-			auto token = std::get<1>(match);
+			//find the first match with the maximum size
+			if (match.first.getSize() == match_size)
+			{
+				auto token = match.second;
 
-			//set the input to the end of the matching token
-			input->moveToMarkerEnd(token.literal);
+				//set the input to the end of the matching token
+				input->moveToMarkerEnd(token->literal);
 
-			if (token.event)
-				token.event(input, token);
+				if (token->event)
+					token->event(input, *token);
 
-			if (token != Token::skip)
-				return token;
-			else
-				break;
+				if (!token->isSkip())
+					return token;
+				else
+					break;
+			}
 		}
-	}
 
-	if (!all_matches.empty())
-		return Scanner::scan(input);
+		if (!all_matches.empty())
+			continue;
+
+		break;
+	}
 
 	return Token::invalid;
 }
 
-void Scanner::registerToken(ProgramPtr regexProgram, const Token& token)
+void Scanner::registerToken(ProgramPtr regexProgram,CT::Handle<Token> token)
 {
-	m_regexPrograms.push_back(std::make_tuple(regexProgram, token));
+	m_regexPrograms.emplace_back(regexProgram, token);
 }
 
 void Scanner::reset()
 {
 	m_vm.reset();
-	for (auto program : m_regexPrograms)
+	for (auto& program : m_regexPrograms)
 	{
-		std::get<0>(program)->reset();
+		program.first->reset();
 	}
 }
 
@@ -86,7 +90,7 @@ bool Scanner::isDefinedToken(const std::string& token)
 {
 	for(auto program: m_regexPrograms)
 	{
-		if(token == std::get<1>(program).tag)
+		if(token == program.second->tag)
 			return true;
 	}
 	return false;

@@ -3,48 +3,64 @@ using namespace CT::Lexer;
 
 bool CT::Lexer::CachedScanner::hasCachedTokens()
 {
-	if(m_index >= m_cache.size() || m_cache.empty())
-		return false;
-	return true;
+	if (m_readIndex != m_writeIndex)
+		return true;
+	return false;
 }
 
-CT::Lexer::CachedScanner::CachedScanner()
-	:m_index(m_cache.size())
+inline void CT::Lexer::CachedScanner::increment(u64 & ix)
 {
-	m_cache.reserve(500);
+	ix = (ix+1)%m_cache.size();
+}
+
+inline void CT::Lexer::CachedScanner::decrement(u64 & ix)
+{
+	ix--;
+	if (ix < 0)
+		ix = m_cache.size() - 1;
+}
+
+CT::Lexer::CachedScanner::CachedScanner() : Scanner()
+{
+	m_cache.resize(1024);
+	m_readIndex = 0;
+	m_writeIndex = 0;
 }
 
 CT::Lexer::CachedScanner::~CachedScanner()
 {
 	m_cache.clear();
+	m_readIndex = 0;
+	m_writeIndex = 0;
 }
 
-Token CT::Lexer::CachedScanner::scan(InputStreamPtr input)
+CT::Handle<Token> CT::Lexer::CachedScanner::scan(InputStreamPtr input)
 {
 	if (!hasCachedTokens())
 	{
 		auto token = Scanner::scan(input);
-		m_cache.push_back(token);
-		m_index = m_cache.size();
+		m_cache[m_writeIndex] = token;
+		increment(m_writeIndex);
+		increment(m_readIndex);
 		return token;
 	}
 	else {
-		return m_cache[m_index++];
+		auto token = m_cache[m_readIndex];
+		increment(m_readIndex);
+		return token;
 	}
 }
 
-Token CT::Lexer::CachedScanner::rewindToken()
+CT::Handle<Token> CT::Lexer::CachedScanner::rewindToken()
 {
-	if (m_index > 0)
-	{
-		m_index--;
-		return m_cache[m_index];
-	}
-	return Token::invalid;
+	decrement(m_readIndex);
+	return m_cache[m_readIndex];
 }
 
 void CT::Lexer::CachedScanner::clear()
 {
 	m_cache.clear();
-	m_index = m_cache.size();
+	m_cache.resize(1024);
+	m_readIndex = 0;
+	m_writeIndex = 0;
 }

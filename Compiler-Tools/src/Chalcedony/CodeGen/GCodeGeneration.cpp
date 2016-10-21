@@ -41,21 +41,25 @@ std::string CT::CodeGen::LLKRD::evalLexRule(std::shared_ptr<CT::Parser::GLexRule
 	std::string local_rule_eval = "(";
 	for (auto regex_component : lex_rule->regex)
 	{
-		if (regex_component.tag == "lex_id")
+		if (regex_component->tag == "lex_id")
 		{
-			auto rule_it = lex_rules_map.find(regex_component.literal.getString());
+			auto rule_it = lex_rules_map.find(regex_component->literal.getString());
 			if (rule_it != lex_rules_map.end())
 			{
 				evalLexRule(rule_it->second,
 					lex_rules_map, local_rule_eval, visited);
 			}
 			else {
-				CT::Log::log(CT::LOG_LEVEL::ERROR, "didn't find a lex rule with the name " + regex_component.literal.getString()+" referenced in lex rule "+lex_rule->tokenName.getString(), CT::FilePosition::invalid);
+				CT::Log::log(CT::LOG_LEVEL::ERROR, "didn't find a lex rule with the name " + regex_component->literal.getString()+" referenced in lex rule "+lex_rule->tokenName.getString(), CT::FilePosition::invalid);
 				return output;
 			}
 		}
-		else if(regex_component.tag == "regex") {
-			local_rule_eval += regex_component.literal.getString();
+		else if(regex_component->tag == "regex") {
+			local_rule_eval += regex_component->literal.getString();
+		}
+		else if (regex_component->tag == "regex_op")
+		{
+			local_rule_eval += regex_component->literal.getString();
 		}
 	}
 	local_rule_eval += ")";
@@ -91,9 +95,9 @@ std::string CT::CodeGen::LLKRD::generateLexerCPP(const std::string& lexer_name, 
 	for (auto child : lex_rules) {
 		std::cout << child->regex.size() << std::endl;
 		for (auto token : child->regex) {
-			if (token.tag == "lex_id") {
-				m_referencedLexRules.insert(token.literal.getString());
-				std::cout << token.literal.getString() << std::endl;
+			if (token->tag == "lex_id") {
+				m_referencedLexRules.insert(token->literal.getString());
+				std::cout << token->literal.getString() << std::endl;
 			}
 		}
 
@@ -172,11 +176,11 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 			//they all an if statements then this else for the branching tree of the generated code
 			if (i < rule_tree_node->next.size() - 1) 
 			{
-				list_nodes += rule_tree_node->next[i]->token.literal.getString() + ", ";
+				list_nodes += rule_tree_node->next[i]->token->literal.getString() + ", ";
 			}
 			else
 			{
-				list_nodes += rule_tree_node->next[i]->token.literal;
+				list_nodes += rule_tree_node->next[i]->token->literal;
 			}
 		}
 
@@ -189,22 +193,22 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 	//if it's a leaf node then this must check for end parsing
 	else if (rule_tree_node->isLeaf)
 	{
-		if(rule_tree_node->token.tag == "parse_id")
+		if(rule_tree_node->token->tag == "parse_id")
 		{
 
-			stream << indent(indentValue) << "auto node" << rule_tree_node->token.literal.getString() << " = parse" << rule_tree_node->token.literal.getString() << "(ct_scanner, ct_input);\n";
+			stream << indent(indentValue) << "auto node" << rule_tree_node->token->literal.getString() << " = parse" << rule_tree_node->token->literal.getString() << "(ct_scanner, ct_input);\n";
 			//predicate
 			if (rule_tree_node->predicate != CT::StringMarker::invalid)
 			{
-				stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal.getString() << " != nullptr && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
+				stream << indent(indentValue) << "if(node" << rule_tree_node->token->literal.getString() << " != nullptr && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
 			}
 			else
 			{
-				stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal.getString() << " != nullptr)\n";
+				stream << indent(indentValue) << "if(node" << rule_tree_node->token->literal.getString() << " != nullptr)\n";
 			}
 			stream << indent(indentValue) << "{\n";
 
-			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement nodeElement; nodeElement.node = node" << rule_tree_node->token.literal.getString() << ";\n";
+			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement nodeElement; nodeElement.node = node" << rule_tree_node->token->literal.getString() << ";\n";
 			stream << indent(indentValue + 1) << "ct_elements.push_back(nodeElement);\n";
 
 			//this is the immediate action
@@ -226,7 +230,7 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 			stream << indent(indentValue) << "}\n";
 
 		}
-		else if (rule_tree_node->token.tag == "any_token")
+		else if (rule_tree_node->token->tag == "any_token")
 		{
 			stream << indent(indentValue) << "auto any_token = ct_scanner->scan(ct_input);\n";
 			stream << indent(indentValue) << "if(any_token != CT::Lexer::Token::invalid && any_token != CT::Lexer::Token::eof)\n";
@@ -253,18 +257,18 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 			stream << indent(indentValue) << "}\n";
 		}else {
 
-			stream << indent(indentValue) << "auto " << rule_tree_node->token.literal.getString() << "Token = ct_scanner->scan(ct_input);\n";
+			stream << indent(indentValue) << "auto " << rule_tree_node->token->literal.getString() << "Token = ct_scanner->scan(ct_input);\n";
 			//predicate
 			if (rule_tree_node->predicate != CT::StringMarker::invalid)
 			{
-				stream << indent(indentValue) << "if(" << rule_tree_node->token.literal.getString() << "Token.tag == \"" << rule_tree_node->token.literal.getString() << "\" && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
+				stream << indent(indentValue) << "if(" << rule_tree_node->token->literal.getString() << "Token.tag == \"" << rule_tree_node->token->literal.getString() << "\" && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
 			}
 			else {
-				stream << indent(indentValue) << "if(" << rule_tree_node->token.literal.getString() << "Token.tag == \"" << rule_tree_node->token.literal.getString() << "\")\n";
+				stream << indent(indentValue) << "if(" << rule_tree_node->token->literal.getString() << "Token.tag == \"" << rule_tree_node->token->literal.getString() << "\")\n";
 			}
 			stream << indent(indentValue) << "{\n";
 
-			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = " << rule_tree_node->token.literal.getString() << "Token;\n";
+			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = " << rule_tree_node->token->literal.getString() << "Token;\n";
 			stream << indent(indentValue + 1) << "ct_elements.push_back(tokenElement);\n";
 
 			//this is the immediate action
@@ -296,22 +300,22 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 		 * check the meta token if it's a lex_id then check with the if statement
 		 * if the meta token is a parse_id then call the function supposed to parse this node and check for nullptr if nullptr then print an error
 		 */
-		if(rule_tree_node->token.tag == "parse_id")
+		if(rule_tree_node->token->tag == "parse_id")
 		{
 
-			stream << indent(indentValue) << "auto node" << rule_tree_node->token.literal.getString() << " = parse" << rule_tree_node->token.literal.getString() << "(ct_scanner, ct_input);\n";
+			stream << indent(indentValue) << "auto node" << rule_tree_node->token->literal.getString() << " = parse" << rule_tree_node->token->literal.getString() << "(ct_scanner, ct_input);\n";
 			//predicate
 			if (rule_tree_node->predicate != CT::StringMarker::invalid)
 			{
-				stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal.getString() << " != nullptr && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
+				stream << indent(indentValue) << "if(node" << rule_tree_node->token->literal.getString() << " != nullptr && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
 			}
 			else
 			{
-				stream << indent(indentValue) << "if(node" << rule_tree_node->token.literal.getString() << " != nullptr)\n";
+				stream << indent(indentValue) << "if(node" << rule_tree_node->token->literal.getString() << " != nullptr)\n";
 			}
 			stream << indent(indentValue) << "{\n";
 
-			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement nodeElement; nodeElement.node = node" << rule_tree_node->token.literal.getString() << ";\n";
+			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement nodeElement; nodeElement.node = node" << rule_tree_node->token->literal.getString() << ";\n";
 			stream << indent(indentValue + 1) << "ct_elements.push_back(nodeElement);\n";
 
 			//this is the immediate action
@@ -329,11 +333,11 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 				//they all an if statements then this else for the branching tree of the generated code
 				if (i < rule_tree_node->next.size() - 1) 
 				{
-					list_nodes += rule_tree_node->next[i]->token.literal.getString() + ", ";
+					list_nodes += rule_tree_node->next[i]->token->literal.getString() + ", ";
 				}
 				else
 				{
-					list_nodes += rule_tree_node->next[i]->token.literal;
+					list_nodes += rule_tree_node->next[i]->token->literal;
 				}
 			}
 
@@ -346,7 +350,7 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 			stream << indent(indentValue) << "}\n";
 
 		}
-		else if (rule_tree_node->token.tag == "any_token")
+		else if (rule_tree_node->token->tag == "any_token")
 		{
 			stream << indent(indentValue) << "auto any_token = ct_scanner->scan(ct_input);\n";
 			stream << indent(indentValue) << "if(any_token != CT::Lexer::Token::invalid && any_token != CT::Lexer::Token::eof)\n";
@@ -372,18 +376,18 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 		}
 		else {
 
-			stream << indent(indentValue) << "auto " << rule_tree_node->token.literal.getString() << "Token = ct_scanner->scan(ct_input);\n";
+			stream << indent(indentValue) << "auto " << rule_tree_node->token->literal.getString() << "Token = ct_scanner->scan(ct_input);\n";
 			//predicate
 			if (rule_tree_node->predicate != CT::StringMarker::invalid)
 			{
-				stream << indent(indentValue) << "if(" << rule_tree_node->token.literal.getString() << "Token.tag == \"" << rule_tree_node->token.literal.getString() << "\" && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
+				stream << indent(indentValue) << "if(" << rule_tree_node->token->literal.getString() << "Token.tag == \"" << rule_tree_node->token->literal.getString() << "\" && " << rule_tree_node->predicate.getString() << "(ct_elements, ct_scanner, ct_input))\n";
 			}
 			else {
-				stream << indent(indentValue) << "if(" << rule_tree_node->token.literal.getString() << "Token.tag == \"" << rule_tree_node->token.literal.getString() << "\")\n";
+				stream << indent(indentValue) << "if(" << rule_tree_node->token->literal.getString() << "Token.tag == \"" << rule_tree_node->token->literal.getString() << "\")\n";
 			}
 			stream << indent(indentValue) << "{\n";
 
-			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = " << rule_tree_node->token.literal.getString() << "Token;\n";
+			stream << indent(indentValue + 1) << "CT::Parser::ParsingElement tokenElement; tokenElement.token = " << rule_tree_node->token->literal.getString() << "Token;\n";
 			stream << indent(indentValue + 1) << "ct_elements.push_back(tokenElement);\n";
 
 			//this is the immediate action
@@ -401,11 +405,11 @@ void CT::CodeGen::LLKRD::generateRuleFunctionBody(std::shared_ptr<CT::Parser::GP
 				//they all an if statements then this else for the branching tree of the generated code
 				if (i < rule_tree_node->next.size() - 1) 
 				{
-					list_nodes += rule_tree_node->next[i]->token.literal.getString() + ", ";
+					list_nodes += rule_tree_node->next[i]->token->literal.getString() + ", ";
 				}
 				else
 				{
-					list_nodes += rule_tree_node->next[i]->token.literal;
+					list_nodes += rule_tree_node->next[i]->token->literal;
 				}
 			}
 			
@@ -671,14 +675,14 @@ bool LeftRecursionChecker::check(const std::string& rule_name, CT::Parser::GPars
 		m_validRules[rule_name] = result;
 		return result;
 	}else{
-		if (rule_node->token.tag == "lex_id" || rule_node->token.tag == "any_token")
+		if (rule_node->token->tag == "lex_id" || rule_node->token->tag == "any_token")
 		{
 			m_validRules[rule_name] = true;
 			return true;
 		}
-		else if (rule_node->token.tag == "parse_id")
+		else if (rule_node->token->tag == "parse_id")
 		{
-			auto sub_rule_name = rule_node->token.literal.getString();
+			auto sub_rule_name = rule_node->token->literal.getString();
 			bool result = check(sub_rule_name, m_rulesTable[sub_rule_name]);
 			m_validRules[rule_name] = result;
 			return result;

@@ -3,53 +3,96 @@
 using namespace CT;
 using namespace CT::Lexer;
 
-const Token Token::eof = eof_token();
-const Token Token::invalid = invalid_token();
-const Token Token::skip = skip_token();
+const CT::Handle<Token> Token::eof = eof_token();
+const CT::Handle<Token> Token::invalid = invalid_token();
+const CT::Handle<Token> Token::skip = skip_token();
+
 std::unordered_map<std::string, s64> Token::TOKEN_TAGS;
 
+MemoryPool<Token>& CT::Lexer::Token::getMemory()
+{
+	static MemoryPool<Token> Memory(4096);
+	return Memory;
+}
+
 Token::Token()
-	:isEOF(false), isInvalid(false), isSkip(false)
+	:m_isEOF(false), m_isInvalid(false), m_isSkip(false)
 {}
 
-Token Lexer::eof_token()
+CT::Lexer::Token::Token(const Token & token)
 {
-	Token result;
-	result.isEOF = true;
-	result.isInvalid = false;
-	result.isSkip = false;
+	m_isEOF = token.m_isEOF;
+	m_isInvalid = token.m_isInvalid;
+	m_isSkip = token.m_isSkip;
+	tag = token.tag;
+	event = token.event;
+}
+
+CT::Lexer::Token::Token(Token && token)
+{
+	m_isEOF = token.m_isEOF;
+	m_isInvalid = token.m_isInvalid;
+	m_isSkip = token.m_isSkip;
+	tag = token.tag;
+	event = token.event;
+}
+
+bool CT::Lexer::Token::isEOF() const
+{
+	return this->m_isEOF;
+}
+
+bool CT::Lexer::Token::isInvalid() const
+{
+	return this->m_isInvalid;
+}
+
+bool CT::Lexer::Token::isSkip() const
+{
+	return this->m_isSkip;
+}
+
+CT::Handle<Token> Lexer::eof_token()
+{
+	CT::Handle<Token> result = Token::getMemory().allocate();
+	result->m_isEOF = true;
+	result->m_isInvalid = false;
+	result->m_isSkip = false;
+	result.ref();
 	return result;
 }
 
-Token Lexer::invalid_token()
+CT::Handle<Token> Lexer::invalid_token()
 {
-	Token result;
-	result.isInvalid = true;
-	result.isEOF = false;
-	result.isSkip = false;
+	CT::Handle<Token> result = Token::getMemory().allocate();
+	result->m_isInvalid = true;
+	result->m_isEOF = false;
+	result->m_isSkip = false;
+	result.ref();
 	return result;
 }
 
-API Token CT::Lexer::skip_token()
+CT::Handle<Token> CT::Lexer::skip_token()
 {
-	Token result;
-	result.isInvalid = false;
-	result.isEOF = false;
-	result.isSkip = true;
+	CT::Handle<Token> result = Token::getMemory().allocate();
+	result->m_isInvalid = false;
+	result->m_isEOF = false;
+	result->m_isSkip = true;
+	result.ref();
 	return result;
 }
 
-bool Lexer::operator==(const Token& a, const Token& b)
+API bool Lexer::operator==(const Token& a, const Token& b)
 {
-	if (a.isEOF && b.isEOF)
+	if (a.m_isEOF && b.m_isEOF)
 		return true;
-	else if (a.isInvalid && b.isInvalid)
+	else if (a.m_isInvalid && b.m_isInvalid)
 		return true;
-	else if (a.isSkip && b.isSkip)
+	else if (a.m_isSkip && b.m_isSkip)
 		return true;
-	else if((a.isEOF & b.isEOF) && (a.isEOF | b.isEOF))
+	else if((a.m_isEOF & b.m_isEOF) && (a.m_isEOF | b.m_isEOF))
 		return false;
-	else if((a.isInvalid & b.isInvalid) && (a.isInvalid | b.isInvalid))
+	else if((a.m_isInvalid & b.m_isInvalid) && (a.m_isInvalid | b.m_isInvalid))
 		return false;
 	else if(a.tag == b.tag && a.literal == b.literal)
 		return true;
@@ -57,25 +100,58 @@ bool Lexer::operator==(const Token& a, const Token& b)
 	return false;
 }
 
-bool Lexer::operator!=(const Token& a, const Token& b)
+API bool CT::Lexer::operator==(CT::Handle<Token> a, CT::Handle<Token> b)
+{
+	return *a == *b;
+}
+
+API bool CT::Lexer::operator==(CT::Handle<Token> a, const Token & b)
+{
+	return *a == b;
+}
+
+API bool CT::Lexer::operator==(const Token & a, CT::Handle<Token> b)
+{
+	return a == *b;
+}
+
+API bool Lexer::operator!=(const Token& a, const Token& b)
 {
 	return !(a==b);
 }
 
-API Token CT::Lexer::make_token(std::string tagName, std::function<bool(InputStreamPtr, Token&)> eventFunction)
+API bool CT::Lexer::operator!=(CT::Handle<Token> a, CT::Handle<Token> b)
 {
-	Token result;
-	result.tag = tagName;
-	result.event = eventFunction;
-	result.isEOF = false;
-	result.isInvalid = false;
-	result.isSkip = false;
+	return !(a == b);
+}
+
+API bool CT::Lexer::operator!=(CT::Handle<Token> a, const Token & b)
+{
+	return !(a == b);
+}
+
+API bool CT::Lexer::operator!=(const Token & a, CT::Handle<Token> b)
+{
+	return !(a == b);
+}
+
+API CT::Handle<Token> CT::Lexer::make_token(std::string tagName, std::function<bool(InputStreamPtr, Token&)> eventFunction)
+{
+	CT::Handle<Token> result = Token::getMemory().allocate();
+	result->tag = tagName;
+	result->event = eventFunction;
+	result->m_isEOF = false;
+	result->m_isInvalid = false;
+	result->m_isSkip = false;
 	return result;
 }
 
-API Token CT::Lexer::make_token(std::function<bool(InputStreamPtr, Token&)> eventFunction)
+API CT::Handle<Token> CT::Lexer::make_token(std::function<bool(InputStreamPtr, Token&)> eventFunction)
 {
-	Token result = Token::skip;
-	result.event = eventFunction;
+	CT::Handle<Token> result = Token::getMemory().allocate();
+	result->m_isSkip = true;
+	result->m_isEOF = false;
+	result->m_isInvalid = false;
+	result->event = eventFunction;
 	return result;
 }

@@ -21,6 +21,14 @@ void GLexer::init()
 	registerToken(compiler.compile("skip"), make_token("skip"));
 	registerToken(compiler.compile("ct_start"), make_token("start_rule"));
 	registerToken(compiler.compile("ct_any"), make_token("any_token"));
+	registerToken(compiler.compile("\\?"), make_token("regex_op"));
+	registerToken(compiler.compile("\\|"), make_token("regex_op"));
+	registerToken(compiler.compile("\\+"), make_token("regex_op"));
+	registerToken(compiler.compile("\\["), make_token("regex_op"));
+	registerToken(compiler.compile("\\]"), make_token("regex_op"));
+	registerToken(compiler.compile("\\("), make_token("regex_op"));
+	registerToken(compiler.compile("\\)"), make_token("regex_op"));
+	registerToken(compiler.compile("\\*"), make_token("regex_op"));
 	registerToken(compiler.compile("#name"), make_token("name_directive", [](CT::InputStreamPtr input, Token& token) -> bool {
 		//token.literal = "";
 		//filter whitespace

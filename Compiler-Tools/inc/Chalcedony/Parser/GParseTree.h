@@ -47,7 +47,7 @@ namespace CT
 		{
 		public:
 			StringMarker tokenName;
-			std::vector<Lexer::Token> regex;
+			std::vector<CT::Handle<Lexer::Token>> regex;
 			StringMarker action;
 			bool isSkip;
 
@@ -60,7 +60,7 @@ namespace CT
 		public:
 			//next nodes is a vector because it can branch
 			std::vector<std::shared_ptr<GParseRulesTreeNode>> next;
-			CT::Lexer::Token token;
+			CT::Handle<CT::Lexer::Token> token;
 			StringMarker predicate;
 			std::vector<StringMarker> immediateActions;
 			StringMarker action;
@@ -74,7 +74,7 @@ namespace CT
 			StringMarker getImmediateAction();
 			void resetImmediateActionCounter();
 
-			std::shared_ptr<GParseRulesTreeNode> insertNode(const CT::Lexer::Token& token);
+			std::shared_ptr<GParseRulesTreeNode> insertNode(CT::Handle<CT::Lexer::Token> token);
 		};
 		using GParseRulesTreeNodePtr = std::shared_ptr<GParseRulesTreeNode>;
 

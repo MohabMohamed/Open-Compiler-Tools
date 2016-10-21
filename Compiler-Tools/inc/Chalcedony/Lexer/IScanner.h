@@ -5,6 +5,7 @@
 #include "Chalcedony/Regex/Program.h"
 #include "Chalcedony/FilePosition.h"
 #include "Chalcedony/InputStream.h"
+#include "Chalcedony/MemoryPool.h"
 #include <istream>
 #include <vector>
 #include <memory>
@@ -27,8 +28,8 @@ namespace CT
 			virtual ~IScanner()
 			{
 			}
-			virtual Token scan(InputStreamPtr input) = 0;
-			virtual void registerToken(Regex::ProgramPtr regexProgram,const Token& token) = 0;
+			virtual CT::Handle<Token> scan(InputStreamPtr input) = 0;
+			virtual void registerToken(Regex::ProgramPtr regexProgram,CT::Handle<Token> token) = 0;
 			virtual bool isDefinedToken(const std::string&) = 0;
 			void setErrorFunction(std::function<void(InputStreamPtr)> errorFunction){m_errorFunction = errorFunction;}
 		};

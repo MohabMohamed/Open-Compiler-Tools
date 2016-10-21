@@ -18,7 +18,7 @@ namespace CT
 		using IParseNodePtr = std::shared_ptr<IParseNode>;
 
 		union API ParsingElement {
-			CT::Lexer::Token token;
+			CT::Handle<CT::Lexer::Token> token;
 			IParseNodePtr node;
 
 			ParsingElement();

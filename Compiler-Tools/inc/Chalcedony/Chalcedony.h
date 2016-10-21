@@ -9,3 +9,4 @@
 #include "Chalcedony/Log.h"
 #include "Chalcedony/StringMarker.h"
 #include "Chalcedony/Utilities.h"
+#include "Chalcedony/MemoryPool.h"

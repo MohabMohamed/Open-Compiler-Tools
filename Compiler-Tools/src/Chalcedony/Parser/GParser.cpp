@@ -24,9 +24,9 @@ GParseNodePtr GParser::parseProgram(Lexer::CachedScannerPtr scanner, InputStream
 	{
 		program->children.push_back(statement);
 		auto semicolon = scanner->scan(input);
-		if(semicolon.tag != "semicolon")
+		if(semicolon->tag != "semicolon")
 		{
-			Log::log(LOG_LEVEL::ERROR, "expected a semicolon but found'"+semicolon.tag+"'", input->getPosition());
+			Log::log(LOG_LEVEL::ERROR, "expected a semicolon but found'"+semicolon->tag+"'", input->getPosition());
 			return nullptr;
 		}
 
@@ -44,22 +44,22 @@ GParseNodePtr GParser::parseProgram(Lexer::CachedScannerPtr scanner, InputStream
 GParseNodePtr GParser::parseStatement(Lexer::CachedScannerPtr scanner, InputStreamPtr input)
 {
 	auto token = scanner->scan(input);
-	if(token.tag == "name_directive")
+	if(token->tag == "name_directive")
 	{
 		scanner->rewindToken();
 		auto statement = parseNameDirective(scanner, input);
 		return statement;
 	}
-	else if (token.tag == "skip")
+	else if (token->tag == "skip")
 	{
 		scanner->rewindToken();
 		auto statement = parseLexRule(scanner, input);
 		return statement;
 	}
-	else if (token.tag == "lex_id")
+	else if (token->tag == "lex_id")
 	{
 		auto maybe_action_token = scanner->scan(input);
-		if (maybe_action_token.tag == "action")
+		if (maybe_action_token->tag == "action")
 		{
 			scanner->rewindToken();
 			scanner->rewindToken();
@@ -72,10 +72,10 @@ GParseNodePtr GParser::parseStatement(Lexer::CachedScannerPtr scanner, InputStre
 			auto statement = parseLexRule(scanner, input);
 			return statement;
 		}
-	}else if(token.tag == "parse_id")
+	}else if(token->tag == "parse_id")
 	{
 		auto maybe_action_token = scanner->scan(input);
-		if (maybe_action_token.tag == "action")
+		if (maybe_action_token->tag == "action")
 		{
 			scanner->rewindToken();
 			scanner->rewindToken();
@@ -89,25 +89,25 @@ GParseNodePtr GParser::parseStatement(Lexer::CachedScannerPtr scanner, InputStre
 			return statement;
 		}
 	}
-	else if (token.tag == "start_rule")
+	else if (token->tag == "start_rule")
 	{
 		scanner->rewindToken();
 		auto statement = parseStartRule(scanner, input);
 		return statement;
 	}
-	else if (token.tag == "header_code")
+	else if (token->tag == "header_code")
 	{
 		std::shared_ptr<GHeaderSegment> result = std::make_shared<GHeaderSegment>();
-		result->code = token.literal;
+		result->code = token->literal;
 		return result;
 	}
-	else if (token.tag == "cpp_code")
+	else if (token->tag == "cpp_code")
 	{
 		std::shared_ptr<GCPPSegment> result = std::make_shared<GCPPSegment>();
-		result->code = token.literal;
+		result->code = token->literal;
 		return result;
 	}
-	else if (token.tag == "c_id")
+	else if (token->tag == "c_id")
 	{
 		scanner->rewindToken();
 		auto statement = parsePredicate(scanner, input);
@@ -123,9 +123,9 @@ GParseNodePtr GParser::parseNameDirective(Lexer::CachedScannerPtr scanner, Input
 	std::shared_ptr<GNameDirective> result = std::make_shared<GNameDirective>();
 
 	auto token = scanner->scan(input);
-	if(token.tag == "name_directive")
+	if(token->tag == "name_directive")
 	{
-		result->directiveValue = token.literal;
+		result->directiveValue = token->literal;
 		return result;
 	}
 
@@ -138,24 +138,28 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 	std::shared_ptr<GLexRule> result = std::make_shared<GLexRule>();
 	auto skip_token = scanner->scan(input);
 	auto lex_id_token = CT::Lexer::Token::invalid;
-	if (skip_token.tag == "skip")
+	if (skip_token->tag == "skip")
 		lex_id_token = scanner->scan(input);
 	else
 		lex_id_token = skip_token;
 
 	auto assign_token = scanner->scan(input);
 	auto regex_or_lex_token = scanner->scan(input);
-	if (lex_id_token.tag == "lex_id" &&
-		assign_token.tag == "assign" &&
-		(regex_or_lex_token.tag == "lex_id" || regex_or_lex_token.tag == "regex"))
+	if (lex_id_token->literal.getString() == "Identifier")
 	{
-		if (skip_token.tag == "skip")
+		std::cout << "we are here" << std::endl;
+	}
+	if (lex_id_token->tag == "lex_id" &&
+		assign_token->tag == "assign" &&
+		(regex_or_lex_token->tag == "lex_id" || regex_or_lex_token->tag == "regex" || regex_or_lex_token->tag == "regex_op"))
+	{
+		if (skip_token->tag == "skip")
 			result->isSkip = true;
 
 		result->regex.reserve(5);
 		result->regex.push_back(regex_or_lex_token);
 		regex_or_lex_token = scanner->scan(input);
-		while (regex_or_lex_token.tag == "lex_id" || regex_or_lex_token.tag == "regex")
+		while (regex_or_lex_token->tag == "lex_id" || regex_or_lex_token->tag == "regex" || regex_or_lex_token->tag == "regex_op")
 		{
 			result->regex.push_back(regex_or_lex_token);
 			regex_or_lex_token = scanner->scan(input);
@@ -164,14 +168,14 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 
 		auto action_token = scanner->scan(input);
 		bool foundAction = true;
-		if (action_token.tag != "action")
+		if (action_token->tag != "action")
 		{
 			scanner->rewindToken();
 			foundAction = false;
 		}
-		result->tokenName = lex_id_token.literal;
+		result->tokenName = lex_id_token->literal;
 		if (foundAction)
-			result->action = action_token.literal;
+			result->action = action_token->literal;
 		else
 			result->action = StringMarker::invalid;
 		return result;
@@ -180,7 +184,7 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 		scanner->rewindToken();
 		scanner->rewindToken();
 		scanner->rewindToken();
-		if (skip_token.tag == "skip")
+		if (skip_token->tag == "skip")
 			scanner->rewindToken();
 		return nullptr;
 	}
@@ -198,17 +202,17 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 
 	auto parse_id_token = scanner->scan(input);
 	auto assign_token = scanner->scan(input);
-	if (parse_id_token.tag == "parse_id" &&
-		assign_token.tag == "assign")
+	if (parse_id_token->tag == "parse_id" &&
+		assign_token->tag == "assign")
 	{
-		result->name = parse_id_token.literal;
+		result->name = parse_id_token->literal;
 		//std::vector<Lexer::Token> rule;
 		//rule.reserve(10);
 		auto rule_token = scanner->scan(input);
 		bool foundOr = false;
 		while(true)
 		{
-			if(rule_token.tag == "semicolon")
+			if(rule_token->tag == "semicolon")
 			{
 				//rewind the semicolon
 				scanner->rewindToken();
@@ -219,21 +223,21 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 				rules_tree_it->isLeaf = true;
 				break;
 			}
-			if (rule_token.tag == "lex_id" ||
-				rule_token.tag == "parse_id" ||
-				rule_token.tag == "any_token")
+			if (rule_token->tag == "lex_id" ||
+				rule_token->tag == "parse_id" ||
+				rule_token->tag == "any_token")
 			{
 				//insert a node to the tree
 				rules_tree_it = rules_tree_it->insertNode(rule_token);
 
 				//check for predicate
 				auto and_token = scanner->scan(input);
-				if (and_token.tag == "and")
+				if (and_token->tag == "and")
 				{
 					//scanner->rewindToken();
 					auto id_token = scanner->scan(input);
-					if (id_token.tag == "parse_id" || id_token.tag == "lex_id" || id_token.tag == "c_id")
-						rules_tree_it->predicate = id_token.literal;
+					if (id_token->tag == "parse_id" || id_token->tag == "lex_id" || id_token->tag == "c_id")
+						rules_tree_it->predicate = id_token->literal;
 					else
 					{
 						scanner->rewindToken();
@@ -248,16 +252,16 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 
 				//check for action
 				auto action_token = scanner->scan(input);
-				if (action_token.tag == "action")
+				if (action_token->tag == "action")
 				{
 					auto look_up_immediate = scanner->scan(input);
 					//checks the next token if it's at the end of the rule which is indicated by ; or |
 					//then this is an action
-					if (look_up_immediate.tag == "or" || look_up_immediate.tag == "semicolon")
-						rules_tree_it->action = action_token.literal;
+					if (look_up_immediate->tag == "or" || look_up_immediate->tag == "semicolon")
+						rules_tree_it->action = action_token->literal;
 					//else if the rule continues then this is immediate action
-					else if (look_up_immediate.tag == "lex_id" || look_up_immediate.tag == "parse_id" || look_up_immediate.tag == "any_token")
-						rules_tree_it->immediateActions.push_back(action_token.literal);
+					else if (look_up_immediate->tag == "lex_id" || look_up_immediate->tag == "parse_id" || look_up_immediate->tag == "any_token")
+						rules_tree_it->immediateActions.push_back(action_token->literal);
 					//rewind the look up token
 					scanner->rewindToken();
 				}else
@@ -266,7 +270,7 @@ GParseNodePtr GParser::parseParseRule(Lexer::CachedScannerPtr scanner, InputStre
 				}
 
 				foundOr = false;
-			}else if(rule_token.tag == "or")
+			}else if(rule_token->tag == "or")
 			{
 				//set back the it to the root
 				rules_tree_it->isLeaf = true;
@@ -288,11 +292,11 @@ GParseNodePtr CT::Parser::GParser::parseStartRule(CT::Lexer::CachedScannerPtr sc
 	auto start_token = scanner->scan(input);
 	auto assign_token = scanner->scan(input);
 	auto start_rule = scanner->scan(input);
-	if (start_token.tag == "start_rule" &&
-		assign_token.tag == "assign" &&
-		start_rule.tag == "parse_id")
+	if (start_token->tag == "start_rule" &&
+		assign_token->tag == "assign" &&
+		start_rule->tag == "parse_id")
 	{
-		result->startRule = start_rule.literal;
+		result->startRule = start_rule->literal;
 	}
 	else {
 		scanner->rewindToken();
@@ -311,10 +315,10 @@ GParseNodePtr CT::Parser::GParser::parsePredicate(CT::Lexer::CachedScannerPtr sc
 	std::shared_ptr<GPredicate> predicate = std::make_shared<GPredicate>();
 	auto id = scanner->scan(input);
 	auto action = scanner->scan(input);
-	if ((id.tag == "parse_id" || id.tag == "lex_id" || id.tag == "c_id") && action.tag == "action")
+	if ((id->tag == "parse_id" || id->tag == "lex_id" || id->tag == "c_id") && action->tag == "action")
 	{
-		predicate->name = id.literal;
-		predicate->code = action.literal;
+		predicate->name = id->literal;
+		predicate->code = action->literal;
 	}
 	else {
 		return nullptr;

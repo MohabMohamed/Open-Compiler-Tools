@@ -14,15 +14,13 @@ VM::VM()
 
 VM::~VM()
 {
-	while (!m_try.empty())
-		m_try.pop();
+	m_try = 0;
 }
 
 void VM::reset()
 {
 	m_status = VMStatus::None;
-	while (!m_try.empty())
-		m_try.pop();
+	m_try = 0;
 	m_consumeRegister = false;
 }
 
@@ -35,7 +33,7 @@ StringMarker VM::exec(ProgramPtr program, InputStreamPtr input)
 {
 	if (program->m_code.empty())
 		return StringMarker::invalid;
-	if (input->getString().empty())
+	if (input->empty())
 		return StringMarker::invalid;
 
 	program->reset();
@@ -64,23 +62,27 @@ StringMarker VM::exec(ProgramPtr program, InputStreamPtr input)
 				//error exit
 				exec_result = false;
 				//if not inside try block
-				if (!m_try.empty())
+				if (m_try > 0)
 				{
 					int test_scope_counter = 0;
 					while (true)
 					{
-						ins = m_program->fetch();
-						if (ins == Instruction::EndTry && test_scope_counter > 0)
+						auto pop_ins = m_program->popCode();
+						if (isInstruction(pop_ins))
 						{
-							test_scope_counter--;
-						}
-						else if (ins == Instruction::EndTry)
-						{
-							break;
-						}
-						else if (ins == Instruction::Try)
-						{
-							test_scope_counter++;
+							ins = static_cast<Instruction>(pop_ins);
+							if (ins == Instruction::EndTry && test_scope_counter > 0)
+							{
+								test_scope_counter--;
+							}
+							else if (ins == Instruction::EndTry)
+							{
+								break;
+							}
+							else if (ins == Instruction::Try)
+							{
+								test_scope_counter++;
+							}
 						}
 					}
 
@@ -125,7 +127,8 @@ StringMarker VM::exec(ProgramPtr program, InputStreamPtr input)
 	else
 	{
 		m_status = VMStatus::CodeFail;
-		input->moveToMarkerStart(input->popMarker());
+		auto marker = input->popMarker();
+		input->moveToMarkerStart(marker);
 		return StringMarker::invalid;
 	}
 }
@@ -256,13 +259,13 @@ VMStatus VM::decode(Instruction ins)
 		case Instruction::Try:
 		{
 			//set try boolean to true
-			m_try.push(true);
+			m_try++;
 			return VMStatus::CodeSuccess;
 		}
 		case Instruction::EndTry:
 		{
 			//set try boolean to false
-			m_try.pop();
+			m_try--;
 			return VMStatus::CodeSuccess;
 		}
 		case Instruction::Push:

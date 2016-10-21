@@ -10,6 +10,7 @@
 #include "CLexer.h"
 #include "CParser.h"
 
+//#pragma comment(linker, "/STACK:2000000")
 using namespace std;
 class InputParser {
 public:
@@ -41,17 +42,29 @@ int main(int argc, char* argv[]) {
 	if (input.cmdOptionExists("-in")) {
 		input_filename = input.getCmdOption("-in");
 	}
+	if (input_filename.empty())
+		input_filename = "test/c_test_02.c";
+
+
 	//test grammar
 
-	//CT::InputStreamPtr file_input = CT::open_file("grammar/c.gr");
+	//CT::InputStreamPtr file_input = CT::open_file("grammar/c_en.gr");
 	//auto grammar_scanner = std::make_shared<CT::Lexer::GLexer>();
 	//CT::Parser::GParser grammar_parser;
 	//auto koko = grammar_parser.parse(grammar_scanner, file_input);
 	//CT::CodeGen::LLKRD code_generator;
 	//code_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(koko));
+	//return 0;
 
-	CT::InputStreamPtr file_input = CT::open_file("test/c_test_02.c");
+	CT::InputStreamPtr file_input = CT::open_file(input_filename);
 	auto lexer_ptr = std::make_shared<C::CLexer>();
+	auto token = lexer_ptr->scan(file_input);
+	while (token != CT::Lexer::Token::eof && token != CT::Lexer::Token::invalid)
+	{
+		//std::cout << token->tag << "<" << token->literal.getString() << ">" << std::endl;
+		token = lexer_ptr->scan(file_input);
+	}
+	return 0;
 	auto parser_ptr = std::make_shared<C::CParser>();
 	auto program = parser_ptr->parse(lexer_ptr, file_input);
 	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;

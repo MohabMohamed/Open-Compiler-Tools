@@ -7,7 +7,7 @@ Program::Program()
 	m_stackPtr = 0;
 	m_codePtr = 0;
 	m_code.reserve(512);
-	m_stack.resize(512);
+	m_stack.resize(1024);
 }
 
 Program::~Program()

@@ -4,7 +4,7 @@
 #include "Chalcedony/StringMarker.h"
 #include <string>
 #include <memory>
-#include <stack>
+#include <vector>
 
 namespace CT
 {
@@ -15,7 +15,7 @@ namespace CT
 		std::size_t m_index;
 		FilePosition m_position;
 		u64 m_lastLineCount;
-		std::stack<StringMarker> m_markerStack;
+		std::vector<StringMarker> m_markerStack;
 
 	public:
 		InputStream(const std::string& input);
@@ -35,6 +35,8 @@ namespace CT
 		void clear();
 
 		bool eof();
+
+		bool empty();
 
 		void append(const std::string& str);
 

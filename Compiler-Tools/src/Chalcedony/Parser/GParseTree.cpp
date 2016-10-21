@@ -73,7 +73,7 @@ void CT::Parser::GParseRulesTreeNode::resetImmediateActionCounter()
 	immediateActionsCounter = 0;
 }
 
-std::shared_ptr<GParseRulesTreeNode> CT::Parser::GParseRulesTreeNode::insertNode(const CT::Lexer::Token & token)
+std::shared_ptr<GParseRulesTreeNode> CT::Parser::GParseRulesTreeNode::insertNode(CT::Handle<CT::Lexer::Token> token)
 {
 	for (auto node : next)
 		if (node && node->token == token)

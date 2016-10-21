@@ -54,7 +54,7 @@ namespace CT
 			//last instruction status register
 			VMStatus m_status;
 			//try boolean to indicate whether in try block or not
-			std::stack<bool> m_try;
+			s32 m_try;
 			//input stream pointer
 			InputStreamPtr m_input;
 			//register to state that current program consumed a char

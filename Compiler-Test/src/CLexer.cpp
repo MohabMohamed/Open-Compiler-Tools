@@ -4,6 +4,7 @@
 #include <Chalcedony/InputStream.h>
 #include <Chalcedony/Utilities.h>
 #include <Chalcedony/Lexer/Token.h>
+#include <Chalcedony/MemoryPool.h>
 using namespace std;
 using namespace CT;
 using namespace CT::Lexer;
@@ -153,46 +154,10 @@ void CLexer::init()
 	registerToken(compiler.compile("(pragma)"), CT::Lexer::make_token("Pragma"));
 	registerToken(compiler.compile("(include)"), CT::Lexer::make_token("Include"));
 	registerToken(compiler.compile("(define)"), CT::Lexer::make_token("Define"));
-	registerToken(compiler.compile("((([a-zA-Z_])|((\\\\u(([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])))|(\\\\U(([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])))))((([a-zA-Z_])|((\\\\u(([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])))|(\\\\U(([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])))))|([0-9]))*)"), CT::Lexer::make_token("Identifier"));
-	registerToken(compiler.compile("(((((([1-9])([0-9])*)((((u|U))((l|L))?)|(((u|U))((ll|LL)))|(((l|L))((u|U))?)|(((ll|LL))((u|U))?))?)|((0([0-7])*)((((u|U))((l|L))?)|(((u|U))((ll|LL)))|(((l|L))((u|U))?)|(((ll|LL))((u|U))?))?)|(((0(x|X))([0-9a-fA-F])+)((((u|U))((l|L))?)|(((u|U))((ll|LL)))|(((l|L))((u|U))?)|(((ll|LL))((u|U))?))?)|(0(b|B)(0|1)+))|((((((([0-9])+)?.(([0-9])+))|((([0-9])+).))((e((\\+ | \\-))?(([0-9])+))|(E((\\+ | \\-))?(([0-9])+)))?((f|l|F|L))?)|((([0-9])+)((e((\\+ | \\-))?(([0-9])+))|(E((\\+ | \\-))?(([0-9])+)))((f|l|F|L))?))|(((0(x|X))(((([0-9a-fA-F])+)?.(([0-9a-fA-F])+))|((([0-9a-fA-F])+).))(((p|P)((\\+ | \\-))?(([0-9])+)))((f|l|F|L))?)|((0(x|X))(([0-9a-fA-F])+)(((p|P)((\\+ | \\-))?(([0-9])+)))((f|l|F|L))?)))))"), CT::Lexer::make_token("Constant"));
-	registerToken(compiler.compile("((u8|[uUL])?\")"), CT::Lexer::make_token("StringConstant", [](CT::InputStreamPtr ct_input, Token& ct_token) -> bool
-	{
-	ct_input->pushMarker(ct_token.literal);
-	char prev = '\0';
-	auto c = ct_input->peek();
-	while(true)
-	{
-		bool ignore = false;
-		if(prev == '\\')
-			ignore = true;
-		if(c == '"' && !ignore)
-			break;
-		//pop peeked letter
-		ct_input->popLetter();
-		prev = c;
-		c = ct_input->peek();
-	}
-	ct_input->popLetter();
-	ct_token.literal = ct_input->popMarker();
-	return true;
+	registerToken(compiler.compile("((([a-zA-Z_])|((\\u(([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])))|(\\U(([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F]))(([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])))))((([a-zA-Z_])|((\\u(([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])))|(\\U(([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F]))(([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])))))|([0-9]))*)"), CT::Lexer::make_token("Identifier"));
+	registerToken(compiler.compile("(.)"), CT::Lexer::make_token());
 }
-	));
-	registerToken(compiler.compile("(')"), CT::Lexer::make_token("CharConstant", [](CT::InputStreamPtr ct_input, Token& ct_token) -> bool
-	{
-	ct_input->pushMarker(ct_token.literal);
-	char val = ct_input->popLetter();
-	char close_quote = ct_input->popLetter();
-	if(close_quote != '\''){
-		ct_input->rewindLetter();
-		ct_input->rewindLetter();
-		return false;
-	}
-	ct_token.literal = ct_input->popMarker();
-	return true;
-}
-	));
-}
-CLexer::CLexer()
+CLexer::CLexer():CachedScanner()
 {
 	init();
 }
