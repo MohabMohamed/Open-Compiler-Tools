@@ -1,4 +1,0 @@
-﻿  main.cpp
-e:\projects\compiler-tools-v1.0\compiler-test\src\main.cpp(11): warning C4101: 'c': unreferenced local variable
-  Compiler-Test.vcxproj -> E:\Projects\Compiler-Tools-v1.0\Compiler-Tools\..\bin\DebugShared\Compiler-Test.exe
-  Compiler-Test.vcxproj -> ..\bin\DebugShared\Compiler-Test.pdb (Full PDB)
