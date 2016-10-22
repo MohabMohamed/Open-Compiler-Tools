@@ -1,0 +1,173 @@
+#name C;
+#cpp{
+	#include <iostream>	
+};
+
+skip Newline 							:= "\n";
+skip Carriage_Return					:= "\r";
+skip Space 								:= " ";
+skip Tab 								:= "\t";
+skip Vertical_Space 					:= "\v";
+skip F_Thing 							:= "\f";
+
+
+Auto 									:= "auto";
+Break 									:= "break";
+Case 									:= "case";
+Char 									:= "char";
+Const 									:= "const";
+Continue								:= "continue";
+Default 								:= "default";
+Double 									:= "double";
+Do										:= "do";
+Else									:= "else";
+Enum									:= "enum";
+Extern									:= "extern";
+Float									:= "float";
+For										:= "for";
+Goto									:= "goto";
+If 										:= "if";
+Inline 									:= "inline";
+InlineGCC 								:= "__inline__";
+Int 									:= "int";
+Long 									:= "long";
+Register 								:= "register";
+Restrict								:= "restrict";
+Return 									:= "return";
+Short 									:= "short";
+Signed 									:= "signed";
+Sizeof 									:= "sizeof";
+Static 									:= "static";
+Struct 									:= "struct";
+Switch 									:= "switch";
+Typedef 								:= "typedef";
+Union 									:= "union";
+Unsigned 								:= "unsigned";
+Void 									:= "void";
+Volatile 								:= "volatile";
+While 									:= "while";
+
+Alignas 								:= "_Alignas";
+Alignof 								:= "_Alignof";
+Atomic 									:= "_Atomic";
+Bool 									:= "_Bool";
+Complex									:= "_Complex";
+Generic 								:= "_Generic";
+Imaginary 								:= "_Imaginary";
+Noreturn 								:= "_Noreturn";
+StaticAssert 							:= "_Static_assert";
+ThreadLocal	 							:= "_Thread_local";
+Extension								:= "__extension__";
+BuiltInVaArg 							:= "__builtin_va_arg";
+BuiltInOffsetOf 						:= "__builtin_offsetof";
+SIMDNoType 								:= "__m128";
+SIMDDType 								:= "__m128d";
+SIMDIType 								:= "__m128i";
+TypeOf									:= "__typeof__";
+StdCall 								:= "__stdcall";
+DeclSpec 								:= "__declspec";
+Asm 									:= "__asm";
+Attribute 								:= "__attribute__";
+
+skip SINGLE_LINE_COMMENT 				:= "//" ->
+{
+	ct_input->pushMarker(ct_token.literal);
+	while (ct_input->peek() != '\n')
+	{
+		ct_input->popLetter();
+	}
+	ct_token.literal = ct_input->popMarker();
+	return true;
+};
+
+skip MULTI_LINE_COMMENT 				:= "/\\*" ->
+{
+	ct_input->pushMarker(ct_token.literal);
+	char prev = '\0';
+	while(true)
+	{
+		auto c = ct_input->popLetter();
+		if(c == '\0')
+			return false;
+
+		if(prev == '*' && c == '/')
+			break;
+		prev = c;
+	}
+	ct_token.literal = ct_input->popMarker();
+	return true;
+};
+
+LeftParen 								:= "\\(";
+RightParen 								:= "\\)";
+LeftBracket 							:= "\\[";
+RightBracket 							:= "\\]";
+LeftBrace 								:= "{";
+RightBrace 								:= "}";
+
+LeftShift 								:= "<<";
+RightShift 								:= ">>";
+LessEqual 								:= "<=";
+GreaterEqual							:= ">=";
+
+StarAssign 								:= "\\*=";
+DivAssign 								:= "/=";
+ModAssign 								:= "%=";
+PlusAssign 								:= "\\+=";
+MinusAssign								:= "-=";
+LeftShiftAssign 						:= "<<=";
+RightShiftAssign 						:= ">>=";
+AndAssign 								:= "&=";
+XorAssign 								:= "^=";
+OrAssign 								:= "\\|=";
+Equal 									:= "==";
+NotEqual 								:= "!=";
+Assign 									:= "=";
+
+PlusPlus 								:= "\\+\\+";
+Arrow 									:= "->";
+Ellipsis 								:= "\\.\\.\\.";
+MinusMinus 								:= "--";
+
+
+AndAnd 									:= "&&";
+OrOr 									:= "\\|\\|";
+Caret 									:= "^";
+Not 									:= "!";
+Tilde 									:= "~";
+
+Greater 								:= ">";
+Less 									:= "<";
+And 									:= "&";
+Or 										:= "\\|";
+Minus 									:= "-";
+Star 									:= "\\*";
+Div 									:= "/";
+Mod 									:= "%";
+Plus 									:= "\\+";
+Dot 									:= "\\.";
+
+Question								:= "\\?";
+Colon 									:= ":";
+Semi 									:= ";";
+Comma 									:= ",";
+Hash 									:= "#";
+Pragma 									:= "pragma";
+Include 								:= "include";
+Define 									:= "define";
+
+Identifier 								:= IdentifierNonDigit ( IdentifierNonDigit | Digit )*;
+IdentifierNonDigit						:= NonDigit | UniversalCharName;
+NonDigit 								:= "[a-zA-Z_]";
+Digit 									:= "[0-9]";
+UniversalCharName 						:= ("\\u" HexQuad) | ("\\U" HexQuad HexQuad);
+HexQuad 								:= HexDigit HexDigit HexDigit HexDigit;
+HexDigit 								:= "[0-9a-fA-F]";
+skip Unidentified							:= ".";
+
+koko 									:= ct_any koko
+										|  ct_any -> {
+														std::cout<<"End"<<std::endl;
+													 }
+										;
+ct_start 								:= koko;

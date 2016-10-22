@@ -63,6 +63,17 @@ API std::ostream & CT::operator<<(std::ostream & out, const StringMarker & marke
 
 API bool CT::operator==(const StringMarker & a, const StringMarker & b)
 {
+	bool a_invalid = (a.end == -1 || a.start == -1) ? true : false;
+	bool b_invalid = (b.end == -1 || b.start == -1) ? true : false;
+	
+	if (a_invalid && b_invalid)
+		return true;
+	else if (a_invalid || b_invalid)
+		return false;
+
+	if (a.start == b.start && a.end == b.end && a.inputStream == b.inputStream)
+		return true;
+
 	return (a.getString() == b.getString());
 }
 

@@ -41,6 +41,8 @@ int main(int argc, char* argv[]) {
 	if (input.cmdOptionExists("-in")) {
 		input_filename = input.getCmdOption("-in");
 	}
+	if (input_filename.empty())
+		input_filename = "test/c_test_02.c";
 	//test grammar
 
 	//CT::InputStreamPtr file_input = CT::open_file("grammar/c.gr");
@@ -50,8 +52,14 @@ int main(int argc, char* argv[]) {
 	//CT::CodeGen::LLKRD code_generator;
 	//code_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(koko));
 
-	CT::InputStreamPtr file_input = CT::open_file("test/c_test_02.c");
+	CT::InputStreamPtr file_input = CT::open_file(input_filename);
 	auto lexer_ptr = std::make_shared<C::CLexer>();
+	auto token = lexer_ptr->scan(file_input);
+	while (token != CT::Lexer::Token::eof && token != CT::Lexer::Token::invalid)
+	{
+		token = lexer_ptr->scan(file_input);
+	}
+	return 0;
 	auto parser_ptr = std::make_shared<C::CParser>();
 	auto program = parser_ptr->parse(lexer_ptr, file_input);
 	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;

@@ -69,6 +69,11 @@ bool InputStream::eof(){
 	return m_index >= m_input.size();
 }
 
+bool InputStream::empty()
+{
+	return m_input.empty();
+}
+
 void InputStream::append(const std::string& str)
 {
 	m_input += str;

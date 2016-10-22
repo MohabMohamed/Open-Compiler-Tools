@@ -35,7 +35,7 @@ StringMarker VM::exec(ProgramPtr program, InputStreamPtr input)
 {
 	if (program->m_code.empty())
 		return StringMarker::invalid;
-	if (input->getString().empty())
+	if (input->empty())
 		return StringMarker::invalid;
 
 	program->reset();
@@ -69,18 +69,22 @@ StringMarker VM::exec(ProgramPtr program, InputStreamPtr input)
 					int test_scope_counter = 0;
 					while (true)
 					{
-						ins = m_program->fetch();
-						if (ins == Instruction::EndTry && test_scope_counter > 0)
+						auto pop_ins = m_program->popCode();
+						if (isInstruction(pop_ins))
 						{
-							test_scope_counter--;
-						}
-						else if (ins == Instruction::EndTry)
-						{
-							break;
-						}
-						else if (ins == Instruction::Try)
-						{
-							test_scope_counter++;
+							ins = static_cast<Instruction>(pop_ins);
+							if (ins == Instruction::EndTry && test_scope_counter > 0)
+							{
+								test_scope_counter--;
+							}
+							else if (ins == Instruction::EndTry)
+							{
+								break;
+							}
+							else if (ins == Instruction::Try)
+							{
+								test_scope_counter++;
+							}
 						}
 					}
 

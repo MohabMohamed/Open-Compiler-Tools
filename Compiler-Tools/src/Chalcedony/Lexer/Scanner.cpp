@@ -16,54 +16,59 @@ Scanner::~Scanner()
 
 Token Scanner::scan(InputStreamPtr input)
 {
-	if (input->eof())
-		return Token::eof;
-
-	reset();
-	std::vector<std::tuple<StringMarker, Token>> all_matches;
-	all_matches.reserve(m_regexPrograms.size());
-
-	s64 match_size = 0;
-	for (auto program : m_regexPrograms)
+	while (true)
 	{
-		//to mark the starting of the matching
-		input->pushMarker();
-		//execute the program
-		StringMarker match = m_vm.exec(std::get<0>(program), input);
-		if (match != StringMarker::invalid)
+		if (input->eof())
+			return Token::eof;
+
+		reset();
+		std::vector<std::tuple<StringMarker, Token>> all_matches;
+		all_matches.reserve(m_regexPrograms.size());
+
+		s64 match_size = 0;
+		for (auto program : m_regexPrograms)
 		{
-			Token result = std::get<1>(program);
-			result.literal = match;
+			//to mark the starting of the matching
+			input->pushMarker();
+			//execute the program
+			StringMarker match = m_vm.exec(std::get<0>(program), input);
+			if (match != StringMarker::invalid)
+			{
+				Token result = std::get<1>(program);
+				result.literal = match;
 
-			all_matches.push_back(std::make_tuple(match, result));
-			match_size = std::max(match_size, match.getSize());
+				all_matches.push_back(std::make_tuple(match, result));
+				match_size = std::max(match_size, match.getSize());
+			}
+			auto start_marker = input->popMarker();
+			input->moveToMarkerStart(start_marker);
 		}
-		auto start_marker = input->popMarker();
-		input->moveToMarkerStart(start_marker);
-	}
 
-	for (auto match : all_matches)
-	{
-		//find the first match with the maximum size
-		if (std::get<0>(match).getSize() == match_size)
+		for (auto match : all_matches)
 		{
-			auto token = std::get<1>(match);
+			//find the first match with the maximum size
+			if (std::get<0>(match).getSize() == match_size)
+			{
+				auto token = std::get<1>(match);
 
-			//set the input to the end of the matching token
-			input->moveToMarkerEnd(token.literal);
+				//set the input to the end of the matching token
+				input->moveToMarkerEnd(token.literal);
 
-			if (token.event)
-				token.event(input, token);
+				if (token.event)
+					token.event(input, token);
 
-			if (token != Token::skip)
-				return token;
-			else
-				break;
+				if (token != Token::skip)
+					return token;
+				else
+					break;
+			}
 		}
-	}
 
-	if (!all_matches.empty())
-		return Scanner::scan(input);
+		if (!all_matches.empty())
+			continue;
+
+		break;
+	}
 
 	return Token::invalid;
 }

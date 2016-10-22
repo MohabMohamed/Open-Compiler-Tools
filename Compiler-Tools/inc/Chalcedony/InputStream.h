@@ -36,6 +36,8 @@ namespace CT
 
 		bool eof();
 
+		bool empty();
+
 		void append(const std::string& str);
 
 		void push(const std::string& str);
