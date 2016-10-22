@@ -8,7 +8,7 @@ workspace "Compiler-Tools"
 project "Compiler-Test"
 	language "C++"
 	kind "ConsoleApp"
-	targetdir "bin/%{cfg.buildcfg}"
+	targetdir "bin/%{cfg.platform}/%{cfg.buildcfg}"
 	location "Compiler-Test"
 
 	files {"Compiler-Test/inc/**.h", "Compiler-Test/src/**.cpp"}
@@ -45,7 +45,7 @@ project "Compiler-Test"
 project "Chalcedony"
 	language "C++"
 	kind "ConsoleApp"
-	targetdir "bin/%{cfg.buildcfg}"
+	targetdir "bin/%{cfg.platform}/%{cfg.buildcfg}"
 	location "Chalcedony"
 
 	files {"Chalcedony/inc/**.h", "Chalcedony/src/**.cpp"}
@@ -81,7 +81,7 @@ project "Chalcedony"
 
 project "Compiler-Tools"
 	language "C++"
-	targetdir "bin/%{cfg.buildcfg}"
+	targetdir "bin/%{cfg.platform}/%{cfg.buildcfg}"
 	location "Compiler-Tools"
 
 	files {"Compiler-Tools/inc/**.h", "Compiler-Tools/inc/**.hpp", 
