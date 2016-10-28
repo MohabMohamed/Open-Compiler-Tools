@@ -1,0 +1,1374 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Mem",
+				"MemoryBlock"
+			],
+			[
+				"inc",
+				"increment	(VM.cpp)"
+			],
+			[
+				"deal",
+				"deallocate_slot"
+			],
+			[
+				"free",
+				"free_slot"
+			],
+			[
+				"resu",
+				"result_free_node"
+			],
+			[
+				"Me",
+				"MemorySlot"
+			],
+			[
+				"size",
+				"sizeof	(c_en.gr)"
+			],
+			[
+				"MEm",
+				"MemoryBlock"
+			],
+			[
+				"name",
+				"namespace"
+			],
+			[
+				"move",
+				"move_handle"
+			],
+			[
+				"mov",
+				"move_handle"
+			],
+			[
+				"u",
+				"u64	(Program.h)"
+			],
+			[
+				"memo",
+				"memoryPool"
+			],
+			[
+				"mem",
+				"memoryPool"
+			],
+			[
+				"true",
+				"true_type"
+			],
+			[
+				"val",
+				"value	(Program.h)"
+			],
+			[
+				"Def",
+				"Defines.h	(Exceptions.h)"
+			],
+			[
+				"Iden",
+				"Identifier"
+			],
+			[
+				"Hex",
+				"HexDigit"
+			],
+			[
+				"Uni",
+				"UniversalCharName"
+			],
+			[
+				"Non",
+				"NonDigit"
+			],
+			[
+				"m_co",
+				"m_codePtr"
+			],
+			[
+				"type",
+				"typename"
+			],
+			[
+				"0x",
+				"0x8000000000000009	(Instructions.h)"
+			],
+			[
+				"Sta",
+				"StackType"
+			],
+			[
+				"static",
+				"static_cast"
+			],
+			[
+				"enabl",
+				"enable_concat"
+			],
+			[
+				"brac",
+				"bracket_ignore"
+			],
+			[
+				"m_oper",
+				"m_operators"
+			],
+			[
+				"push",
+				"push_back"
+			],
+			[
+				"m_op",
+				"m_operators"
+			],
+			[
+				"ins",
+				"insert"
+			],
+			[
+				"Compi",
+				"Compiler"
+			],
+			[
+				"recom",
+				"recommend_concat"
+			],
+			[
+				"Opera",
+				"Operators"
+			],
+			[
+				"Oper",
+				"Operations"
+			],
+			[
+				"Op",
+				"Operations"
+			],
+			[
+				"Reg",
+				"RegExIns"
+			],
+			[
+				"err",
+				"errorFunction"
+			],
+			[
+				"ct_",
+				"ct_elements"
+			],
+			[
+				"fac",
+				"factor_node"
+			],
+			[
+				"enum",
+				"enum_value_type"
+			],
+			[
+				"num",
+				"num_value"
+			],
+			[
+				"INT",
+				"INT_NUM"
+			],
+			[
+				"Simpl",
+				"SimpleCalcNodeTypes"
+			],
+			[
+				"IPar",
+				"IParseNode"
+			],
+			[
+				"Code",
+				"CodeGenOutput"
+			],
+			[
+				"parse_rule",
+				"parse_rules"
+			],
+			[
+				"GPar",
+				"GParseNodePtr"
+			],
+			[
+				"Input",
+				"InputStream.h	(IParser.h)"
+			],
+			[
+				"Cac",
+				"CachedScanner.h	(IParser.h)"
+			],
+			[
+				"ISc",
+				"IScanner.h	(IParser.h)"
+			],
+			[
+				"G",
+				"GParseRule"
+			],
+			[
+				"Cah",
+				"CachedScanner	(GLexer.h)"
+			],
+			[
+				"foun",
+				"foundOr"
+			],
+			[
+				"rule",
+				"rule_token"
+			],
+			[
+				"lex",
+				"lex_id"
+			],
+			[
+				"assig",
+				"assign_token"
+			],
+			[
+				"Cha",
+				"CachedScannerPtr"
+			],
+			[
+				"lit",
+				"literal"
+			],
+			[
+				"actio",
+				"action_token"
+			],
+			[
+				"found",
+				"foundAction"
+			],
+			[
+				"fou",
+				"foundAction"
+			],
+			[
+				"GPa",
+				"GParseNodePtr"
+			],
+			[
+				"GL",
+				"GLexRule"
+			],
+			[
+				"GP",
+				"GParseNode"
+			],
+			[
+				"N",
+				"NAME_DIRECTIVE"
+			],
+			[
+				"sc",
+				"scanner"
+			],
+			[
+				"ac",
+				"action_token"
+			],
+			[
+				"rege",
+				"regex_token"
+			],
+			[
+				"assi",
+				"assign_token"
+			],
+			[
+				"scan",
+				"scanner"
+			],
+			[
+				"Parse",
+				"ParseNode"
+			],
+			[
+				"state",
+				"statement"
+			],
+			[
+				"Pars",
+				"ParseNode"
+			],
+			[
+				"Par",
+				"ParseNode"
+			],
+			[
+				"RegexBuil",
+				"RegexBuilder	(RegexBuilder.h)"
+			],
+			[
+				"Regex",
+				"RegexBuilder.h	(CompilerTools.h)"
+			],
+			[
+				"literal_",
+				"literal_size"
+			],
+			[
+				"liter",
+				"literal_start"
+			],
+			[
+				"getC",
+				"getCharAt	(InputStream.h)"
+			],
+			[
+				"m_in",
+				"m_input"
+			],
+			[
+				"InputS",
+				"InputStreamPtr"
+			],
+			[
+				"tok",
+				"token2"
+			],
+			[
+				"token",
+				"token1"
+			],
+			[
+				"Inp",
+				"InputStream.h	(Parser.cpp)"
+			],
+			[
+				"pars",
+				"parse	(scratch)"
+			],
+			[
+				"IS",
+				"IScannerPtr"
+			],
+			[
+				"Scan",
+				"Scanner.h	(CompilerTools.h)"
+			],
+			[
+				"tran",
+				"transition"
+			],
+			[
+				"transi",
+				"transitions"
+			],
+			[
+				"gene",
+				"generateID"
+			],
+			[
+				"State",
+				"StateInput"
+			],
+			[
+				"end",
+				"end_point"
+			],
+			[
+				"log",
+				"logic_and"
+			],
+			[
+				"m_",
+				"m_input"
+			],
+			[
+				"is",
+				"isInvalid"
+			],
+			[
+				"EOF",
+				"EOF_token"
+			],
+			[
+				"en",
+				"entry"
+			],
+			[
+				"Log",
+				"LogEntry"
+			],
+			[
+				"LOG",
+				"LOG_LEVEL"
+			],
+			[
+				"mahc",
+				"machineTagPair"
+			],
+			[
+				"be",
+				"begin"
+			],
+			[
+				"m_s",
+				"m_scheduledForDeletion"
+			],
+			[
+				"machine",
+				"machineTagPair"
+			],
+			[
+				"eve",
+				"eventFunction"
+			],
+			[
+				"le",
+				"letterType"
+			],
+			[
+				"m_i",
+				"m_index"
+			],
+			[
+				"vis",
+				"visited_set"
+			],
+			[
+				"eps",
+				"epsilonTransitAux"
+			],
+			[
+				"cl",
+				"clone_final"
+			],
+			[
+				"clone",
+				"clone_start"
+			],
+			[
+				"Stat",
+				"StateToken"
+			],
+			[
+				"clon",
+				"clonedA"
+			],
+			[
+				"add",
+				"addTransition"
+			],
+			[
+				"Stae",
+				"StatePtr"
+			],
+			[
+				"St",
+				"Star"
+			],
+			[
+				"re",
+				"recommend_concat"
+			],
+			[
+				"char",
+				"char_it"
+			],
+			[
+				"las",
+				"last_is_input"
+			],
+			[
+				"m_ope",
+				"m_operators"
+			],
+			[
+				"ty",
+				"tokenType"
+			],
+			[
+				"m_o",
+				"m_operands"
+			],
+			[
+				"Lef",
+				"LeftParan"
+			],
+			[
+				"opera",
+				"m_operators"
+			],
+			[
+				"oper",
+				"operands"
+			],
+			[
+				"opea",
+				"operands"
+			],
+			[
+				"Or",
+				"Operators"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "Compiler-Tools/inc/Chalcedony/Regex/Exceptions.h",
+			"settings":
+			{
+				"buffer_size": 319,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Compiler-Tools/inc/Chalcedony/Regex/Program.h",
+			"settings":
+			{
+				"buffer_size": 2652,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Compiler-Tools/src/Chalcedony/Regex/Program.cpp",
+			"settings":
+			{
+				"buffer_size": 1471,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Compiler-Tools/inc/Chalcedony/Regex/VM.h",
+			"settings":
+			{
+				"buffer_size": 1315,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "#name C;\n#cpp{\n	#include <iostream>	\n};\n\nskip Newline 							:= \"\\n\";\nskip Carriage_Return					:= \"\\r\";\nskip Space 								:= \" \";\nskip Tab 								:= \"\\t\";\nskip Vertical_Space 					:= \"\\v\";\nskip F_Thing 							:= \"\\f\";\n\n\nAuto 									:= \"auto\";\nBreak 									:= \"break\";\nCase 									:= \"case\";\nChar 									:= \"char\";\nConst 									:= \"const\";\nContinue								:= \"continue\";\nDefault 								:= \"default\";\nDouble 									:= \"double\";\nDo										:= \"do\";\nElse									:= \"else\";\nEnum									:= \"enum\";\nExtern									:= \"extern\";\nFloat									:= \"float\";\nFor										:= \"for\";\nGoto									:= \"goto\";\nIf 										:= \"if\";\nInline 									:= \"inline\";\nInlineGCC 								:= \"__inline__\";\nInt 									:= \"int\";\nLong 									:= \"long\";\nRegister 								:= \"register\";\nRestrict								:= \"restrict\";\nReturn 									:= \"return\";\nShort 									:= \"short\";\nSigned 									:= \"signed\";\nSizeof 									:= \"sizeof\";\nStatic 									:= \"static\";\nStruct 									:= \"struct\";\nSwitch 									:= \"switch\";\nTypedef 								:= \"typedef\";\nUnion 									:= \"union\";\nUnsigned 								:= \"unsigned\";\nVoid 									:= \"void\";\nVolatile 								:= \"volatile\";\nWhile 									:= \"while\";\n\nAlignas 								:= \"_Alignas\";\nAlignof 								:= \"_Alignof\";\nAtomic 									:= \"_Atomic\";\nBool 									:= \"_Bool\";\nComplex									:= \"_Complex\";\nGeneric 								:= \"_Generic\";\nImaginary 								:= \"_Imaginary\";\nNoreturn 								:= \"_Noreturn\";\nStaticAssert 							:= \"_Static_assert\";\nThreadLocal	 							:= \"_Thread_local\";\nExtension								:= \"__extension__\";\nBuiltInVaArg 							:= \"__builtin_va_arg\";\nBuiltInOffsetOf 						:= \"__builtin_offsetof\";\nSIMDNoType 								:= \"__m128\";\nSIMDDType 								:= \"__m128d\";\nSIMDIType 								:= \"__m128i\";\nTypeOf									:= \"__typeof__\";\nStdCall 								:= \"__stdcall\";\nDeclSpec 								:= \"__declspec\";\nAsm 									:= \"__asm\";\nAttribute 								:= \"__attribute__\";\n\nskip SINGLE_LINE_COMMENT 				:= \"//\" ->\n{\n	ct_input->pushMarker(ct_token.literal);\n	while (ct_input->peek() != '\\n')\n	{\n		ct_input->popLetter();\n	}\n	ct_token.literal = ct_input->popMarker();\n	return true;\n};\n\nskip MULTI_LINE_COMMENT 				:= \"/\\\\*\" ->\n{\n	ct_input->pushMarker(ct_token.literal);\n	char prev = '\\0';\n	while(true)\n	{\n		auto c = ct_input->popLetter();\n		if(c == '\\0')\n			return false;\n\n		if(prev == '*' && c == '/')\n			break;\n		prev = c;\n	}\n	ct_token.literal = ct_input->popMarker();\n	return true;\n};\n\nLeftParen 								:= \"\\\\(\";\nRightParen 								:= \"\\\\)\";\nLeftBracket 							:= \"\\\\[\";\nRightBracket 							:= \"\\\\]\";\nLeftBrace 								:= \"{\";\nRightBrace 								:= \"}\";\n\nLeftShift 								:= \"<<\";\nRightShift 								:= \">>\";\nLessEqual 								:= \"<=\";\nGreaterEqual							:= \">=\";\n\nStarAssign 								:= \"\\\\*=\";\nDivAssign 								:= \"/=\";\nModAssign 								:= \"%=\";\nPlusAssign 								:= \"\\\\+=\";\nMinusAssign								:= \"-=\";\nLeftShiftAssign 						:= \"<<=\";\nRightShiftAssign 						:= \">>=\";\nAndAssign 								:= \"&=\";\nXorAssign 								:= \"^=\";\nOrAssign 								:= \"\\\\|=\";\nEqual 									:= \"==\";\nNotEqual 								:= \"!=\";\nAssign 									:= \"=\";\n\nPlusPlus 								:= \"\\\\+\\\\+\";\nArrow 									:= \"->\";\nEllipsis 								:= \"\\\\.\\\\.\\\\.\";\nMinusMinus 								:= \"--\";\n\n\nAndAnd 									:= \"&&\";\nOrOr 									:= \"\\\\|\\\\|\";\nCaret 									:= \"^\";\nNot 									:= \"!\";\nTilde 									:= \"~\";\n\nGreater 								:= \">\";\nLess 									:= \"<\";\nAnd 									:= \"&\";\nOr 										:= \"\\\\|\";\nMinus 									:= \"-\";\nStar 									:= \"\\\\*\";\nDiv 									:= \"/\";\nMod 									:= \"%\";\nPlus 									:= \"\\\\+\";\nDot 									:= \"\\\\.\";\n\nQuestion								:= \"\\\\?\";\nColon 									:= \":\";\nSemi 									:= \";\";\nComma 									:= \",\";\nHash 									:= \"#\";\nPragma 									:= \"pragma\";\nInclude 								:= \"include\";\nDefine 									:= \"define\";\n\nIdentifier 								:= IdentifierNonDigit ( IdentifierNonDigit | Digit )*;\nIdentifierNonDigit						:= NonDigit | UniversalCharName;\nNonDigit 								:= \"[a-zA-Z_]\";\nDigit 									:= \"[0-9]\";\nUniversalCharName 						:= (\"\\\\u\" HexQuad) | (\"\\\\U\" HexQuad HexQuad);\nHexQuad 								:= HexDigit HexDigit HexDigit HexDigit;\nHexDigit 								:= \"[0-9a-fA-F]\";\nskip Unidentified							:= \".\";\n\nkoko 									:= ct_any koko\n										|  ct_any -> {\n														std::cout<<\"End\"<<std::endl;\n													 }\n										;\n\nkoko 									:= Element Comma koko Semi\n										|  Element Semi\n										|  Element Comma LeftShift\n										;\n\nct_start 								:= koko;",
+			"file": "Compiler-Test/grammar/c_en.gr",
+			"file_size": 4430,
+			"file_write_time": 131215589978448696,
+			"settings":
+			{
+				"buffer_size": 4376,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Compiler-Test/test/c_test_02.c",
+			"settings":
+			{
+				"buffer_size": 144192,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 109.0,
+		"last_filter": "c++",
+		"selected_items":
+		[
+			[
+				"c++",
+				"Set Syntax: C++"
+			],
+			[
+				"host",
+				"Remote: Host Session"
+			],
+			[
+				"hos",
+				"Remote: Host Session"
+			],
+			[
+				"dis",
+				"Remote: Disconnect from Session"
+			],
+			[
+				"conn",
+				"Remote: Connect to Session"
+			],
+			[
+				"Disc",
+				"Remote: Disconnect from Session"
+			],
+			[
+				"disconn",
+				"Remote: Disconnect from Session"
+			],
+			[
+				"Host",
+				"Remote: Host Session"
+			],
+			[
+				"ho",
+				"Remote: Host Session"
+			],
+			[
+				"remote",
+				"Remote: Disconnect from Session"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"re",
+				"Package Control: Remove Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			]
+		],
+		"width": 440.0
+	},
+	"console":
+	{
+		"height": 136.0,
+		"history":
+		[
+			"sublime.log_commands(False)",
+			"sublime.log_commands(True)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/E/Projects/Compiler-Tools-v1.0",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools",
+		"/E/Projects/Compiler-Tools-v1.0/test"
+	],
+	"file_history":
+	[
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Chalcedony/MemoryPool.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Chalcedony/Regex/VM.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/dist-bin/c_test_02.c",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Chalcedony/Automata/Program.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Chalcedony/Automata/RegexBuilder.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Chalcedony/Automata/RegexBuilder.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Chalcedony/Automata/RegExVM.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Chalcedony/Automata/Instructions.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Chalcedony/Automata/Instructions.cpp",
+		"/C/Users/Mostafa/Desktop/koko.html",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Utilities.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/FilePosition.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/src/main.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/scratch",
+		"/E/Projects/Compiler-Tools-v1.0/test/scan-test-01.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/build/Compiler-Tools.sln",
+		"/E/Projects/Compiler-Tools-v1.0/test/calc-rd-ll1-01.gr",
+		"/E/Projects/Compiler-Tools-v1.0/.gitignore",
+		"/E/Projects/Compiler-Tools-v1.0/README.md",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/RegexBuilder.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Token.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/premake5.lua",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Chalcedony/Automata/State.hpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Chalcedony/IScanner.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Chalcedony/Token.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Chalcedony/Automata/NFA.hpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/GLexer.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Log.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/InputStream.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/GParser.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/CachedScanner.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Scanner.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/GParseTree.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/GCodeGeneration.cpp",
+		"/E/Projects/ResourcesDriver/ResourcesDriver/test.bin",
+		"/E/Projects/ResourcesDriver/ResourcesDriver/koko.bin",
+		"/E/Projects/ResourcesDriver/ResourcesDriver/~koko.bin",
+		"/E/Projects/ResourcesDriver/build-ResourcesDriver-Desktop_Qt_5_7_0_MSVC2015_64bit-Debug/koko.bin",
+		"/E/Applications/Selfishnet win 7/SelfishNetv0.2-beta_vista.exe",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/GParser.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/GParseTree.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Scanner.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/CachedScanner.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/CPPScanner.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/GCodeGeneration.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Log.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/IGCodeGeneration.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/IScanner.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Token.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/InputStream.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/State.hpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/NFA.hpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/RegexBuilder.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/StringMarker.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/CompilerTools.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/GLexer.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/IParser.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/FilePosition.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Utilities.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Defines.h",
+		"/E/Applications/mingw-w64-install.exe",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/SimpleCalcParser.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/SimpleCalcParser.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/SimpleCalcLexer.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/SimpleCalcLexer.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/ SimpleCalcLexer.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/ SimpleCalcLexer.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/ SimpleCalcParser.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Test/ SimpleCalcParser.h",
+		"/E/Libraries/mstch-1.0.2/README.md",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/Parser.h",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/Parser.cpp",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/src/IScanner.cpp",
+		"/C/ANTLR/grun.bat",
+		"/C/ANTLR/ANTLR.bat",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/log.txt",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/debug_log.txt",
+		"/E/Projects/Compiler-Tools-v1.0/Compiler-Tools/inc/InputStream.hpp",
+		"/C/Users/Mostafa/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Program Files/Sublime Text 3/Packages/Default.sublime-package"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"popCode",
+			"0008 0000",
+			">& ",
+			"generateToken",
+			"generateTokenTag",
+			"\\",
+			"();\n",
+			"letterType",
+			"getChar",
+			"char",
+			"pop"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"char"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Compiler-Tools/inc/Chalcedony/Regex/Exceptions.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 319,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								303,
+								303
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Compiler-Tools/inc/Chalcedony/Regex/Program.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2652,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1629,
+								1629
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 799.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Compiler-Tools/src/Chalcedony/Regex/Program.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1471,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 630.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Compiler-Tools/inc/Chalcedony/Regex/VM.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1315,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								617,
+								617
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 855.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Compiler-Test/grammar/c_en.gr",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4376,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4337,
+								4337
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2238.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "Compiler-Test/test/c_test_02.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 144192,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								144192,
+								144192
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 99075.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 29.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": false,
+	"output.CppYCM.2":
+	{
+		"height": 0.0
+	},
+	"output.exec":
+	{
+		"height": 98.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "Compiler-Tools.sublime-project",
+	"replace":
+	{
+		"height": 40.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"dist-bin\\c_test_02.c"
+			],
+			[
+				"c_te",
+				"Compiler-Test\\test\\c_test_02.c"
+			],
+			[
+				"c_test",
+				"dist-bin\\c_test_02.c"
+			],
+			[
+				"c.g",
+				"Compiler-Test\\grammar\\c.gr"
+			],
+			[
+				"vm",
+				"Compiler-Tools\\src\\Chalcedony\\Regex\\VM.cpp"
+			],
+			[
+				"pro",
+				"Compiler-Tools\\src\\Chalcedony\\Regex\\Program.cpp"
+			],
+			[
+				"prog",
+				"Compiler-Tools\\inc\\Chalcedony\\Regex\\Program.h"
+			],
+			[
+				"rege",
+				"Compiler-Tools\\inc\\Chalcedony\\Automata\\RegexBuilder.h"
+			],
+			[
+				"reg",
+				"Compiler-Tools\\inc\\Chalcedony\\Automata\\RegExVM.h"
+			],
+			[
+				"regexb",
+				"Compiler-Tools\\src\\Chalcedony\\Automata\\RegexBuilder.cpp"
+			],
+			[
+				"regex",
+				"Compiler-Tools\\inc\\Chalcedony\\Automata\\RegexBuilder.h"
+			],
+			[
+				"calc",
+				"test\\calc-rd-ll1-01.gr"
+			],
+			[
+				"prem",
+				"premake5.lua"
+			],
+			[
+				"token",
+				"Compiler-Tools\\inc\\Chalcedony\\Token.h"
+			],
+			[
+				"isc",
+				"Compiler-Tools\\inc\\Chalcedony\\IScanner.h"
+			],
+			[
+				"stat",
+				"Compiler-Tools\\inc\\Chalcedony\\Automata\\State.hpp"
+			],
+			[
+				"n",
+				"Compiler-Tools\\inc\\Chalcedony\\Automata\\NFA.hpp"
+			],
+			[
+				"sc",
+				"Compiler-Tools\\src\\Scanner.cpp"
+			],
+			[
+				"sca",
+				"Compiler-Tools\\inc\\Scanner.h"
+			],
+			[
+				"cal",
+				"test\\calc-rd-ll1-01.gr"
+			],
+			[
+				"gcod",
+				"Compiler-Tools\\src\\GCodeGeneration.cpp"
+			],
+			[
+				"g",
+				"Compiler-Tools\\inc\\GCodeGeneration.h"
+			],
+			[
+				"gc",
+				"Compiler-Tools\\inc\\GCodeGeneration.h"
+			],
+			[
+				"gcode",
+				"Compiler-Tools\\inc\\GCodeGeneration.h"
+			],
+			[
+				"parser",
+				"Compiler-Tools\\src\\Parser.cpp"
+			],
+			[
+				"ip",
+				"Compiler-Tools\\inc\\IParser.h"
+			],
+			[
+				"par",
+				"Compiler-Tools\\inc\\Parser.h"
+			],
+			[
+				"scann",
+				"Compiler-Tools\\src\\Scanner.cpp"
+			],
+			[
+				"gl",
+				"Compiler-Tools\\inc\\GLexer.h"
+			],
+			[
+				"toke",
+				"Compiler-Tools\\src\\Token.cpp"
+			],
+			[
+				"scan",
+				"Compiler-Tools\\inc\\Scanner.h"
+			],
+			[
+				"u",
+				"Compiler-Tools\\src\\Utilities.cpp"
+			],
+			[
+				"utit",
+				"Compiler-Tools\\inc\\Utilities.h"
+			],
+			[
+				"uti",
+				"Compiler-Tools\\src\\Utilities.cpp"
+			],
+			[
+				"prema",
+				"premake5.lua"
+			],
+			[
+				"gco",
+				"Compiler-Tools\\inc\\GCodeGeneration.h"
+			],
+			[
+				"scanner",
+				"Compiler-Tools\\src\\Scanner.cpp"
+			],
+			[
+				"in",
+				"Compiler-Tools\\src\\InputStream.cpp"
+			],
+			[
+				"inp",
+				"Compiler-Tools\\src\\InputStream.cpp"
+			],
+			[
+				"pars",
+				"Compiler-Tools\\src\\Parser.cpp"
+			],
+			[
+				"premake",
+				"premake5.lua"
+			],
+			[
+				"gpar",
+				"Compiler-Tools\\src\\GParseTree.cpp"
+			],
+			[
+				"gtr",
+				"Compiler-Tools\\src\\GParseTree.cpp"
+			],
+			[
+				"gp",
+				"Compiler-Tools\\inc\\GParseTree.h"
+			],
+			[
+				"ca",
+				"Compiler-Tools\\inc\\CachedScanner.h"
+			],
+			[
+				"compiler-tools.h",
+				"Compiler-Tools\\inc\\CompilerTools.h"
+			],
+			[
+				"is",
+				"Compiler-Tools\\src\\IScanner.cpp"
+			],
+			[
+				"iscann",
+				"Compiler-Tools\\inc\\IScanner.h"
+			],
+			[
+				"cach",
+				"Compiler-Tools\\inc\\CachedScanner.h"
+			],
+			[
+				"s",
+				"Compiler-Tools\\src\\Scanner.cpp"
+			],
+			[
+				"pa",
+				"Compiler-Tools\\inc\\Parser.h"
+			],
+			[
+				"log",
+				"Compiler-Tools\\src\\Log.cpp"
+			],
+			[
+				"cpp",
+				"Compiler-Tools\\inc\\CPPScanner.h"
+			],
+			[
+				".gr",
+				"test\\calc-rd-ll1-01.gr"
+			],
+			[
+				"cp",
+				"Compiler-Tools\\inc\\CPPScanner.h"
+			],
+			[
+				"tok",
+				"Compiler-Tools\\src\\Token.cpp"
+			],
+			[
+				"i",
+				"Compiler-Tools\\src\\InputStream.cpp"
+			],
+			[
+				"t",
+				"Compiler-Tools\\inc\\Token.h"
+			],
+			[
+				"p",
+				"Compiler-Tools\\src\\Position.cpp"
+			],
+			[
+				"com",
+				"Compiler-Tools\\inc\\CompilerTools.h"
+			],
+			[
+				"st",
+				"Compiler-Tools\\inc\\State.hpp"
+			],
+			[
+				"def",
+				"Compiler-Tools\\inc\\Defines.h"
+			],
+			[
+				"nf",
+				"Compiler-Tools\\inc\\NFA.hpp"
+			],
+			[
+				"re",
+				"Compiler-Tools\\src\\RegexBuilder.cpp"
+			],
+			[
+				"inputs",
+				"Compiler-Tools\\inc\\InputStream.h"
+			],
+			[
+				"r",
+				"Compiler-Tools\\inc\\regexbuilder.h"
+			],
+			[
+				"main",
+				"Compiler-Test\\src\\main.cpp"
+			],
+			[
+				"po",
+				"Compiler-Tools\\src\\Position.cpp"
+			],
+			[
+				"pos",
+				"Compiler-Tools\\inc\\Position.h"
+			],
+			[
+				"lo",
+				"Compiler-Tools\\inc\\Log.h"
+			],
+			[
+				"l",
+				"Compiler-Tools\\inc\\Log.h"
+			],
+			[
+				"ps",
+				"Compiler-Tools\\src\\Position.cpp"
+			],
+			[
+				"posi",
+				"Compiler-Tools\\src\\Position.cpp"
+			],
+			[
+				"de",
+				"Compiler-Tools\\inc\\Defines.h"
+			],
+			[
+				"inpt",
+				"Compiler-Tools\\inc\\InputStream.hpp"
+			],
+			[
+				".",
+				".gitignore"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 271.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
