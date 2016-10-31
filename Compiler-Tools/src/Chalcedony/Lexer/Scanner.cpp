@@ -73,7 +73,7 @@ Token Scanner::scan(InputStreamPtr input)
 	return Token::invalid;
 }
 
-void Scanner::registerToken(ProgramPtr regexProgram, const Token& token)
+void Scanner::registerToken(CartridgePtr regexProgram, const Token& token)
 {
 	m_regexPrograms.push_back(std::make_tuple(regexProgram, token));
 }

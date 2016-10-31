@@ -9,3 +9,5 @@
 #include "Chalcedony/Log.h"
 #include "Chalcedony/StringMarker.h"
 #include "Chalcedony/Utilities.h"
+#include "Chalcedony/Cartridge.h"
+#include "Chalcedony/Serialization.h"

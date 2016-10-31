@@ -2,7 +2,7 @@
 
 #include "Chalcedony/Defines.h"
 #include "Chalcedony/InputStream.h"
-#include "Chalcedony/Regex/Program.h"
+#include "Chalcedony/Cartridge.h"
 #include <string>
 #include <stack>
 #include <vector>
@@ -31,13 +31,13 @@ namespace CT
 			constexpr static s8 RANGE = -5;
 
 
-			std::stack<Program> m_operands;
+			std::stack<Cartridge> m_operands;
 			std::stack<s8> m_operators;
 
 			//resets the stacks
 			void resetStacks();
 
-			bool popOperand(Program& block);
+			bool popOperand(Cartridge& block);
 
 			bool Eval();
 
@@ -47,7 +47,7 @@ namespace CT
 			bool Plus();
 			bool Optional();
 		public:
-			ProgramPtr compile(const std::string& regex);
+			CartridgePtr compile(const std::string& regex);
 		};
 	}
 }

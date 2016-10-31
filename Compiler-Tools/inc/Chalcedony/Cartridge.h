@@ -14,42 +14,17 @@ namespace CT
     public:
         using CodeType = std::vector<u64>;
 
-        Cartridge()
-        {
-            reset();
-        }
+		Cartridge();
 
-        Cartridge(const Cartridge& other)
-        {
-            m_codePtr = other.m_codePtr;
-            m_code = other.m_code;
-        }
+		Cartridge(const Cartridge& other);
 
-        Cartridge(Cartridge&& other)
-        {
-            m_codePtr = other.m_codePtr;
-            m_code = std::move(other.m_code);
-        }
+		Cartridge(Cartridge&& other);
 
-        ~Cartridge()
-        {
-            m_codePtr = 0;
-            m_code.clear();
-        }
+		~Cartridge();
 
-        Cartridge& operator=(const Cartridge& other)
-        {
-            m_codePtr = other.m_codePtr;
-            m_code = other.m_code;
-            return *this;
-        }
+		Cartridge& operator=(const Cartridge& other);
 
-        Cartridge operator==(Cartridge&& other)
-        {
-            m_codePtr = other.m_codePtr;
-            m_code = std::move(other.m_code);
-            return *this;
-        }
+		Cartridge operator==(Cartridge&& other);
 
         //push const into the code
         template<typename dataType>
@@ -62,14 +37,36 @@ namespace CT
         template<>
         void pushCode<CT::Regex::Instruction>(CT::Regex::Instruction value)
         {
-            m_code.push_back(value);
+            m_code.push_back(static_cast<u64>(value));
         }
 
         template<>
         void pushCode<CT::Parser::Instruction>(CT::Parser::Instruction value)
         {
-            m_code.push_back(value);
+            m_code.push_back(static_cast<u64>(value));
         }
+
+		template<typename datatype>
+		void pushCodeFront(datatype value)
+		{
+			u64 data = 0x4000000000000000 | static_cast<u64>(value);
+			m_code.insert(m_code.begin(), data);
+		}
+
+		template<>
+		void pushCodeFront<CT::Regex::Instruction>(CT::Regex::Instruction value)
+		{
+			m_code.insert(m_code.begin(), static_cast<u64>(value));
+		}
+
+		template<>
+		void pushCodeFront<CT::Parser::Instruction>(CT::Parser::Instruction value)
+		{
+			m_code.insert(m_code.begin(), static_cast<u64>(value));
+		}
+
+		void appendCode(const Cartridge& program);
+		void appendCodeFront(const Cartridge& program);
 
         template<typename dataType>
         dataType popCode()
@@ -82,7 +79,7 @@ namespace CT
         }
 
         template<>
-        u64 popCode<CT::Regex::Instruction>()
+		CT::Regex::Instruction popCode<CT::Regex::Instruction>()
         {
             if(m_codePtr < m_code.size())
             {
@@ -97,7 +94,7 @@ namespace CT
         }
 
         template<>
-        u64 popCode<CT::Parser::Instruction>()
+		CT::Parser::Instruction popCode<CT::Parser::Instruction>()
         {
             if(m_codePtr < m_code.size())
             {
@@ -111,24 +108,22 @@ namespace CT
             throw std::out_of_range("[Cartridge::popCode]: codePtr out of range");
         }
 
-        void reset()
-        {
-            m_codePtr = 0;
-        }
+		u64 popRawIns();
 
-        bool endOfCode() const
-        {
-            return m_codePtr >= m_code.size();
-        }
+		void reset();
 
-        std::size_t size() const
-        {
-            return m_code.size();
-        }
+		bool endOfCode() const;
+
+		std::size_t size() const;
+
+		CodeType& getCode();
+
+		s64& getCodePtr();
 
     private:
         CodeType m_code;
-        s64 m_codePtr;
+        CT::s64 m_codePtr;
     };
+
     using CartridgePtr = std::shared_ptr<Cartridge>;
 }

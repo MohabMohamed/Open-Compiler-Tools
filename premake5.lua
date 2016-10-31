@@ -13,7 +13,7 @@ project "Compiler-Test"
 
 	files {"Compiler-Test/inc/**.h", "Compiler-Test/src/**.cpp"}
 
-	includedirs {"Compiler-Tools/inc/", "Compiler-Test/inc/"}
+	includedirs {"Compiler-Tools/inc/", "Compiler-Test/inc/", "deps/cereal-1.2.1/include/"}
 
 	links {"Compiler-Tools"}
 
@@ -50,7 +50,7 @@ project "Chalcedony"
 
 	files {"Chalcedony/inc/**.h", "Chalcedony/src/**.cpp"}
 
-	includedirs {"Compiler-Tools/inc/", "Chalcedony/inc/"}
+	includedirs {"Compiler-Tools/inc/", "Chalcedony/inc/", "deps/cereal-1.2.1/include/"}
 
 	links {"Compiler-Tools"}
 
@@ -87,7 +87,7 @@ project "Compiler-Tools"
 	files {"Compiler-Tools/inc/**.h", "Compiler-Tools/inc/**.hpp", 
 		   "Compiler-Tools/src/**.cpp"}
 
-	includedirs {"Compiler-Tools/inc/"}
+	includedirs {"Compiler-Tools/inc/", "deps/cereal-1.2.1/include/"}
 
 	configuration {"linux", "gmake"}
 		buildoptions{"-std=c++11"}

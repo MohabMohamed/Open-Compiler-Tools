@@ -1,5 +1,5 @@
 #include "Chalcedony/Lexer/GLexer.h"
-#include "Chalcedony/Regex/Program.h"
+#include "Chalcedony/Cartridge.h"
 #include "Chalcedony/Regex/Compiler.h"
 #include "Chalcedony/InputStream.h"
 #include "Chalcedony/Utilities.h"

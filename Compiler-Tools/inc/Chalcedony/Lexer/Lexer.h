@@ -4,4 +4,3 @@
 #include "Chalcedony/Lexer/Scanner.h"
 #include "Chalcedony/Lexer/CachedScanner.h"
 #include "Chalcedony/Lexer/GLexer.h"
-#include "Chalcedony/Lexer/CPPScanner.h"

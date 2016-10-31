@@ -11,7 +11,7 @@ void Regex::Compiler::resetStacks()
 		m_operands.pop();
 }
 
-bool Regex::Compiler::popOperand(Program& block)
+bool Regex::Compiler::popOperand(Cartridge& block)
 {
 	if(m_operands.empty())
 		return false;
@@ -47,7 +47,7 @@ bool Regex::Compiler::Eval()
 
 bool Regex::Compiler::Concat()
 {
-	Program A, B;
+	Cartridge A, B;
 	if(!popOperand(B) || !popOperand(A))
 		return false;
 
@@ -58,14 +58,14 @@ bool Regex::Compiler::Concat()
 
 bool Regex::Compiler::Or()
 {
-	Program A, B;
+	Cartridge A, B;
 	if (!popOperand(B) || !popOperand(A))
 		return false;
 	
 	A.pushCodeFront(Instruction::Try);
 	A.pushCode(Instruction::EndTry);
 	A.pushCode(Instruction::JIS);
-	A.pushCode(static_cast<u32>(B.getCodeSize()));
+	A.pushCode(static_cast<u32>(B.size()));
 	A.appendCode(B);
 
 	m_operands.push(A);
@@ -74,14 +74,14 @@ bool Regex::Compiler::Or()
 
 bool Regex::Compiler::Star()
 {
-	Program A;
+	Cartridge A;
 	if(!popOperand(A))
 		return false;
 
 	A.pushCodeFront(Instruction::Try); //i'm label
 	A.pushCode(Instruction::EndTry);
 	A.pushCode(Instruction::JIS);
-	A.pushCode(static_cast<u32>(A.getCodeSize()*-1)); //jump to label
+	A.pushCode(static_cast<u32>(A.size()*-1)); //jump to label
 	A.pushCode(Instruction::JINC);
 	A.pushCode(2);
 	A.pushCode(Instruction::Push);
@@ -93,23 +93,23 @@ bool Regex::Compiler::Star()
 
 bool Regex::Compiler::Plus()
 {
-	Program A;
+	Cartridge A;
 	if(!popOperand(A))
 		return false;
-	Program result;
+	Cartridge result;
 	result.appendCode(A);
 	result.pushCode(Instruction::Try); //i'm label
 	result.appendCode(A);
 	result.pushCode(Instruction::EndTry);
 	result.pushCode(Instruction::JIS);
-	result.pushCode(static_cast<u32>((A.getCodeSize() + 3)*-1)); //jump to label
+	result.pushCode(static_cast<u32>((A.size() + 3)*-1)); //jump to label
 	m_operands.push(result);
 	return true;
 }
 
 bool Regex::Compiler::Optional()
 {
-	Program A;
+	Cartridge A;
 	if(!popOperand(A))
 		return false;
 	A.pushCodeFront(Instruction::Try);
@@ -118,7 +118,7 @@ bool Regex::Compiler::Optional()
 	return true;
 }
 
-Regex::ProgramPtr Regex::Compiler::compile(const std::string& regex)
+CartridgePtr Regex::Compiler::compile(const std::string& regex)
 {
 	InputStream input(regex);
 	resetStacks();
@@ -221,7 +221,7 @@ Regex::ProgramPtr Regex::Compiler::compile(const std::string& regex)
 			}
 
 			//add code block that matches a letter
-			Program block;
+			Cartridge block;
 			block.pushCode(Instruction::Match);
 			block.pushCode(Instruction::Any);
 			m_operands.push(block);
@@ -381,7 +381,7 @@ Regex::ProgramPtr Regex::Compiler::compile(const std::string& regex)
 			}
 
 			//add code block that matches a letter
-			Program block;
+			Cartridge block;
 			block.pushCode(Instruction::Match);
 			block.pushCode(c);
 			m_operands.push(block);
@@ -403,8 +403,8 @@ Regex::ProgramPtr Regex::Compiler::compile(const std::string& regex)
 		if (!Eval())
 			return nullptr;
 
-	Program result;
-	auto result_ptr = std::make_shared<Program>();
+	Cartridge result;
+	auto result_ptr = std::make_shared<Cartridge>();
 	if (popOperand(result))
 		result_ptr->appendCode(result);
 	

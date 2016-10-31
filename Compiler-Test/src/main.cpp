@@ -7,8 +7,8 @@
 #include <memory>
 #include <regex>
 #include <Chalcedony/Chalcedony.h>
-#include "CLexer.h"
-#include "CParser.h"
+//#include "CLexer.h"
+//#include "CParser.h"
 
 using namespace std;
 class InputParser {
@@ -43,6 +43,41 @@ int main(int argc, char* argv[]) {
 	}
 	if (input_filename.empty())
 		input_filename = "test/c_test_02.c";
+	
+	//test stuff
+	CT::CodeGen::Librarian librarian;
+	librarian.addLexRule("moka");
+	librarian.addParseRule("koko");
+	librarian.addParseRule("moka");
+	auto id = librarian.getID("koko");
+	id = librarian.getID("moka");
+	auto lexid = librarian.getLexID("moka");
+	auto parseid = librarian.getParseID("moka");
+	auto bresult = librarian.exists("moka");
+	bresult = librarian.isLexRule(lexid);
+	bresult = librarian.isParseRule(lexid);
+	bresult = librarian.isParseRule(parseid);
+
+	std::stringstream sstream;
+
+	{
+		cereal::BinaryOutputArchive archive(sstream);
+		librarian.save(archive);
+	}
+
+	sstream.seekg(0, ios::end);
+	int str = sstream.tellg();
+	sstream.seekg(0, ios::beg);
+
+	{
+		CT::CodeGen::Librarian lib2;
+		{
+			cereal::BinaryInputArchive iarchive(sstream);
+			lib2.load(iarchive);
+		}
+		lexid = lib2.getLexID("moka");
+	}
+
 	//test grammar
 
 	//CT::InputStreamPtr file_input = CT::open_file("grammar/c.gr");
@@ -52,7 +87,8 @@ int main(int argc, char* argv[]) {
 	//CT::CodeGen::LLKRD code_generator;
 	//code_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(koko));
 
-	CT::InputStreamPtr file_input = CT::open_file(input_filename);
+	//actual c program
+	/*CT::InputStreamPtr file_input = CT::open_file(input_filename);
 	auto lexer_ptr = std::make_shared<C::CLexer>();
 	auto token = lexer_ptr->scan(file_input);
 	while (token != CT::Lexer::Token::eof && token != CT::Lexer::Token::invalid)
@@ -62,6 +98,6 @@ int main(int argc, char* argv[]) {
 	return 0;
 	auto parser_ptr = std::make_shared<C::CParser>();
 	auto program = parser_ptr->parse(lexer_ptr, file_input);
-	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
+	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;*/
 	return 0;
 }

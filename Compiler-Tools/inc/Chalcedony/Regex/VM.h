@@ -3,9 +3,9 @@
 #include "Chalcedony/Defines.h"
 #include "Chalcedony/StringMarker.h"
 #include "Chalcedony/InputStream.h"
-#include "Chalcedony/Regex/Program.h"
 #include "Chalcedony/Regex/Instructions.h"
 #include "Chalcedony/Regex/Exceptions.h"
+#include "Chalcedony/Cartridge.h"
 #include <vector>
 #include <stack>
 #include <ostream>
@@ -36,10 +36,34 @@ namespace CT
 
 			VMStatus getVMStatus() const;
 
-			StringMarker exec(ProgramPtr program, InputStreamPtr input);
+			StringMarker exec(CartridgePtr program, InputStreamPtr input);
 
-			static void printProgram(ProgramPtr program, std::ostream& out);
+			static void printProgram(CartridgePtr program, std::ostream& out);
 		private:
+			//pushes data to stack
+			template<typename datatype>
+			void pushData(datatype value)
+			{
+				if (m_stackPtr < m_stack.size())
+				{
+					m_stack[m_stackPtr++] = static_cast<u32>(value);
+				}
+				else
+				{
+					m_stack.resize(m_stack.size() * 2);
+					m_stack[m_stackPtr++] = static_cast<u32>(value);
+				}
+			}
+
+			template<typename datatype>
+			datatype popData()
+			{
+				if (m_stackPtr >= 0)
+				{
+					return static_cast<datatype>(m_stack[m_stackPtr--]);
+				}
+				throw regex_error("[Regex::VM]: stack pointer out of bound");
+			}
 
 			//decodes fetched instruction
 			VMStatus decode(Instruction ins);
@@ -50,15 +74,19 @@ namespace CT
 			bool matchAny();
 
 			//program to run
-			ProgramPtr m_program;
+			CartridgePtr m_program;
 			//last instruction status register
 			VMStatus m_status;
 			//try boolean to indicate whether in try block or not
-			std::stack<bool> m_try;
+			s32 m_try;
 			//input stream pointer
 			InputStreamPtr m_input;
 			//register to state that current program consumed a char
 			bool m_consumeRegister;
+			//stack of this VM
+			std::vector<u64> m_stack;
+			//stackPtr
+			s64 m_stackPtr;
 		};
 	}
 }

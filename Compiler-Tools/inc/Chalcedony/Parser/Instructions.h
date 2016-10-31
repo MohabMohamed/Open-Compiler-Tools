@@ -8,7 +8,9 @@ namespace CT
     {
         enum class Instruction: u64
         {
-            None = 0x8000000000000000;
+            None = 0x8000000000000000,
+            Match = 0x8000000000000001,
+            Call = 0x8000000000000002
         };
 
         API inline bool isInstruction(u64 value);

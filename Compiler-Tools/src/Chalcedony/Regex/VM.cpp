@@ -10,20 +10,23 @@ VM::VM()
 {
 	m_status = VMStatus::None;
 	m_consumeRegister = false;
+	m_stackPtr = 0;
+	m_stack.resize(1024);
 }
 
 VM::~VM()
 {
-	while (!m_try.empty())
-		m_try.pop();
+	m_try = 0;
+	m_stack.clear();
 }
 
 void VM::reset()
 {
 	m_status = VMStatus::None;
-	while (!m_try.empty())
-		m_try.pop();
+	m_try = 0;
 	m_consumeRegister = false;
+	m_stackPtr = 0;
+	m_stack.resize(1024);
 }
 
 VMStatus VM::getVMStatus() const
@@ -31,9 +34,9 @@ VMStatus VM::getVMStatus() const
 	return m_status;
 }
 
-StringMarker VM::exec(ProgramPtr program, InputStreamPtr input)
+StringMarker VM::exec(CartridgePtr program, InputStreamPtr input)
 {
-	if (program->m_code.empty())
+	if (program->getCode().empty())
 		return StringMarker::invalid;
 	if (input->empty())
 		return StringMarker::invalid;
@@ -44,11 +47,11 @@ StringMarker VM::exec(ProgramPtr program, InputStreamPtr input)
 	input->pushMarker();
 	bool exec_result = false;
 	//push the return status as false in the beginning
-	m_program->pushData(exec_result);
+	this->pushData(exec_result);
 	//start executing the code
 	while(true)
 	{
-		Instruction ins = m_program->fetch();
+		Instruction ins = m_program->popCode<Instruction>();
 		//if the fetch succeeds 
 		if(ins != Instruction::None)
 		{
@@ -64,12 +67,12 @@ StringMarker VM::exec(ProgramPtr program, InputStreamPtr input)
 				//error exit
 				exec_result = false;
 				//if not inside try block
-				if (!m_try.empty())
+				if (m_try > 0)
 				{
 					int test_scope_counter = 0;
 					while (true)
 					{
-						auto pop_ins = m_program->popCode();
+						auto pop_ins = m_program->popRawIns();
 						if (isInstruction(pop_ins))
 						{
 							ins = static_cast<Instruction>(pop_ins);
@@ -99,9 +102,9 @@ StringMarker VM::exec(ProgramPtr program, InputStreamPtr input)
 			else if(m_status == VMStatus::Halt)
 			{
 				//pop the top of stack if possible
-				if(m_program->m_stackPtr > 0)
+				if(this->m_stackPtr > 0)
 				{
-					exec_result = m_program->popData<bool>();
+					exec_result = this->popData<bool>();
 					//exit the code
 					break;
 				}else
@@ -144,7 +147,7 @@ VMStatus VM::decode(Instruction ins)
 		case Instruction::Match:
 		{
 			//get letter to match
-			u64 ins = m_program->popCode();
+			u64 ins = m_program->popRawIns();
 
 			bool result = false;
 			if (isInstruction(ins) && static_cast<Instruction>(ins) == Instruction::Any)
@@ -159,7 +162,7 @@ VMStatus VM::decode(Instruction ins)
 			}
 			
 			//push match result into the stack
-			m_program->pushData(result);
+			this->pushData(result);
 
 			//return instruction status
 			if(result){
@@ -173,10 +176,10 @@ VMStatus VM::decode(Instruction ins)
 		case Instruction::JIS:
 		{
 			//get the condition
-			bool condition_result = m_program->popData<bool>();
-			m_program->pushData(condition_result);
+			bool condition_result = this->popData<bool>();
+			this->pushData(condition_result);
 			//get the offset
-			s32 offset = m_program->popConst<s32>();
+			s32 offset = m_program->popCode<s32>();
 
 			//to compensate for the increment of popCode
 			if (offset < 0)
@@ -185,17 +188,17 @@ VMStatus VM::decode(Instruction ins)
 			//if condition = true then move code ptr
 			if(condition_result)
 			{
-				m_program->m_codePtr += offset;
+				m_program->getCodePtr() += offset;
 			}
 			return VMStatus::CodeSuccess;
 		}
 		case Instruction::JIF:
 		{
 			//get the condition
-			bool condition_result = m_program->popData<bool>();
-			m_program->pushData(condition_result);
+			bool condition_result = this->popData<bool>();
+			this->pushData(condition_result);
 			//get the offset
-			s32 offset = m_program->popConst<s32>();
+			s32 offset = m_program->popCode<s32>();
 
 			//to compensate for the increment of popCode
 			if (offset < 0)
@@ -204,7 +207,7 @@ VMStatus VM::decode(Instruction ins)
 			//if condition = true then move code ptr
 			if (!condition_result)
 			{
-				m_program->m_codePtr += offset;
+				m_program->getCodePtr() += offset;
 			}
 			return VMStatus::CodeSuccess;
 		}
@@ -213,7 +216,7 @@ VMStatus VM::decode(Instruction ins)
 			//get the condition
 			bool condition_result = m_consumeRegister;
 			//get the offset
-			s32 offset = m_program->popConst<s32>();
+			s32 offset = m_program->popCode<s32>();
 
 			//to compensate for the increment of popCode
 			if (offset < 0)
@@ -222,7 +225,7 @@ VMStatus VM::decode(Instruction ins)
 			//if condition = true then move code ptr
 			if (condition_result)
 			{
-				m_program->m_codePtr += offset;
+				m_program->getCodePtr() += offset;
 				m_consumeRegister = false;
 			}
 			return VMStatus::CodeSuccess;
@@ -232,7 +235,7 @@ VMStatus VM::decode(Instruction ins)
 			//get the condition
 			bool condition_result = m_consumeRegister;
 			//get the offset
-			s32 offset = m_program->popConst<s32>();
+			s32 offset = m_program->popCode<s32>();
 
 			//to compensate for the increment of popCode
 			if (offset < 0)
@@ -241,44 +244,44 @@ VMStatus VM::decode(Instruction ins)
 			//if condition = true then move code ptr
 			if (!condition_result)
 			{
-				m_program->m_codePtr += offset;
+				m_program->getCodePtr() += offset;
 			}
 			return VMStatus::CodeSuccess;
 		}
 		case Instruction::Success:
 		{
 			//exits the program with no error
-			m_program->pushData(true);
+			this->pushData(true);
 			return VMStatus::Halt;
 		}
 		case Instruction::Fail:
 		{
 			//exits the program with error
-			m_program->pushData(false);
+			this->pushData(false);
 			return VMStatus::Halt;
 		}
 		case Instruction::Try:
 		{
 			//set try boolean to true
-			m_try.push(true);
+			m_try++;
 			return VMStatus::CodeSuccess;
 		}
 		case Instruction::EndTry:
 		{
 			//set try boolean to false
-			m_try.pop();
+			m_try--;
 			return VMStatus::CodeSuccess;
 		}
 		case Instruction::Push:
 		{
 			//pushes some value from the code to the stack
-			m_program->pushData(m_program->popConst<u32>());
+			this->pushData(m_program->popCode<u32>());
 			return VMStatus::CodeSuccess;
 		}
 		case Instruction::Pop:
 		{
 			//pops a value from the stack
-			m_program->popData<u32>();
+			this->popData<u32>();
 			return VMStatus::CodeSuccess;
 		}
 		default:
@@ -310,17 +313,21 @@ bool CT::Regex::VM::matchAny()
 	return false;
 }
 
-void VM::printProgram(ProgramPtr program, std::ostream& out)
+void VM::printProgram(CartridgePtr program, std::ostream& out)
 {
-	if(program->m_code.empty())
+	if(program->getCode().empty())
 		return;
 
-	s32 width = std::to_string(program->getCodeSize()).size();
+	auto saved_codePtr = program->getCodePtr();
+	program->reset();
+
+	s32 width = std::to_string(program->size()).size();
 	s32 indent = 0;
-	for(int i=0;i<program->m_code.size();i++)
+	for(int i=0;i<program->size();i++)
 	{
-		if (isInstruction(program->m_code[i])) {
-			Instruction ins = static_cast<Instruction>(program->m_code[i]);
+		auto rawIns = program->popRawIns();
+		if (isInstruction(rawIns)) {
+			Instruction ins = static_cast<Instruction>(rawIns);
 			switch (ins)
 			{
 			case Instruction::Pop:
@@ -387,16 +394,16 @@ void VM::printProgram(ProgramPtr program, std::ostream& out)
 			}
 			default:
 
-				throw regex_error("[Error]: cannot identify the instruction #" + std::to_string(i) + " = " + std::to_string(program->m_code[i]));
+				throw regex_error("[Error]: cannot identify the instruction #" + std::to_string(i) + " = " + std::to_string(rawIns));
 				break;
 			}
 		}
-		else if (isConst(program->m_code[i]))
+		else if (isConst(rawIns))
 		{
-			out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "Const[0x" << std::hex <<static_cast<u32>(program->m_code[i]) <<"]"<< std::endl;
+			out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "Const[0x" << std::hex <<static_cast<u32>(rawIns) <<"]"<< std::endl;
 		}
 		else {
-			throw regex_error("[printProgram]: cannot identify the type of this entry "+std::to_string(program->m_code[i]));
+			throw regex_error("[printProgram]: cannot identify the type of this entry "+std::to_string(rawIns));
 		}
 	}
 }
