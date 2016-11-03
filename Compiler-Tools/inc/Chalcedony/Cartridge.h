@@ -84,7 +84,7 @@ namespace CT
             if(m_codePtr < m_code.size())
             {
                 auto value =  static_cast<u64>(m_code[m_codePtr++]);
-                if(CT::Regex::isInstruction(value))
+                if(isInstruction(value))
                 {
                     return static_cast<CT::Regex::Instruction>(value);
                 }
@@ -99,7 +99,7 @@ namespace CT
             if(m_codePtr < m_code.size())
             {
                 auto value =  static_cast<u64>(m_code[m_codePtr++]);
-                if(CT::Parser::isInstruction(value))
+                if(isInstruction(value))
                 {
                     return static_cast<CT::Parser::Instruction>(value);
                 }

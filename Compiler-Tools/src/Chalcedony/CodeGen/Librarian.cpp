@@ -2,8 +2,8 @@
 using namespace CT;
 using namespace CT::CodeGen;
 
-//std::unordered_map<u32, std::string> Librarian::m_library;
-//u32 Librarian::m_ID = 0;
+std::unordered_map<u32, std::string> Librarian::m_library;
+u32 Librarian::m_ID = 0;
 
 bool Librarian::isLexRule(u32 id)
 {

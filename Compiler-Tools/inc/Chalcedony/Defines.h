@@ -23,7 +23,7 @@
 #endif
 
 
-namespace CT{
+namespace CT {
 	//type definitions
 	using ubyte = unsigned char;
 	using byte = char;
@@ -40,4 +40,17 @@ namespace CT{
 
 	using real32 = float;
 	using real64 = double;
+
+
+	API inline bool isInstruction(u64 value)
+	{
+		u64 res = 0x8000000000000000 & value;
+		return res != 0;
+	}
+
+	API inline bool isConst(u64 value)
+	{
+		u64 res = 0x4000000000000000 & value;
+		return res != 0;
+	}
 }

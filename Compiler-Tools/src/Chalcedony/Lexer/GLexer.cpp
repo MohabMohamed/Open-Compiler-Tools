@@ -193,6 +193,14 @@ void GLexer::init()
 
 	registerToken(compiler.compile("[a-z][a-z_A-Z]*"), make_token("parse_id"));
 	registerToken(compiler.compile("\\|"), make_token("or"));
+	registerToken(compiler.compile("\\("), make_token("regex_op"));
+	registerToken(compiler.compile("\\)"), make_token("regex_op"));
+	registerToken(compiler.compile("\\+"), make_token("regex_op"));
+	registerToken(compiler.compile("\\*"), make_token("regex_op"));
+	registerToken(compiler.compile("\\?"), make_token("regex_op"));
+	registerToken(compiler.compile("\\["), make_token("regex_op"));
+	registerToken(compiler.compile("\\]"), make_token("regex_op"));
+	registerToken(compiler.compile("\\-"), make_token("regex_op"));
 	registerToken(compiler.compile("&&"), make_token("and"));
 	registerToken(compiler.compile("[_a-zA-Z][_a-zA-Z0-9]*"), make_token("c_id"));
 }

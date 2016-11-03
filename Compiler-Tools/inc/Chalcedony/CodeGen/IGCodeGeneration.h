@@ -1,6 +1,7 @@
 #pragma once
 #include "Chalcedony/Defines.h"
 #include "Chalcedony/Parser/GParseTree.h"
+#include <ostream>
 
 namespace CT
 {
@@ -30,6 +31,11 @@ namespace CT
 		{
 		public:
 			virtual bool process(std::vector<CT::Parser::GParseNodePtr>& grammar) = 0;
+		};
+
+		class API IGenerator {
+		public:
+			virtual void generate(const std::vector<CT::Parser::GParseNodePtr>&, std::ostream&) = 0;
 		};
 	}
 }

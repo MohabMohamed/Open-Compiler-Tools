@@ -12,8 +12,5 @@ namespace CT
             Match = 0x8000000000000001,
             Call = 0x8000000000000002
         };
-
-        API inline bool isInstruction(u64 value);
-        API inline bool isConst(u64 value);
     }
 }

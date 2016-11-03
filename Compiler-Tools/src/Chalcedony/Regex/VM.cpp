@@ -10,7 +10,7 @@ VM::VM()
 {
 	m_status = VMStatus::None;
 	m_consumeRegister = false;
-	m_stackPtr = 0;
+	m_stackPtr = -1;
 	m_stack.resize(1024);
 }
 
@@ -25,7 +25,7 @@ void VM::reset()
 	m_status = VMStatus::None;
 	m_try = 0;
 	m_consumeRegister = false;
-	m_stackPtr = 0;
+	m_stackPtr = -1;
 	m_stack.resize(1024);
 }
 

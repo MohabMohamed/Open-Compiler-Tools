@@ -1,4 +1,5 @@
 #include "Chalcedony/Lexer/CachedScanner.h"
+#include <iostream>
 using namespace CT::Lexer;
 
 bool CT::Lexer::CachedScanner::hasCachedTokens()
@@ -24,6 +25,7 @@ Token CT::Lexer::CachedScanner::scan(InputStreamPtr input)
 	if (!hasCachedTokens())
 	{
 		auto token = Scanner::scan(input);
+		std::cout << token.tag << "<" << token.literal.getString() << ">" << std::endl;
 		m_cache.push_back(token);
 		m_index = m_cache.size();
 		return token;

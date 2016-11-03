@@ -26,10 +26,5 @@ namespace CT
 			JINC = 0x800000000000000c,
 			Any =  0x800000000000000d
 		};
-
-		//checks the instruction bit
-		API inline bool isInstruction(u64);
-		//checks the const bit
-		API inline bool isConst(u64);
 	}
 }

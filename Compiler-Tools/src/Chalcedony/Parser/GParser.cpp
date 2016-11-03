@@ -24,6 +24,8 @@ GParseNodePtr GParser::parseProgram(Lexer::CachedScannerPtr scanner, InputStream
 	{
 		program->children.push_back(statement);
 		auto semicolon = scanner->scan(input);
+		if (input->getPosition().row == 151)
+			int x = 0;
 		if(semicolon.tag != "semicolon")
 		{
 			Log::log(LOG_LEVEL::ERROR, "expected a semicolon but found'"+semicolon.tag+"'", input->getPosition());
@@ -147,7 +149,7 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 	auto regex_or_lex_token = scanner->scan(input);
 	if (lex_id_token.tag == "lex_id" &&
 		assign_token.tag == "assign" &&
-		(regex_or_lex_token.tag == "lex_id" || regex_or_lex_token.tag == "regex"))
+		(regex_or_lex_token.tag == "lex_id" || regex_or_lex_token.tag == "regex" || regex_or_lex_token.tag == "or" || regex_or_lex_token.tag == "regex_op"))
 	{
 		if (skip_token.tag == "skip")
 			result->isSkip = true;
@@ -155,7 +157,7 @@ GParseNodePtr GParser::parseLexRule(Lexer::CachedScannerPtr scanner, InputStream
 		result->regex.reserve(5);
 		result->regex.push_back(regex_or_lex_token);
 		regex_or_lex_token = scanner->scan(input);
-		while (regex_or_lex_token.tag == "lex_id" || regex_or_lex_token.tag == "regex")
+		while (regex_or_lex_token.tag == "lex_id" || regex_or_lex_token.tag == "regex" || regex_or_lex_token.tag == "or" || regex_or_lex_token.tag == "regex_op")
 		{
 			result->regex.push_back(regex_or_lex_token);
 			regex_or_lex_token = scanner->scan(input);

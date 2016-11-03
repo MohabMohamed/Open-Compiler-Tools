@@ -43,41 +43,16 @@ int main(int argc, char* argv[]) {
 	}
 	if (input_filename.empty())
 		input_filename = "test/c_test_02.c";
-	
-	//test stuff
-	CT::CodeGen::Librarian librarian;
-	librarian.addLexRule("moka");
-	librarian.addParseRule("koko");
-	librarian.addParseRule("moka");
-	auto id = librarian.getID("koko");
-	id = librarian.getID("moka");
-	auto lexid = librarian.getLexID("moka");
-	auto parseid = librarian.getParseID("moka");
-	auto bresult = librarian.exists("moka");
-	bresult = librarian.isLexRule(lexid);
-	bresult = librarian.isParseRule(lexid);
-	bresult = librarian.isParseRule(parseid);
 
-	std::stringstream sstream;
+	//test code
 
-	{
-		cereal::BinaryOutputArchive archive(sstream);
-		librarian.save(archive);
-	}
-
-	sstream.seekg(0, ios::end);
-	int str = sstream.tellg();
-	sstream.seekg(0, ios::beg);
-
-	{
-		CT::CodeGen::Librarian lib2;
-		{
-			cereal::BinaryInputArchive iarchive(sstream);
-			lib2.load(iarchive);
-		}
-		lexid = lib2.getLexID("moka");
-	}
-
+	CT::InputStreamPtr file_input = CT::open_file("grammar/c_en.gr");
+	auto grammar_scanner = std::make_shared<CT::Lexer::GLexer>();
+	CT::Parser::GParser grammar_parser;
+	auto koko = grammar_parser.parse(grammar_scanner, file_input);
+	CT::CodeGen::LLKSRD code_generator;
+	code_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(koko));
+	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
 	//test grammar
 
 	//CT::InputStreamPtr file_input = CT::open_file("grammar/c.gr");

@@ -46,12 +46,14 @@ namespace CT
 			{
 				if (m_stackPtr < m_stack.size())
 				{
-					m_stack[m_stackPtr++] = static_cast<u32>(value);
+					m_stackPtr++;
+					m_stack[m_stackPtr] = static_cast<u32>(value);
 				}
 				else
 				{
+					m_stackPtr++;
 					m_stack.resize(m_stack.size() * 2);
-					m_stack[m_stackPtr++] = static_cast<u32>(value);
+					m_stack[m_stackPtr] = static_cast<u32>(value);
 				}
 			}
 

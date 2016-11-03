@@ -20,8 +20,8 @@ namespace CT
 		{
 		public:
 			//a map that has all the ids and names of everything inserted in the library
-			std::unordered_map<u32, std::string> m_library;
-			u32 m_ID = 0;
+			static std::unordered_map<u32, std::string> m_library;
+			static u32 m_ID;
 		//public:
 			
 			bool isLexRule(u32);
