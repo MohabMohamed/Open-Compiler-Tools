@@ -47,9 +47,9 @@ bool Lexer::operator==(const Token& a, const Token& b)
 		return true;
 	else if (a.isSkip && b.isSkip)
 		return true;
-	else if((a.isEOF & b.isEOF) && (a.isEOF | b.isEOF))
+	else if(!(a.isEOF & b.isEOF) && (a.isEOF | b.isEOF))
 		return false;
-	else if((a.isInvalid & b.isInvalid) && (a.isInvalid | b.isInvalid))
+	else if(!(a.isInvalid & b.isInvalid) && (a.isInvalid | b.isInvalid))
 		return false;
 	else if(a.tag == b.tag && a.literal == b.literal)
 		return true;

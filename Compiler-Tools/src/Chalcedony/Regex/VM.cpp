@@ -6,27 +6,28 @@
 using namespace CT::Regex;
 using namespace CT;
 
-VM::VM()
+VM::VM():m_currentThread(-1,-1)
 {
 	m_status = VMStatus::None;
-	m_consumeRegister = false;
-	m_stackPtr = -1;
-	m_stack.resize(1024);
 }
 
 VM::~VM()
 {
-	m_try = 0;
-	m_stack.clear();
+	while (!m_threadStack.empty())
+	{
+		m_threadStack.pop();
+	}
+	m_currentThread = Thread(-1, -1);
 }
 
 void VM::reset()
 {
 	m_status = VMStatus::None;
-	m_try = 0;
-	m_consumeRegister = false;
-	m_stackPtr = -1;
-	m_stack.resize(1024);
+	while (!m_threadStack.empty())
+	{
+		m_threadStack.pop();
+	}
+	m_currentThread = Thread(-1, -1);
 }
 
 VMStatus VM::getVMStatus() const
@@ -41,252 +42,108 @@ StringMarker VM::exec(CartridgePtr program, InputStreamPtr input)
 	if (input->empty())
 		return StringMarker::invalid;
 
+	reset();
 	program->reset();
 	m_program = program;
 	m_input = input;
 	input->pushMarker();
-	bool exec_result = false;
-	//push the return status as false in the beginning
-	this->pushData(exec_result);
-	//start executing the code
-	while(true)
+	
+	Thread main_thread(0, input->index());
+	m_threadStack.push(main_thread);
+	while (true)
 	{
-		Instruction ins = m_program->popCode<Instruction>();
-		//if the fetch succeeds 
-		if(ins != Instruction::None)
-		{
-			m_status = decode(ins);
-			if(m_status == VMStatus::CodeSuccess)
-			{
-				//ins ran successfully
-				//continue
-			}
-			else if(m_status == VMStatus::CodeFail)
-			{
-				//ins failed
-				//error exit
-				exec_result = false;
-				//if not inside try block
-				if (m_try > 0)
-				{
-					int test_scope_counter = 0;
-					while (true)
-					{
-						auto pop_ins = m_program->popRawIns();
-						if (isInstruction(pop_ins))
-						{
-							ins = static_cast<Instruction>(pop_ins);
-							if (ins == Instruction::EndTry && test_scope_counter > 0)
-							{
-								test_scope_counter--;
-							}
-							else if (ins == Instruction::EndTry)
-							{
-								break;
-							}
-							else if (ins == Instruction::Try)
-							{
-								test_scope_counter++;
-							}
-						}
-					}
+		if (m_threadStack.empty())
+			return StringMarker::invalid;
+		m_currentThread = m_threadStack.top();
+		m_threadStack.pop();
+		m_input->moveToMarkerStart(make_string_marker(m_currentThread.sp, 0, nullptr));
+		m_program->getCodePtr() = m_currentThread.pc;
 
-					if (ins == Instruction::EndTry)
-						decode(ins);
-				}
-				else
-				{
-					break;
-				}
-			}
-			else if(m_status == VMStatus::Halt)
-			{
-				//pop the top of stack if possible
-				if(this->m_stackPtr > 0)
-				{
-					exec_result = this->popData<bool>();
-					//exit the code
-					break;
-				}else
-				{
-					//we are in deep shit
-					exec_result = false;
-					break;
-				}
-
-			}
-		}
-		else
+		while (true)
 		{
-			//this is a failure in the program
-			exec_result = false;
-			break;
+			bool kill_thread = false;
+			auto ins = m_program->popCode<Instruction>();
+			m_currentThread.pc++;
+			auto result = decode(ins);
+			
+			switch (result)
+			{
+			case CT::Regex::VMStatus::None:
+				kill_thread = true;
+				break;
+			case CT::Regex::VMStatus::CodeSuccess:
+				break;
+			case CT::Regex::VMStatus::CodeFail:
+				kill_thread = true;
+				break;
+			case CT::Regex::VMStatus::Halt:
+				return m_input->popMarker();
+				break;
+			default:
+				kill_thread = true;
+				break;
+			}
+
+			if (kill_thread)
+				break;
+
 		}
 	}
-	m_input = nullptr;
-	m_program = nullptr;
-	if (exec_result) {
-		m_status = VMStatus::Halt;
-		return input->popMarker();
-	}
-	else
-	{
-		m_status = VMStatus::CodeFail;
-		input->moveToMarkerStart(input->popMarker());
-		return StringMarker::invalid;
-	}
+
+	m_input->moveToMarkerStart(m_input->popMarker());
+	return StringMarker::invalid;
 }
 
 VMStatus VM::decode(Instruction ins)
 {
-	switch(ins)
+	switch (ins)
 	{
-		case Instruction::None:
-			throw regex_error("[decode]: None instruction");
-			return VMStatus::CodeFail;
-		case Instruction::Match:
+	case CT::Regex::Instruction::None:
+		return VMStatus::CodeFail;
+		break;
+	case CT::Regex::Instruction::Match:
+	{
+		auto raw_ins = m_program->popRawIns();
+		m_currentThread.pc++;
+		if (raw_ins == static_cast<u64>(Instruction::Any))
 		{
-			//get letter to match
-			u64 ins = m_program->popRawIns();
-
-			bool result = false;
-			if (isInstruction(ins) && static_cast<Instruction>(ins) == Instruction::Any)
-			{
-				result = matchAny();
-			}
-			else if(isConst(ins))
-			{
-				auto letter_u32 = static_cast<u32>(ins);
-				char letter = static_cast<char>(letter_u32);
-				result = match(letter);
-			}
-			
-			//push match result into the stack
-			this->pushData(result);
-
-			//return instruction status
-			if(result){
-				m_consumeRegister = true;
-				return VMStatus::CodeSuccess;
-			}
-			else{
-				return VMStatus::CodeFail;
-			}
+			matchAny();
 		}
-		case Instruction::JIS:
+		else 
 		{
-			//get the condition
-			bool condition_result = this->popData<bool>();
-			this->pushData(condition_result);
-			//get the offset
-			s32 offset = m_program->popCode<s32>();
-
-			//to compensate for the increment of popCode
-			if (offset < 0)
-				offset -= 1;
-
-			//if condition = true then move code ptr
-			if(condition_result)
-			{
-				m_program->getCodePtr() += offset;
-			}
-			return VMStatus::CodeSuccess;
+			return match(static_cast<char>(raw_ins)) ? VMStatus::CodeSuccess : VMStatus::CodeFail;
 		}
-		case Instruction::JIF:
-		{
-			//get the condition
-			bool condition_result = this->popData<bool>();
-			this->pushData(condition_result);
-			//get the offset
-			s32 offset = m_program->popCode<s32>();
-
-			//to compensate for the increment of popCode
-			if (offset < 0)
-				offset -= 1;
-
-			//if condition = true then move code ptr
-			if (!condition_result)
-			{
-				m_program->getCodePtr() += offset;
-			}
-			return VMStatus::CodeSuccess;
-		}
-		case Instruction::JIC:
-		{
-			//get the condition
-			bool condition_result = m_consumeRegister;
-			//get the offset
-			s32 offset = m_program->popCode<s32>();
-
-			//to compensate for the increment of popCode
-			if (offset < 0)
-				offset -= 1;
-
-			//if condition = true then move code ptr
-			if (condition_result)
-			{
-				m_program->getCodePtr() += offset;
-				m_consumeRegister = false;
-			}
-			return VMStatus::CodeSuccess;
-		}
-		case Instruction::JINC:
-		{
-			//get the condition
-			bool condition_result = m_consumeRegister;
-			//get the offset
-			s32 offset = m_program->popCode<s32>();
-
-			//to compensate for the increment of popCode
-			if (offset < 0)
-				offset -= 1;
-
-			//if condition = true then move code ptr
-			if (!condition_result)
-			{
-				m_program->getCodePtr() += offset;
-			}
-			return VMStatus::CodeSuccess;
-		}
-		case Instruction::Success:
-		{
-			//exits the program with no error
-			this->pushData(true);
-			return VMStatus::Halt;
-		}
-		case Instruction::Fail:
-		{
-			//exits the program with error
-			this->pushData(false);
-			return VMStatus::Halt;
-		}
-		case Instruction::Try:
-		{
-			//set try boolean to true
-			m_try++;
-			return VMStatus::CodeSuccess;
-		}
-		case Instruction::EndTry:
-		{
-			//set try boolean to false
-			m_try--;
-			return VMStatus::CodeSuccess;
-		}
-		case Instruction::Push:
-		{
-			//pushes some value from the code to the stack
-			this->pushData(m_program->popCode<u32>());
-			return VMStatus::CodeSuccess;
-		}
-		case Instruction::Pop:
-		{
-			//pops a value from the stack
-			this->popData<u32>();
-			return VMStatus::CodeSuccess;
-		}
-		default:
-			throw regex_error("[decode]: Unidentified instruction");
-			return VMStatus::CodeFail;
+	}
+		break;
+	case CT::Regex::Instruction::JMP:
+	{
+		auto offset = m_program->popCode<s32>();
+		m_currentThread.pc++;
+		m_program->getCodePtr() += offset;
+		m_currentThread.pc += offset;
+		return VMStatus::CodeSuccess;
+	}
+		break;
+	case CT::Regex::Instruction::Split:
+	{
+		auto x = m_program->popCode<s32>();
+		m_currentThread.pc++;
+		auto y = m_program->popCode<s32>();
+		m_currentThread.pc++;
+		Thread newThread(m_currentThread.pc + y, m_currentThread.sp);
+		m_currentThread.pc += x;
+		m_threadStack.push(newThread);
+		return VMStatus::CodeSuccess;
+	}
+		break;
+	case CT::Regex::Instruction::Halt:
+	{
+		return VMStatus::Halt;
+	}
+		break;
+	default:
+		return VMStatus::CodeFail;
+		break;
 	}
 }
 
@@ -297,6 +154,7 @@ bool VM::match(char letter)
 		if(m_input->peek() == letter)
 		{
 			m_input->popLetter();
+			m_currentThread.sp++;
 			return true;
 		}
 	}
@@ -308,6 +166,7 @@ bool CT::Regex::VM::matchAny()
 	if (m_input && !m_input->eof())
 	{
 		m_input->popLetter();
+		m_currentThread.sp++;
 		return true;
 	}
 	return false;
@@ -330,68 +189,21 @@ void VM::printProgram(CartridgePtr program, std::ostream& out)
 			Instruction ins = static_cast<Instruction>(rawIns);
 			switch (ins)
 			{
-			case Instruction::Pop:
-			{
-				out << i << ": " << std::string(indent, '\t') << "Pop" << std::endl;
-				break;
-			}
-			case Instruction::Push:
-			{
-				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "Push" << std::endl;
-				break;
-			}
-			case Instruction::EndTry:
-			{
-				indent--;
-				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "EndTry" << std::endl;
-				break;
-			}
-			case Instruction::Try:
-			{
-				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "Try" << std::endl;
-				indent++;
-				break;
-			}
-			case Instruction::Fail:
-			{
-				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "Fail" << std::endl;
-				break;
-			}
-			case Instruction::Success:
-			{
-				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "Success" << std::endl;
-				break;
-			}
-			case Instruction::JIS:
-			{
-				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "JIS" << std::endl;
-				break;
-			}
-			case Instruction::JIF:
-			{
-				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "JIF" << std::endl;
-				break;
-			}
-			case Instruction::JIC:
-			{
-				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "JIC" << std::endl;
-				break;
-			}
-			case Instruction::JINC:
-			{
-				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "JINC" << std::endl;
-				break;
-			}
 			case Instruction::Match:
-			{
 				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "Match " << std::endl;
 				break;
-			}
+			case Instruction::Split:
+				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "Split " << std::endl;
+				break;
+			case Instruction::JMP:
+				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "Jmp " << std::endl;
+				break;
 			case Instruction::Any:
-			{
 				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "Any " << std::endl;
 				break;
-			}
+			case Instruction::Halt:
+				out << std::setfill('0') << std::setw(3) << i << ": " << std::string(indent, '\t') << "Halt " << std::endl;
+				break;
 			default:
 
 				throw regex_error("[Error]: cannot identify the instruction #" + std::to_string(i) + " = " + std::to_string(rawIns));
@@ -406,4 +218,10 @@ void VM::printProgram(CartridgePtr program, std::ostream& out)
 			throw regex_error("[printProgram]: cannot identify the type of this entry "+std::to_string(rawIns));
 		}
 	}
+}
+
+CT::Regex::Thread::Thread(s64 _pc, s64 _sp)
+{
+	pc = _pc;
+	sp = _sp;
 }

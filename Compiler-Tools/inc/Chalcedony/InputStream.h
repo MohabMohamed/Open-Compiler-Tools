@@ -22,6 +22,10 @@ namespace CT
 
 		std::string getString() const;
 
+		std::size_t size() const;
+
+		std::size_t index() const;
+
 		char popLetter();
 
 		void advance(u64 value);

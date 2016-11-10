@@ -62,13 +62,16 @@ bool Regex::Compiler::Or()
 	if (!popOperand(B) || !popOperand(A))
 		return false;
 	
-	A.pushCodeFront(Instruction::Try);
-	A.pushCode(Instruction::EndTry);
-	A.pushCode(Instruction::JIS);
-	A.pushCode(static_cast<u32>(B.size()));
-	A.appendCode(B);
+	Cartridge result;
+	result.pushCode(Instruction::Split);
+	result.pushCode<u32>(0);
+	result.pushCode<u32>(A.size() + 2);
+	result.appendCode(A);
+	result.pushCode(Instruction::JMP);
+	result.pushCode<u32>(B.size());
+	result.appendCode(B);
 
-	m_operands.push(A);
+	m_operands.push(result);
 	return true;
 }
 
@@ -78,16 +81,15 @@ bool Regex::Compiler::Star()
 	if(!popOperand(A))
 		return false;
 
-	A.pushCodeFront(Instruction::Try); //i'm label
-	A.pushCode(Instruction::EndTry);
-	A.pushCode(Instruction::JIS);
-	A.pushCode(static_cast<u32>(A.size()*-1)); //jump to label
-	A.pushCode(Instruction::JINC);
-	A.pushCode(2);
-	A.pushCode(Instruction::Push);
-	A.pushCode(true);
-
-	m_operands.push(A);
+	Cartridge result;
+	result.pushCode(Instruction::Split);
+	result.pushCode<u32>(0);
+	result.pushCode<u32>(A.size()+2);
+	result.appendCode(A);
+	result.pushCode(Instruction::JMP);
+	result.pushCode<u32>((A.size() + 5)*-1);
+	m_operands.push(result);
+	
 	return true;
 }
 
@@ -97,12 +99,15 @@ bool Regex::Compiler::Plus()
 	if(!popOperand(A))
 		return false;
 	Cartridge result;
+
 	result.appendCode(A);
-	result.pushCode(Instruction::Try); //i'm label
+	result.pushCode(Instruction::Split);
+	result.pushCode<u32>(0);
+	result.pushCode<u32>(A.size() + 2);
 	result.appendCode(A);
-	result.pushCode(Instruction::EndTry);
-	result.pushCode(Instruction::JIS);
-	result.pushCode(static_cast<u32>((A.size() + 3)*-1)); //jump to label
+	result.pushCode(Instruction::JMP);
+	result.pushCode<u32>(-1 * (A.size() + 5));
+
 	m_operands.push(result);
 	return true;
 }
@@ -112,9 +117,13 @@ bool Regex::Compiler::Optional()
 	Cartridge A;
 	if(!popOperand(A))
 		return false;
-	A.pushCodeFront(Instruction::Try);
-	A.pushCode(Instruction::EndTry);
-	m_operands.push(A);
+	
+	Cartridge result;
+	result.pushCode(Instruction::Split);
+	result.pushCode<u32>(0);
+	result.pushCode<u32>(A.size());
+	result.appendCode(A);
+	m_operands.push(result);
 	return true;
 }
 
@@ -408,7 +417,7 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 	if (popOperand(result))
 		result_ptr->appendCode(result);
 	
-	result_ptr->pushCode(Instruction::Success);
+	result_ptr->pushCode(Instruction::Halt);
 
 	return result_ptr;
 }

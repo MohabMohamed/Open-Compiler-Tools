@@ -44,15 +44,28 @@ int main(int argc, char* argv[]) {
 	if (input_filename.empty())
 		input_filename = "test/c_test_02.c";
 
+	CT::Regex::Compiler compiler;
+	auto program = compiler.compile("a?a?a?a?a?a?a?a?a?a?a?a?a?a?a?a?a?a?aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+	//CT::Regex::VM::printProgram(program, std::cout);
+	auto iunput = std::make_shared<CT::InputStream>("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+	CT::StringMarker ss;
+	for (int i = 0; i < 10000; i++)
+	{
+		iunput->reset();
+		CT::Regex::VM vm;
+		ss = vm.exec(program, iunput);
+	}
+	std::cout << ss.end << std::endl;
+	return 0;
 	//test code
 
-	CT::InputStreamPtr file_input = CT::open_file("grammar/c_en.gr");
-	auto grammar_scanner = std::make_shared<CT::Lexer::GLexer>();
-	CT::Parser::GParser grammar_parser;
-	auto koko = grammar_parser.parse(grammar_scanner, file_input);
-	CT::CodeGen::LLKSRD code_generator;
-	code_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(koko));
-	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
+	//CT::InputStreamPtr file_input = CT::open_file("grammar/c_en.gr");
+	//auto grammar_scanner = std::make_shared<CT::Lexer::GLexer>();
+	//CT::Parser::GParser grammar_parser;
+	//auto koko = grammar_parser.parse(grammar_scanner, file_input);
+	//CT::CodeGen::LLKSRD code_generator;
+	//code_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(koko));
+	//std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
 	//test grammar
 
 	//CT::InputStreamPtr file_input = CT::open_file("grammar/c.gr");

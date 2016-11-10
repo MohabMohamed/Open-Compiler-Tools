@@ -621,11 +621,11 @@ CodeGenOutput CT::CodeGen::LLKRD::generate(GParseNodePtr program)
 	bool goodGrammar = checker.process(parse_rules);
 	if (!goodGrammar)
 	{
-		return CodeGenOutput::invalid;
+		return CodeGenOutput();
 	}
 
 	CodeGenOutput result;
-	std::tie(result.lexer_h, result.lexer_cpp) = generateLexer(name_directive, lex_rules);
+	/*std::tie(result.lexer_h, result.lexer_cpp) = generateLexer(name_directive, lex_rules);
 	std::tie(result.parser_h, result.parser_cpp) = generateParser(name_directive,
 		start_rule,
 		std::dynamic_pointer_cast<GHeaderSegment>(header_code),
@@ -635,7 +635,7 @@ CodeGenOutput CT::CodeGen::LLKRD::generate(GParseNodePtr program)
 	result.lexer_h_filename = name_directive+"Lexer.h";
 	result.lexer_cpp_filename = name_directive+"Lexer.cpp";
 	result.parser_h_filename = name_directive+"Parser.h";
-	result.parser_cpp_filename = name_directive+"Parser.cpp";
+	result.parser_cpp_filename = name_directive+"Parser.cpp";*/
 
 	return result;
 }

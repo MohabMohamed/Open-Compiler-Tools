@@ -28,6 +28,7 @@ namespace CT
 			{
 			}
 			virtual Token scan(InputStreamPtr input) = 0;
+			virtual Token search(InputStreamPtr input) { return CT::Lexer::Token::invalid; };
 			virtual void registerToken(CartridgePtr regexProgram,const Token& token) = 0;
 			virtual bool isDefinedToken(const std::string&) = 0;
 			void setErrorFunction(std::function<void(InputStreamPtr)> errorFunction){m_errorFunction = errorFunction;}

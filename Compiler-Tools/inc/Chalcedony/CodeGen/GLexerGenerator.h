@@ -11,8 +11,11 @@ namespace CT
 	{
 		class API GLexerGenerator : public IGenerator
 		{
+		protected:
+			void generateHeader(const std::string& lexer_name, OutputModule& out);
+
 		public:
-			void generate(const std::vector<CT::Parser::GParseNodePtr>& parse_node, std::ostream& out) override;
+			void generate(const std::vector<CT::Parser::GParseNodePtr>& parse_node, OutputModule& out) override;
 		};
 	}
 }

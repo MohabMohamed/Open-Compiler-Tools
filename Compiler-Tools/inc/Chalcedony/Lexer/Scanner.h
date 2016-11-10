@@ -23,6 +23,7 @@ namespace CT
 			virtual ~Scanner();
 
 			virtual Token scan(InputStreamPtr input) override;
+			virtual Token search(InputStreamPtr input) override;
 			virtual void registerToken(CartridgePtr regexProgram, const Token& token) override;
 			virtual bool isDefinedToken(const std::string& token) override;
 		};

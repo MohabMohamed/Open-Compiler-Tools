@@ -11,6 +11,16 @@ std::string InputStream::getString() const
 	return m_input;
 }
 
+std::size_t CT::InputStream::size() const
+{
+	return m_input.size();
+}
+
+u64 CT::InputStream::index() const
+{
+	return m_index;
+}
+
 char InputStream::popLetter()
 {
 	if(m_index >= m_input.size())

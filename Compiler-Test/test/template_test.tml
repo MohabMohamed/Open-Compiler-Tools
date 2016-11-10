@@ -1,0 +1,12 @@
+class {{class_name}}
+{
+private:
+	void init(){
+		CT::Regex::Compiler compiler;
+		{{#rules}}
+		
+		registerToken(compiler.compile({{regex}}), make_token("{{token_tag}}"));
+
+		{{/rules}}
+	}
+};

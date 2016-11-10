@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
 	auto program = parser->parse(scanner, ss);
 	CT::CodeGen::LLKRD compiler_generator;
 	auto generated_code = compiler_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(program));
-	if (generated_code != CT::CodeGen::CodeGenOutput::invalid)
+	/*if (generated_code != CT::CodeGen::CodeGenOutput::invalid)
 	{
 		if(!header_path.empty())
 			CT::write_file(header_path + "/" + generated_code.lexer_h_filename, generated_code.lexer_h);
@@ -123,7 +123,7 @@ int main(int argc, char* argv[]) {
 			CT::write_file(cpp_path + "/" + generated_code.parser_cpp_filename, generated_code.parser_cpp);
 		else
 			CT::write_file(generated_code.parser_cpp_filename, generated_code.parser_cpp);
-	}
+	}*/
 	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
 	return 0;
 }

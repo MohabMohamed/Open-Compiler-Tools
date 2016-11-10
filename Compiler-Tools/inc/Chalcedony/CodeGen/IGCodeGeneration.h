@@ -2,23 +2,24 @@
 #include "Chalcedony/Defines.h"
 #include "Chalcedony/Parser/GParseTree.h"
 #include <ostream>
+#include <sstream>
+#include <memory>
 
 namespace CT
 {
 	namespace CodeGen
 	{
+		struct API OutputModule
+		{
+			std::string filename;
+			std::stringstream header, source;
+		};
+		using OutputModulePtr = std::shared_ptr<OutputModule>;
+
 		struct API CodeGenOutput
 		{
-			std::string lexer_h, lexer_h_filename;
-			std::string lexer_cpp, lexer_cpp_filename;
-			std::string parser_h, parser_h_filename;
-			std::string parser_cpp, parser_cpp_filename;
-
-			const static CodeGenOutput invalid;
+			std::vector<OutputModulePtr> modules;
 		};
-
-		API bool operator==(const CodeGenOutput& a, const CodeGenOutput& b);
-		API bool operator!=(const CodeGenOutput& a, const CodeGenOutput& b);
 
 		class API IGCodeGeneration
 		{
@@ -35,7 +36,7 @@ namespace CT
 
 		class API IGenerator {
 		public:
-			virtual void generate(const std::vector<CT::Parser::GParseNodePtr>&, std::ostream&) = 0;
+			virtual void generate(const std::vector<CT::Parser::GParseNodePtr>&, OutputModule&) = 0;
 		};
 	}
 }

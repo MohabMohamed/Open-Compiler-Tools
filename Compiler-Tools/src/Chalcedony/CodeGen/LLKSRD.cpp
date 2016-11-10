@@ -8,7 +8,7 @@ using namespace CT::Parser;
 CodeGenOutput LLKSRD::generate(GParseNodePtr program)
 {
     if(!program)
-        return CodeGenOutput::invalid;
+        return CodeGenOutput();
     
     //grammar name
     std::string name_directive = "Default";
@@ -94,12 +94,11 @@ CodeGenOutput LLKSRD::generate(GParseNodePtr program)
 		 }
      }
 
-	 std::ofstream of("koko", std::ios::binary);
+	 OutputModule mod;
+	 mod.filename = name_directive + "Lexer";
 
 	 GLexerGenerator lexer_generator;
-	 lexer_generator.generate(program->children, of);
+	 lexer_generator.generate(program->children, mod);
 
-	 of.close();
-
-	 return CodeGenOutput::invalid;
+	 return CodeGenOutput();
 }

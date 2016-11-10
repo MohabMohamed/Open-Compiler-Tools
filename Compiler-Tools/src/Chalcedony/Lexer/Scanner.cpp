@@ -73,6 +73,19 @@ Token Scanner::scan(InputStreamPtr input)
 	return Token::invalid;
 }
 
+Token CT::Lexer::Scanner::search(InputStreamPtr input)
+{
+	auto token = scan(input);
+	while (token == Token::invalid)
+	{
+		auto c = input->popLetter();
+		token = scan(input);
+		if (token == Token::eof)
+			break;
+	}
+	return token;
+}
+
 void Scanner::registerToken(CartridgePtr regexProgram, const Token& token)
 {
 	m_regexPrograms.push_back(std::make_tuple(regexProgram, token));

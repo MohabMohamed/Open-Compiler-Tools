@@ -44,4 +44,8 @@ namespace CT
 		return ltrim(rtrim(s));
 	}
 
+	static inline std::string indent(u32 t) {
+		return std::string(t, '\t');
+	}
+
 }
