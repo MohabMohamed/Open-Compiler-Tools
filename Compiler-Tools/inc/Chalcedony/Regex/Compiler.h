@@ -31,8 +31,8 @@ namespace CT
 			constexpr static s8 RANGE = -5;
 
 
-			std::stack<Cartridge> m_operands;
-			std::stack<s8> m_operators;
+			std::vector<Cartridge> m_operands;
+			std::vector<s8> m_operators;
 
 			//resets the stacks
 			void resetStacks();

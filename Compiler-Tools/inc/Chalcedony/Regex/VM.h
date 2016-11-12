@@ -60,7 +60,7 @@ namespace CT
 			//input stream pointer
 			InputStreamPtr m_input;
 			//threadStack
-			std::stack<Thread> m_threadStack;
+			std::vector<Thread> m_threadStack;
 			//current thread
 			Thread m_currentThread;
 		};

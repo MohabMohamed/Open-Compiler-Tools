@@ -3,12 +3,11 @@
 #include <sstream>
 using namespace CT;
 
+
 void Regex::Compiler::resetStacks()
 {
-	while(!m_operators.empty())
-		m_operators.pop();
-	while(!m_operands.empty())
-		m_operands.pop();
+	m_operators.clear();
+	m_operands.clear();
 }
 
 bool Regex::Compiler::popOperand(Cartridge& block)
@@ -16,8 +15,8 @@ bool Regex::Compiler::popOperand(Cartridge& block)
 	if(m_operands.empty())
 		return false;
 
-	block = m_operands.top();
-	m_operands.pop();
+	block = m_operands.back();
+	m_operands.pop_back();
 	return true;
 }
 
@@ -26,8 +25,8 @@ bool Regex::Compiler::Eval()
 	if(m_operators.empty())
 		return false;
 
-	u8 op = m_operators.top();
-	m_operators.pop();
+	u8 op = m_operators.back();
+	m_operators.pop_back();
 	switch(op)
 	{
 		case CONCAT:
@@ -52,7 +51,7 @@ bool Regex::Compiler::Concat()
 		return false;
 
 	A.appendCode(B);
-	m_operands.push(A);
+	m_operands.push_back(A);
 	return true;
 }
 
@@ -71,7 +70,7 @@ bool Regex::Compiler::Or()
 	result.pushCode<u32>(B.size());
 	result.appendCode(B);
 
-	m_operands.push(result);
+	m_operands.push_back(result);
 	return true;
 }
 
@@ -88,7 +87,7 @@ bool Regex::Compiler::Star()
 	result.appendCode(A);
 	result.pushCode(Instruction::JMP);
 	result.pushCode<u32>((A.size() + 5)*-1);
-	m_operands.push(result);
+	m_operands.push_back(result);
 	
 	return true;
 }
@@ -108,7 +107,7 @@ bool Regex::Compiler::Plus()
 	result.pushCode(Instruction::JMP);
 	result.pushCode<u32>(-1 * (A.size() + 5));
 
-	m_operands.push(result);
+	m_operands.push_back(result);
 	return true;
 }
 
@@ -123,7 +122,7 @@ bool Regex::Compiler::Optional()
 	result.pushCode<u32>(0);
 	result.pushCode<u32>(A.size());
 	result.appendCode(A);
-	m_operands.push(result);
+	m_operands.push_back(result);
 	return true;
 }
 
@@ -148,12 +147,12 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 		if(c == '|' && !ignore && !bracket_ignore)
 		{
 			//check presedence
-			while(!m_operators.empty() && m_operators.top() >= OR)
+			while(!m_operators.empty() && m_operators.back() >= OR)
 				if(!Eval())
 					return nullptr;
 
 			//add or
-			m_operators.push(OR);
+			m_operators.push_back(OR);
 			//don't recommend a concat after or operation
 			recommend_concat = false;
 			ignore = false;
@@ -162,12 +161,12 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 		else if(c == '*' && !ignore && !bracket_ignore)
 		{
 			//check presedence
-			while(!m_operators.empty() && m_operators.top() >= STAR)
+			while(!m_operators.empty() && m_operators.back() >= STAR)
 				if(!Eval())
 					return nullptr;
 
 			//add star
-			m_operators.push(STAR);
+			m_operators.push_back(STAR);
 			//recommend a concat after star operation
 			recommend_concat = true;
 			ignore = false;
@@ -176,12 +175,12 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 		else if(c == '+' && !ignore && !bracket_ignore)
 		{
 			//check presedence
-			while(!m_operators.empty() && m_operators.top() >= PLUS)
+			while(!m_operators.empty() && m_operators.back() >= PLUS)
 				if(!Eval())
 					return nullptr;
 
 			//add plus
-			m_operators.push(PLUS);
+			m_operators.push_back(PLUS);
 			//recommend a concat after plus operation
 			recommend_concat = true;
 			ignore = false;
@@ -190,12 +189,12 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 		else if(c == '?' && !ignore && !bracket_ignore)
 		{
 			//check presedence
-			while(!m_operators.empty() && m_operators.top() >= OPTIONAL)
+			while(!m_operators.empty() && m_operators.back() >= OPTIONAL)
 				if(!Eval())
 					return nullptr;
 
 			//add OPTIONAL
-			m_operators.push(OPTIONAL);
+			m_operators.push_back(OPTIONAL);
 			//recommend a concat after plus operation
 			recommend_concat = true;
 			ignore = false;
@@ -208,11 +207,11 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 			if (enable_concat && recommend_concat)
 			{
 				//check presedence
-				while (!m_operators.empty() && m_operators.top() >= CONCAT)
+				while (!m_operators.empty() && m_operators.back() >= CONCAT)
 					if (!Eval())
 						return nullptr;
 				//add concat
-				m_operators.push(CONCAT);
+				m_operators.push_back(CONCAT);
 				//reset concat recommendation
 				recommend_concat = false;
 			}
@@ -220,11 +219,11 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 			else if (enable_concat == false && recommend_concat)
 			{
 				//check presedence
-				while (!m_operators.empty() && m_operators.top() >= OR)
+				while (!m_operators.empty() && m_operators.back() >= OR)
 					if (!Eval())
 						return nullptr;
 				//add concat
-				m_operators.push(OR);
+				m_operators.push_back(OR);
 				//reset concat recommendation
 				recommend_concat = false;
 			}
@@ -233,7 +232,7 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 			Cartridge block;
 			block.pushCode(Instruction::Match);
 			block.pushCode(Instruction::Any);
-			m_operands.push(block);
+			m_operands.push_back(block);
 			//recommend a concat
 			recommend_concat = true;
 			ignore = false;
@@ -262,11 +261,11 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 			if (enable_concat && recommend_concat)
 			{
 				//check presedence
-				while (!m_operators.empty() && m_operators.top() >= CONCAT)
+				while (!m_operators.empty() && m_operators.back() >= CONCAT)
 					if (!Eval())
 						return nullptr;
 				//add concat
-				m_operators.push(CONCAT);
+				m_operators.push_back(CONCAT);
 				//reset concat recommendation
 				recommend_concat = false;
 
@@ -275,27 +274,27 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 			else if(enable_concat == false && recommend_concat)
 			{
 				//check presedence
-				while (!m_operators.empty() && m_operators.top() >= OR)
+				while (!m_operators.empty() && m_operators.back() >= OR)
 					if (!Eval())
 						return nullptr;
 				//add or
-				m_operators.push(OR);
+				m_operators.push_back(OR);
 				//reset or recommendation
 				recommend_concat = false;
 			}
 
-			m_operators.push(LEFTPARAN);
+			m_operators.push_back(LEFTPARAN);
 			ignore = false;
 		}
 		//check if right paran and not ignore the meta meaning
 		else if(c == ')' && !ignore && !bracket_ignore)
 		{
 			//eval until the left paran
-			while(m_operators.top() != LEFTPARAN)
+			while(m_operators.back() != LEFTPARAN)
 				if(!Eval())
 					return nullptr;
 			//pop the left paran
-			m_operators.pop();
+			m_operators.pop_back();
 			//recommend concat
 			recommend_concat = true;
 			ignore = false;
@@ -308,11 +307,11 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 			if (enable_concat && recommend_concat)
 			{
 				//check presedence
-				while (!m_operators.empty() && m_operators.top() >= CONCAT)
+				while (!m_operators.empty() && m_operators.back() >= CONCAT)
 					if (!Eval())
 						return nullptr;
 				//add concat
-				m_operators.push(CONCAT);
+				m_operators.push_back(CONCAT);
 				//reset concat recommendation
 				recommend_concat = false;
 
@@ -321,11 +320,11 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 			else if (enable_concat == false && recommend_concat)
 			{
 				//check presedence
-				while (!m_operators.empty() && m_operators.top() >= OR)
+				while (!m_operators.empty() && m_operators.back() >= OR)
 					if (!Eval())
 						return nullptr;
 				//add or
-				m_operators.push(OR);
+				m_operators.push_back(OR);
 				//reset or recommendation
 				recommend_concat = false;
 			}
@@ -336,16 +335,16 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 			bracket_ignore_scopes.push(bracket_ignore);
 			bracket_ignore = true;
 			ignore = false;
-			m_operators.push(LEFTBRACKET);
+			m_operators.push_back(LEFTBRACKET);
 		}
 		//check if right bracker and not ignore the meta meaning
 		else if(c == ']' && !ignore)
 		{
 			//eval until the left paran
-			while (m_operators.top() != LEFTBRACKET)
+			while (m_operators.back() != LEFTBRACKET)
 				if (!Eval())
 					return nullptr;
-			m_operators.pop();
+			m_operators.pop_back();
 			//return enable_concat to it's previous state
 			enable_concat = enable_concat_scopes.top();
 			enable_concat_scopes.pop();
@@ -368,11 +367,11 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 			if (enable_concat && recommend_concat)
 			{
 				//check presedence
-				while (!m_operators.empty() && m_operators.top() >= CONCAT)
+				while (!m_operators.empty() && m_operators.back() >= CONCAT)
 					if (!Eval())
 						return nullptr;
 				//add concat
-				m_operators.push(CONCAT);
+				m_operators.push_back(CONCAT);
 				//reset concat recommendation
 				recommend_concat = false;
 			}
@@ -380,11 +379,11 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 			else if(enable_concat == false && recommend_concat)
 			{
 				//check presedence
-				while (!m_operators.empty() && m_operators.top() >= OR)
+				while (!m_operators.empty() && m_operators.back() >= OR)
 					if (!Eval())
 						return nullptr;
 				//add concat
-				m_operators.push(OR);
+				m_operators.push_back(OR);
 				//reset concat recommendation
 				recommend_concat = false;
 			}
@@ -393,7 +392,7 @@ CartridgePtr Regex::Compiler::compile(const std::string& regex)
 			Cartridge block;
 			block.pushCode(Instruction::Match);
 			block.pushCode(c);
-			m_operands.push(block);
+			m_operands.push_back(block);
 			//recommend a concat
 			recommend_concat = true;
 			ignore = false;

@@ -37,7 +37,7 @@ char InputStream::popLetter()
 
 void CT::InputStream::advance(u64 value)
 {
-	while (--value)
+	while (value--)
 		popLetter();
 }
 

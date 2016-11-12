@@ -7,6 +7,8 @@
 #include <memory>
 #include <regex>
 #include <Chalcedony/Chalcedony.h>
+#include <Chalcedony/Fluorine/Renderer.h>
+#include <chrono>
 //#include "CLexer.h"
 //#include "CParser.h"
 
@@ -44,19 +46,57 @@ int main(int argc, char* argv[]) {
 	if (input_filename.empty())
 		input_filename = "test/c_test_02.c";
 
-	CT::Regex::Compiler compiler;
-	auto program = compiler.compile("a?a?a?a?a?a?a?a?a?a?a?a?a?a?a?a?a?a?aaaaaaaaaaaaaaaaaaaaaaaaaaa");
-	//CT::Regex::VM::printProgram(program, std::cout);
-	auto iunput = std::make_shared<CT::InputStream>("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-	CT::StringMarker ss;
-	for (int i = 0; i < 10000; i++)
-	{
-		iunput->reset();
-		CT::Regex::VM vm;
-		ss = vm.exec(program, iunput);
+
+	CT::Fluorine::DataPtr root = std::make_shared<CT::Fluorine::Data>();
+	root->addSingle("namespace_name", "koko");
+	root->addSingle("class_name", "MOKA");
+	
+	CT::Fluorine::DataPtr moka = std::make_shared<CT::Fluorine::Data>();
+	moka->addSingle("name", "Mostafa");
+
+	CT::Fluorine::DataPtr phones = std::make_shared<CT::Fluorine::Data>();
+	phones->addSingle("home", "0");
+	phones->addSingle("work", "1");
+	moka->addMulti("phones", phones);
+
+	root->addMulti("moka", moka);
+
+	moka = std::make_shared<CT::Fluorine::Data>();
+	moka->addSingle("name", "Hani");
+
+	phones = std::make_shared<CT::Fluorine::Data>();
+	phones->addSingle("home", "2");
+	//phones->addSingle("work", "3");
+	moka->addMulti("phones", phones);
+
+	root->addMulti("moka", moka);
+
+	CT::Fluorine::Renderer renderer;
+
+	std::string tem = R"template(
+	#include <iostream>
+	namespace {{namespace_name}} {
+		class {{class_name}} {
+		public:
+			{{class_name}}()
+			{
+				{{#moka}}
+					{{name}}
+					{{class_name}}
+					{{#phones}}
+						{{work}}
+						{{home}}
+					{{/phones}}
+				{{/moka}}
+			}
+		};
 	}
-	std::cout << ss.end << std::endl;
-	return 0;
+	)template";
+
+	auto start = std::chrono::high_resolution_clock::now();
+	std::cout<<renderer.render(tem,root)<<std::endl;
+	auto end = std::chrono::high_resolution_clock::now();
+	std::cout << std::chrono::duration<double>(end - start).count() << std::endl;
 	//test code
 
 	//CT::InputStreamPtr file_input = CT::open_file("grammar/c_en.gr");

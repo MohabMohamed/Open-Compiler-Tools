@@ -9,24 +9,20 @@ using namespace CT;
 VM::VM():m_currentThread(-1,-1)
 {
 	m_status = VMStatus::None;
+	m_threadStack.reserve(256);
 }
 
 VM::~VM()
 {
-	while (!m_threadStack.empty())
-	{
-		m_threadStack.pop();
-	}
+	m_threadStack.clear();
 	m_currentThread = Thread(-1, -1);
 }
 
 void VM::reset()
 {
 	m_status = VMStatus::None;
-	while (!m_threadStack.empty())
-	{
-		m_threadStack.pop();
-	}
+	m_threadStack.clear();
+	m_threadStack.reserve(256);
 	m_currentThread = Thread(-1, -1);
 }
 
@@ -49,13 +45,13 @@ StringMarker VM::exec(CartridgePtr program, InputStreamPtr input)
 	input->pushMarker();
 	
 	Thread main_thread(0, input->index());
-	m_threadStack.push(main_thread);
+	m_threadStack.push_back(main_thread);
 	while (true)
 	{
 		if (m_threadStack.empty())
 			return StringMarker::invalid;
-		m_currentThread = m_threadStack.top();
-		m_threadStack.pop();
+		m_currentThread = m_threadStack.back();
+		m_threadStack.pop_back();
 		m_input->moveToMarkerStart(make_string_marker(m_currentThread.sp, 0, nullptr));
 		m_program->getCodePtr() = m_currentThread.pc;
 
@@ -132,7 +128,7 @@ VMStatus VM::decode(Instruction ins)
 		m_currentThread.pc++;
 		Thread newThread(m_currentThread.pc + y, m_currentThread.sp);
 		m_currentThread.pc += x;
-		m_threadStack.push(newThread);
+		m_threadStack.push_back(newThread);
 		return VMStatus::CodeSuccess;
 	}
 		break;

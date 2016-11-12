@@ -87,13 +87,10 @@ std::string CT::CodeGen::LLKRD::generateLexerCPP(const std::string& lexer_name, 
 {
 	stringstream lexer_cpp;
 	//fill the refereced_rules
-	std::cout << lex_rules.size() << std::endl;
 	for (auto child : lex_rules) {
-		std::cout << child->regex.size() << std::endl;
 		for (auto token : child->regex) {
 			if (token.tag == "lex_id") {
 				m_referencedLexRules.insert(token.literal.getString());
-				std::cout << token.literal.getString() << std::endl;
 			}
 		}
 
