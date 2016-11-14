@@ -33,12 +33,16 @@ namespace CT
             
         private:
             
+			//start program that'll be executed
             std::string m_startProgram;
+			//map of the available programs
             std::map<std::string, CartridgePtr> m_programs;
+			//current loaded program
             CartridgePtr m_loadedCode;
+			//current stack
             StackPtr m_dataStack;
+			//call stack
             std::stack<details::CallStackFrame> m_callStack;
-            s64 m_codePtr;
         };
     }
 }

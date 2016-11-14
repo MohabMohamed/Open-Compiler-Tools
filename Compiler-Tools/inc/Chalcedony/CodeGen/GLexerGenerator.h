@@ -21,6 +21,11 @@ namespace CT
 			void generateCPP(const std::vector<std::shared_ptr<CT::Parser::GLexRule>>& lex_rules,
 				OutputModule& out);
 
+			std::string evalLexRule(std::shared_ptr<CT::Parser::GLexRule> lex_rule,
+				std::map<std::string, std::shared_ptr<CT::Parser::GLexRule>>& lex_rules_map,
+				std::string& output,
+				std::map<std::shared_ptr<CT::Parser::GLexRule>, std::string>& visited);
+
 		public:
 
 			GLexerGenerator(const std::string lexerName = "");

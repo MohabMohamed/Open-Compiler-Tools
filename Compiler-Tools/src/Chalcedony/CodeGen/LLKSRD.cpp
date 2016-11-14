@@ -94,11 +94,13 @@ CodeGenOutput LLKSRD::generate(GParseNodePtr program)
 		 }
      }
 
-	 OutputModule mod;
-	 mod.filename = name_directive + "Lexer";
+	 CodeGenOutput result;
+	 OutputModulePtr mod = std::make_shared<OutputModule>();
+	 mod->filename = name_directive + "Lexer";
 
 	 GLexerGenerator lexer_generator;
-	 lexer_generator.generate(program->children, mod);
+	 lexer_generator.generate(program->children, *mod);
+	 result.modules.push_back(mod);
 
-	 return CodeGenOutput();
+	 return result;
 }

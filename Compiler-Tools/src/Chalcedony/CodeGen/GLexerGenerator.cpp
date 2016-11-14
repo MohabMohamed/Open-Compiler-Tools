@@ -89,6 +89,71 @@ void CT::CodeGen::GLexerGenerator::generateCPP(const std::vector<std::shared_ptr
 	out.source << indent(0) << "}";
 }
 
+std::string CT::CodeGen::GLexerGenerator::evalLexRule(std::shared_ptr<CT::Parser::GLexRule> lex_rule,
+	std::map<std::string, std::shared_ptr<CT::Parser::GLexRule>>& lex_rules_map,
+	std::string & output,
+	std::map<std::shared_ptr<CT::Parser::GLexRule>, std::string>& visited)
+{
+	//if null then return the given output
+	if (!lex_rule)
+		return output;
+
+	//check if visited this rule before
+	auto visited_it = visited.find(lex_rule);
+	if (visited_it != visited.end())
+	{
+		//found the rule
+		//check if it's evaluated before then add it and return
+		if (!(visited_it->second.empty()))
+		{
+			output += visited_it->second;
+			return output;
+		}
+
+		//if didn't find it evaluated but it was visited then it's a cycle
+		CT::Log::log(CT::LOG_LEVEL::ERROR, "you made a cyclic reference if this lex rule " + lex_rule->tokenName.getString(), CT::FilePosition::invalid);
+		return "";
+	}
+
+
+	//set as visited
+	visited[lex_rule] = "";
+
+	std::string local_rule_eval = "(";
+	//loop over regex components
+	for (auto regex_component : lex_rule->regex)
+	{
+		//check if call other lex rules
+		if (regex_component.tag == "lex_id")
+		{
+			//search for the regex rule
+			auto rule_it = lex_rules_map.find(regex_component.literal.getString());
+			if (rule_it != lex_rules_map.end())
+			{
+				//found the rule then eval it
+				evalLexRule(rule_it->second, lex_rules_map, local_rule_eval, visited);
+			}
+			else {
+				//didn't find the rule then that's an error
+				CT::Log::log(CT::LOG_LEVEL::ERROR, "didn't find a lex rule with the name " + regex_component.literal.getString(), CT::FilePosition::invalid);
+				return output;
+			}
+		}
+		//check if regex
+		else if (regex_component.tag == "regex")
+		{
+			//directly add the regex
+			local_rule_eval += regex_component.literal.getString();
+		}
+	}
+	//close it
+	local_rule_eval += ")";
+	//cache the value
+	visited[lex_rule] = local_rule_eval;
+	output += local_rule_eval;
+	return output;
+}
+
 CT::CodeGen::GLexerGenerator::GLexerGenerator(const std::string lexerName)
 {
 	m_lexerName = lexerName;
@@ -117,7 +182,7 @@ void GLexerGenerator::generate(const std::vector<GParseNodePtr>& abstract_lex_ru
 	}
 
 	generateHeader(out);
-
+	generateCPP(lex_rules, out);
 
 	return;
 }

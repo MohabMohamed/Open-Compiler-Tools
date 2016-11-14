@@ -100,8 +100,16 @@ int main(int argc, char* argv[]) {
 	CT::InputStreamPtr ss = CT::open_file(grammar_filename);
 	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GParser>();
 	auto program = parser->parse(scanner, ss);
-	CT::CodeGen::LLKRD compiler_generator;
+	CT::CodeGen::LLKSRD compiler_generator;
 	auto generated_code = compiler_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(program));
+	for (auto module : generated_code.modules)
+	{
+		CT::write_file(header_path + "/" + module->filename + ".h", module->header.str());
+		CT::write_file(cpp_path + "/" + module->filename + ".cpp", module->source.str());
+	}
+
+	//CT::CodeGen::LLKRD compiler_generator;
+	//auto generated_code = compiler_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(program));
 	/*if (generated_code != CT::CodeGen::CodeGenOutput::invalid)
 	{
 		if(!header_path.empty())
