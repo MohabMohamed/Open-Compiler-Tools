@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string>
 #include <sstream>
-#include <Chalcedony/Chalcedony.h>
+#include <OCT/Chalcedony.h>
 
 using namespace std;
 
@@ -96,42 +96,42 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 
-	CT::Lexer::IScannerPtr scanner = std::make_shared<CT::Lexer::GLexer>();
-	CT::InputStreamPtr ss = CT::open_file(grammar_filename);
-	CT::Parser::IParserPtr parser = std::make_shared<CT::Parser::GParser>();
+	OCT::Lexer::IScannerPtr scanner = std::make_shared<OCT::Lexer::GLexer>();
+	OCT::InputStreamPtr ss = OCT::open_file(grammar_filename);
+	OCT::Parser::IParserPtr parser = std::make_shared<OCT::Parser::GParser>();
 	auto program = parser->parse(scanner, ss);
-	CT::CodeGen::LLKSRD compiler_generator;
-	auto generated_code = compiler_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(program));
+	OCT::CodeGen::LLKSRD compiler_generator;
+	auto generated_code = compiler_generator.generate(std::dynamic_pointer_cast<OCT::Parser::GParseNode>(program));
 	for (auto module : generated_code.modules)
 	{
-		CT::write_file(header_path + "/" + module->filename + ".h", module->header.str());
-		CT::write_file(cpp_path + "/" + module->filename + ".cpp", module->source.str());
+		OCT::write_file(header_path + "/" + module->filename + ".h", module->header.str());
+		OCT::write_file(cpp_path + "/" + module->filename + ".cpp", module->source.str());
 	}
 
-	//CT::CodeGen::LLKRD compiler_generator;
-	//auto generated_code = compiler_generator.generate(std::dynamic_pointer_cast<CT::Parser::GParseNode>(program));
-	/*if (generated_code != CT::CodeGen::CodeGenOutput::invalid)
+	//OCT::CodeGen::LLKRD compiler_generator;
+	//auto generated_code = compiler_generator.generate(std::dynamic_pointer_cast<OCT::Parser::GParseNode>(program));
+	/*if (generated_code != OCT::CodeGen::CodeGenOutput::invalid)
 	{
 		if(!header_path.empty())
-			CT::write_file(header_path + "/" + generated_code.lexer_h_filename, generated_code.lexer_h);
+			OCT::write_file(header_path + "/" + generated_code.lexer_h_filename, generated_code.lexer_h);
 		else
-			CT::write_file(generated_code.lexer_h_filename, generated_code.lexer_h);
+			OCT::write_file(generated_code.lexer_h_filename, generated_code.lexer_h);
 
 		if(!cpp_path.empty())
-			CT::write_file(cpp_path + "/" + generated_code.lexer_cpp_filename, generated_code.lexer_cpp);
+			OCT::write_file(cpp_path + "/" + generated_code.lexer_cpp_filename, generated_code.lexer_cpp);
 		else
-			CT::write_file(generated_code.lexer_cpp_filename, generated_code.lexer_cpp);
+			OCT::write_file(generated_code.lexer_cpp_filename, generated_code.lexer_cpp);
 
 		if(!header_path.empty())
-			CT::write_file(header_path + "/" + generated_code.parser_h_filename, generated_code.parser_h);
+			OCT::write_file(header_path + "/" + generated_code.parser_h_filename, generated_code.parser_h);
 		else
-			CT::write_file(generated_code.parser_h_filename, generated_code.parser_h);
+			OCT::write_file(generated_code.parser_h_filename, generated_code.parser_h);
 
 		if(!cpp_path.empty())
-			CT::write_file(cpp_path + "/" + generated_code.parser_cpp_filename, generated_code.parser_cpp);
+			OCT::write_file(cpp_path + "/" + generated_code.parser_cpp_filename, generated_code.parser_cpp);
 		else
-			CT::write_file(generated_code.parser_cpp_filename, generated_code.parser_cpp);
+			OCT::write_file(generated_code.parser_cpp_filename, generated_code.parser_cpp);
 	}*/
-	std::cout << CT::Log::filterLog(CT::LOG_LEVEL::ERROR) << std::endl;
+	std::cout << OCT::Log::filterLog(OCT::LOG_LEVEL::ERROR) << std::endl;
 	return 0;
 }
