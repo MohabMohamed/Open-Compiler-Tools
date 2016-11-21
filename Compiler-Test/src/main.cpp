@@ -48,7 +48,6 @@ int main(int argc, char* argv[]) {
 
 
 	//test code
-	//test code
 
 	//OCT::InputStreamPtr file_input = OCT::open_file("grammar/c_en.gr");
 	//auto grammar_scanner = std::make_shared<OCT::Lexer::GLexer>();
