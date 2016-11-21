@@ -10,6 +10,8 @@
 **/*.vcxproj.filters
 dist-bin
 **/obj
+**/.vscode
+**/*.sublime-workspace
 
 # User-specific files
 *.suo
