@@ -2,11 +2,11 @@
 using namespace OCT;
 using namespace OCT::CodeGen;
 
-std::unordered_map<OCT::u64, std::string> Store::m_lexRules;
-std::unordered_map<OCT::u64, std::string> Store::m_parseRules;
-OCT::u64 Store::m_counter = 0;
+std::unordered_map<OCT::u32, std::string> Store::m_lexRules;
+std::unordered_map<OCT::u32, std::string> Store::m_parseRules;
+OCT::u32 Store::m_counter = 0;
 
-OCT::u64 Store::addLexRule(const std::string& name)
+OCT::u32 Store::addLexRule(const std::string& name)
 {
 	m_counter++;
 	auto id = m_counter | BitPattern_LexRule;
@@ -14,7 +14,7 @@ OCT::u64 Store::addLexRule(const std::string& name)
 	return id;
 }
 
-std::string Store::getLexRuleName(u64 id)
+std::string Store::getLexRuleName(u32 id)
 {
 	auto lex_rule_it = m_lexRules.find(id);
 	if(lex_rule_it == m_lexRules.end())
@@ -24,7 +24,7 @@ std::string Store::getLexRuleName(u64 id)
 	return "";
 }
 
-OCT::u64 Store::findLexRuleID(const std::string& name)
+OCT::u32 Store::findLexRuleID(const std::string& name)
 {
 	for(const auto& lex_rule: m_lexRules)
 	{
@@ -34,7 +34,7 @@ OCT::u64 Store::findLexRuleID(const std::string& name)
 	return 0;
 }
 
-OCT::u64 Store::addParseRule(const std::string& name)
+OCT::u32 Store::addParseRule(const std::string& name)
 {
 	m_counter++;
 	auto id = m_counter | BitPattern_ParseRule;
@@ -42,7 +42,7 @@ OCT::u64 Store::addParseRule(const std::string& name)
 	return id;
 }
 
-std::string Store::getParseRuleName(u64 id)
+std::string Store::getParseRuleName(u32 id)
 {
 	auto parse_rule_it = m_parseRules.find(id);
 	if(parse_rule_it != m_parseRules.end())
@@ -52,7 +52,7 @@ std::string Store::getParseRuleName(u64 id)
 	return "";
 }
 
-OCT::u64 Store::findParseRuleID(const std::string& name)
+OCT::u32 Store::findParseRuleID(const std::string& name)
 {
 	for(const auto& parse_rule: m_parseRules)
 	{
@@ -62,7 +62,7 @@ OCT::u64 Store::findParseRuleID(const std::string& name)
 	return 0;
 }
 
-void Store::listLexRules(std::vector<std::tuple<OCT::u64, std::string>>& rules)
+void Store::listLexRules(std::vector<std::tuple<OCT::u32, std::string>>& rules)
 {
 	rules.reserve(m_lexRules.size());
 	for(const auto& lex_rule: m_lexRules)
@@ -71,7 +71,7 @@ void Store::listLexRules(std::vector<std::tuple<OCT::u64, std::string>>& rules)
 	}
 }
 
-void Store::listParseRules(std::vector<std::tuple<u64, std::string>>& rules)
+void Store::listParseRules(std::vector<std::tuple<u32, std::string>>& rules)
 {
 	rules.reserve(m_parseRules.size());
 	for(const auto& parse_rule: m_parseRules)

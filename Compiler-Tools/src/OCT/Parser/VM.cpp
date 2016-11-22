@@ -57,7 +57,7 @@ IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 	//add the main thread to the callstack
 	details::CallStackFrame main_frame;
 	main_frame.code = m_loadedCode;
-	main_frame.codePtr = m_loadedCode->getCodePtr();
+	main_frame.codePtr = m_loadedCode->codePtr;
 	m_callStack.push(main_frame);
 
 	//execute until the program die
@@ -74,7 +74,7 @@ IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 
 		//sets the program to the current call stack frame
 		m_loadedCode = current_frame.code;
-		m_loadedCode.getCodePtr() = current_frame.codePtr;
+		m_loadedCode->codePtr = current_frame.codePtr;
 
 		//execute until the end of program code
 		//program execution loop
@@ -125,5 +125,46 @@ IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 
 VMStatus VM::decode(Parser::Instruction ins)
 {
-	return VMStatus::CodeFail; 
+	switch(ins)
+	{
+
+		case Parser::Instruction::Match:
+		{
+			//get the token
+			auto token = m_scanner->scan(m_input);
+			auto match_token_id = m_loadedCode->popCode<OCT::u32>();
+			//compare the two ids
+		}
+		break;
+
+		case Parser::Instruction::Call:
+		{
+		}
+		break;
+
+		case Parser::Instruction::Split:
+		{
+
+		}
+		break;
+
+		case Parser::Instruction::JMP:
+		{
+			//get the jmp offset 
+			auto offset = m_loadedCode->popCode<OCT::s32>();
+			//perform the jmp
+			m_loadedCode->codePtr += offset;
+			return VMStatus::CodeSuccess;
+		}
+
+		//halt the thread
+		case Parser::Instruction::Halt:
+		return VMStatus::Halt;
+		
+		default:
+		break;
+	}
+
+	//decode didn't decide
+	return VMStatus::None;
 }

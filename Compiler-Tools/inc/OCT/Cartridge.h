@@ -73,7 +73,12 @@ namespace OCT
         {
             if(m_codePtr < m_code.size())
             {
-                return static_cast<dataType>(m_code[m_codePtr++]);
+                auto raw_data = m_code[m_codePtr++];
+                if(isConst(raw_data))
+                {
+                    return static_cast<dataType>(raw_data);
+                }
+                throw std::logical_error("[Cartridge::popCode]: code data is not a constant");
             }
             throw std::out_of_range("[Cartridge::popCode]: codePtr out of range");
         }
@@ -118,11 +123,9 @@ namespace OCT
 
 		CodeType& getCode();
 
-		s64& getCodePtr();
-
+        OCT::s64 codePtr;
     private:
         CodeType m_code;
-        OCT::s64 m_codePtr;
     };
 
     using CartridgePtr = std::shared_ptr<Cartridge>;

@@ -76,8 +76,3 @@ OCT::Cartridge::CodeType & OCT::Cartridge::getCode()
 {
 	return m_code;
 }
-
-s64 & OCT::Cartridge::getCodePtr()
-{
-	return m_codePtr;
-}

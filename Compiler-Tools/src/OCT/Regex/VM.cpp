@@ -53,7 +53,7 @@ StringMarker VM::exec(CartridgePtr program, InputStreamPtr input)
 		m_currentThread = m_threadStack.back();
 		m_threadStack.pop_back();
 		m_input->moveToMarkerStart(make_string_marker(m_currentThread.sp, 0, nullptr));
-		m_program->getCodePtr() = m_currentThread.pc;
+		m_program->codePtr = m_currentThread.pc;
 
 		while (true)
 		{
@@ -115,7 +115,7 @@ VMStatus VM::decode(Instruction ins)
 	{
 		auto offset = m_program->popCode<s32>();
 		m_currentThread.pc++;
-		m_program->getCodePtr() += offset;
+		m_program->codePtr += offset;
 		m_currentThread.pc += offset;
 		return VMStatus::CodeSuccess;
 	}
@@ -173,7 +173,7 @@ void VM::printProgram(CartridgePtr program, std::ostream& out)
 	if(program->getCode().empty())
 		return;
 
-	auto saved_codePtr = program->getCodePtr();
+	auto saved_codePtr = program->codePtr;
 	program->reset();
 
 	s32 width = std::to_string(program->size()).size();
