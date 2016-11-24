@@ -22,6 +22,10 @@ namespace OCT
 			virtual Token scan(InputStreamPtr input) override;
 			virtual Token rewindToken();
 
+			u64 getIndex();
+			void move(s64 offset);
+			void moveTo(u64 index);
+
 			void clear();
 		};
 		using CachedScannerPtr = std::shared_ptr<CachedScanner>;

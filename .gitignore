@@ -12,6 +12,9 @@ dist-bin
 **/obj
 **/.vscode
 **/*.sublime-workspace
+**/bin/
+**/build/
+**/Makefile
 
 # User-specific files
 *.suo

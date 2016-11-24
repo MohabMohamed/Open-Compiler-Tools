@@ -2,6 +2,7 @@
 #include "OCT/Utilities.h"
 #include <cereal/cereal.hpp>
 #include <cereal/archives/binary.hpp>
+#include <iostream>
 
 using namespace OCT;
 using namespace OCT::CodeGen;
@@ -10,8 +11,8 @@ using namespace OCT::Parser;
 void OCT::CodeGen::GLexerGenerator::generateHeader(OutputModule & out)
 {
 	out.header << indent(0) << "#pragma once\n";
-	out.header << indent(0) << "#include <Chalcedony/Defines.h>\n";
-	out.header << indent(0) << "#include <Chalcedony/Lexer/CachedScanner.h>\n";
+	out.header << indent(0) << "#include <OCT/Defines.h>\n";
+	out.header << indent(0) << "#include <OCT/Lexer/CachedScanner.h>\n";
 	out.header << indent(0) << "namespace " << m_lexerName << "\n{\n";
 	out.header << indent(1) << "class " << m_lexerName << "Lexer: public OCT::Lexer::CachedScanner \n{\n";
 	out.header << indent(1) << "protected:\n";
@@ -40,11 +41,11 @@ void OCT::CodeGen::GLexerGenerator::generateCPP(const std::vector<std::shared_pt
 		lex_rules_map.emplace(child->tokenName.getString(), child);
 
 	out.source << indent(0) << "#include \"" << m_lexerName << "Lexer.h\"\n";
-	out.source << indent(0) << "#include <Chalcedony/Regex/Compiler.h>\n";
-	out.source << indent(0) << "#include <Chalcedony/Regex/Program.h>\n";
-	out.source << indent(0) << "#include <Chalcedony/InputStream.h>\n";
-	out.source << indent(0) << "#include <Chalcedony/Utilities.h>\n";
-	out.source << indent(0) << "#include <Chalcedony/Lexer/Token.h>\n";
+	out.source << indent(0) << "#include <OCT/Regex/Compiler.h>\n";
+	out.source << indent(0) << "#include <OCT/Cartridge.h>\n";
+	out.source << indent(0) << "#include <OCT/InputStream.h>\n";
+	out.source << indent(0) << "#include <OCT/Utilities.h>\n";
+	out.source << indent(0) << "#include <OCT/Lexer/Token.h>\n";
 	out.source << indent(0) << "using namespace std;\n";
 	out.source << indent(0) << "using namespace OCT;\n";
 	out.source << indent(0) << "using namespace OCT::Lexer;\n";
@@ -142,6 +143,9 @@ std::string OCT::CodeGen::GLexerGenerator::evalLexRule(std::shared_ptr<OCT::Pars
 		else if (regex_component.tag == "regex")
 		{
 			//directly add the regex
+			local_rule_eval += regex_component.literal.getString();
+		}else if (regex_component.tag == "regex_op" || regex_component.tag == "or")
+		{
 			local_rule_eval += regex_component.literal.getString();
 		}
 	}

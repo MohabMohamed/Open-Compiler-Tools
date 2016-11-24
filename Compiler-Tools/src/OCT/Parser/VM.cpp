@@ -1,4 +1,6 @@
 #include "OCT/Parser/VM.h"
+#include <iostream>
+#include <iomanip>
 using namespace OCT;
 using namespace OCT::Parser;
 
@@ -42,13 +44,33 @@ CartridgePtr VM::findProgram(const std::string& name)
 	return nullptr;
 }
 
+bool VM::call(const std::string& name)
+{
+	auto program = findProgram(name);
+	if(!program)
+		return false;
+	
+	details::CallStackFrame call_frame;
+	call_frame.code = m_loadedCode;
+	call_frame.codePtr = m_loadedCode->codePtr;
+	m_callStack.push(call_frame);
+
+	m_loadedCode = program;
+	program->reset();
+	return true;
+}
+
 IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 {
+	m_callRegister = CallStatus::None;
+
 	IParserPtr parse_tree = nullptr;
 	
 	//assign the member objects
 	m_scanner = scanner;
 	m_input = input;
+
+	auto cached_scanner = std::dynamic_pointer_cast<Lexer::CachedScanner>(m_scanner);
 
 	//reset the VM and load the start program
 	reset();
@@ -76,6 +98,8 @@ IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 		m_loadedCode = current_frame.code;
 		m_loadedCode->codePtr = current_frame.codePtr;
 
+		auto scanner_position = cached_scanner->getIndex();
+
 		//execute until the end of program code
 		//program execution loop
 		while(true)
@@ -85,10 +109,9 @@ IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 			//fetch
 			auto ins = m_loadedCode->popCode<Parser::Instruction>();
 
-			//decode
+			//decode & execute
 			auto result = decode(ins);
 
-			//execute
 			switch(result)
 			{
 			case OCT::Parser::VMStatus::None:
@@ -104,6 +127,8 @@ IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 				break;
 			case OCT::Parser::VMStatus::Halt:
 				//this thing done success
+				std::cout<<"halt"<<std::endl;
+				m_callRegister = CallStatus::Success;
 				return nullptr;
 			default:
 				kill_thread = true;
@@ -111,7 +136,12 @@ IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 			}
 
 			if(kill_thread)
+			{
+				//before killing the thread we must rewind the scanner to reparse this input
+				cached_scanner->moveTo(scanner_position);
+				m_callRegister = CallStatus::Fail;
 				break;
+			}
 		}
 
 	}
@@ -132,19 +162,41 @@ VMStatus VM::decode(Parser::Instruction ins)
 		{
 			//get the token
 			auto token = m_scanner->scan(m_input);
-			auto match_token_id = m_loadedCode->popCode<OCT::u32>();
+			auto match_token_id = m_store.findLexRuleID(token.tag);
+			auto code_token_id = m_loadedCode->popCode<OCT::u32>();
 			//compare the two ids
+			if(match_token_id == code_token_id)
+				return VMStatus::CodeSuccess;
+			return VMStatus::CodeFail;
 		}
-		break;
 
 		case Parser::Instruction::Call:
 		{
+			//getting program id from code
+			auto program_id = m_loadedCode->popCode<OCT::u32>();
+			auto program_name = m_store.getParseRuleName(program_id);
+			//performing the call
+			auto result = call(program_name);
+			if(result)
+				return VMStatus::CodeSuccess;
+			return VMStatus::CodeFail;
 		}
 		break;
 
 		case Parser::Instruction::Split:
 		{
+			//get the offsets
+			auto first_offset = m_loadedCode->popCode<OCT::s32>();
+			auto second_offset = m_loadedCode->popCode<OCT::s32>();
 
+			//call stack frame input
+			details::CallStackFrame call_frame;
+			call_frame.code = m_loadedCode;
+			call_frame.codePtr = m_loadedCode->codePtr + second_offset;
+			m_callStack.push(call_frame);
+
+			//jmp to the first offset
+			m_loadedCode->codePtr += first_offset;
 		}
 		break;
 
@@ -156,15 +208,84 @@ VMStatus VM::decode(Parser::Instruction ins)
 			m_loadedCode->codePtr += offset;
 			return VMStatus::CodeSuccess;
 		}
+		case Parser::Instruction::JSCR:
+		{
+			auto offset = m_loadedCode->popCode<OCT::s32>();
+			if(m_callRegister == CallStatus::Success)
+				m_loadedCode->codePtr += offset;
+			return VMStatus::CodeSuccess;
+		}
+		case Parser::Instruction::JFCR:
+		{
+			auto offset = m_loadedCode->popCode<OCT::s32>();
+			if(m_callRegister == CallStatus::Fail)
+				m_loadedCode->codePtr += offset;
+			return VMStatus::CodeSuccess;
+		}
 
 		//halt the thread
 		case Parser::Instruction::Halt:
 		return VMStatus::Halt;
 		
+		case Parser::Instruction::HFail:
+		m_callRegister = CallStatus::Fail;
+		return VMStatus::CodeFail;
+
 		default:
 		break;
 	}
 
 	//decode didn't decide
 	return VMStatus::None;
+}
+
+void VM::printProgram(CartridgePtr program, std::ostream& out)
+{
+	for(u64 i=0;i<program->size();i++)
+	{
+		auto rawIns = program->popRawIns();
+		if (isInstruction(rawIns))
+		{
+			auto ins = static_cast<Instruction>(rawIns);
+			switch (ins)
+			{
+			case Instruction::None:
+				out << std::setfill('0') << std::setw(3) << i << ": None" << std::endl;
+				break;
+			case Instruction::Match:
+				out << std::setfill('0') << std::setw(3) << i << ": Match" << std::endl;
+				break;
+			case Instruction::Call:
+				out << std::setfill('0') << std::setw(3) << i << ": Call" << std::endl;
+				break;
+			case Instruction::Any:
+				out << std::setfill('0') << std::setw(3) << i << ": Any" << std::endl;
+				break;
+			case Instruction::Split:
+				out << std::setfill('0') << std::setw(3) << i << ": Split" << std::endl;
+				break;
+			case Instruction::JMP:
+				out << std::setfill('0') << std::setw(3) << i << ": JMP" << std::endl;
+				break;
+			case Instruction::Halt:
+				out << std::setfill('0') << std::setw(3) << i << ": Halt" << std::endl;
+				break;
+			case Instruction::JSCR:
+				out << std::setfill('0') << std::setw(3) << i << ": JSCR" << std::endl;
+				break;
+			case Instruction::JFCR:
+				out << std::setfill('0') << std::setw(3) << i << ": JFCR" << std::endl;
+				break;
+			case Instruction::HFail:
+				out << std::setfill('0') << std::setw(3) << i << ": HFail" << std::endl;
+				break;
+			default:
+				out << std::setfill('0') << std::setw(3) << i << ": Unidentified instruction" << std::endl;
+				break;
+			}
+		}else if(isConst(rawIns))
+		{
+			out << std::setfill('0') << std::setw(3) << i << ": Const[0x" << std::hex << static_cast<u32>(rawIns) << "]" << std::endl;
+		}
+	}
 }

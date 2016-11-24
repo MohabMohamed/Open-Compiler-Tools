@@ -9,6 +9,7 @@
 #include <OCT/Chalcedony.h>
 #include <OCT/Fluorine/Renderer.h>
 #include <chrono>
+#include "digitListLexer.h"
 //#include "CLexer.h"
 //#include "CParser.h"
 
@@ -46,16 +47,26 @@ int main(int argc, char* argv[]) {
 	if (input_filename.empty())
 		input_filename = "test/c_test_02.c";
 
+	
+	//test VM Parser
+	//OCT::InputStreamPtr file_input = OCT::open_file("test/list_test01.list");
+	//std::shared_ptr<digitList::digitListLexer> scanner = std::make_shared<digitList::digitListLexer>();
+	//auto token = scanner->scan(file_input);
+	//while(token != OCT::Lexer::Token::invalid && token != OCT::Lexer::Token::eof)
+	//{
+	//	std::cout << token.tag << "<" << token.literal.getString() << ">" << std::endl;
+	//	token = scanner->scan(file_input);
+	//}
 
 	//test code
 
-	//OCT::InputStreamPtr file_input = OCT::open_file("grammar/c_en.gr");
-	//auto grammar_scanner = std::make_shared<OCT::Lexer::GLexer>();
-	//OCT::Parser::GParser grammar_parser;
-	//auto koko = grammar_parser.parse(grammar_scanner, file_input);
-	//OCT::CodeGen::LLKSRD code_generator;
-	//code_generator.generate(std::dynamic_pointer_cast<OCT::Parser::GParseNode>(koko));
-	//std::cout << OCT::Log::filterLog(OCT::LOG_LEVEL::ERROR) << std::endl;
+	OCT::InputStreamPtr file_input = OCT::open_file("grammar/digit_list.gr");
+	auto grammar_scanner = std::make_shared<OCT::Lexer::GLexer>();
+	OCT::Parser::GParser grammar_parser;
+	auto koko = grammar_parser.parse(grammar_scanner, file_input);
+	OCT::CodeGen::LLKSRD code_generator;
+	code_generator.generate(std::dynamic_pointer_cast<OCT::Parser::GParseNode>(koko));
+	std::cout << OCT::Log::filterLog(OCT::LOG_LEVEL::ERROR) << std::endl;
 	//test grammar
 
 	//OCT::InputStreamPtr file_input = OCT::open_file("grammar/c.gr");

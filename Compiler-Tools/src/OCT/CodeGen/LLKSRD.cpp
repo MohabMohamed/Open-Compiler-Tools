@@ -1,6 +1,7 @@
 #include "OCT/CodeGen/LLKSRD.h"
 #include "OCT/CodeGen/GLexerGenerator.h"
 #include "OCT/CodeGen/GStoreRegistration.h"
+#include "OCT/CodeGen/GParserGenerator.h"
 #include <fstream>
 using namespace OCT;
 using namespace OCT::CodeGen;
@@ -106,9 +107,18 @@ CodeGenOutput LLKSRD::generate(GParseNodePtr program)
 	 mod->filename = name_directive + "Lexer";
 
 	 //generate the lexer
-	 GLexerGenerator lexer_generator;
+	 GLexerGenerator lexer_generator(name_directive);
 	 lexer_generator.generate(program->children, *mod);
 	 //add the module to the result
+	 result.modules.push_back(mod);
+
+	 mod = std::make_shared<OutputModule>();
+	 mod->filename = name_directive + "Parser";
+
+	 //generate the parser program
+	 GParserGenerator parser_generator;
+	 parser_generator.generate(program->children, *mod);
+
 	 result.modules.push_back(mod);
 
 	 return result;

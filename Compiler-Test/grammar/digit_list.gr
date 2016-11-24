@@ -1,0 +1,28 @@
+#name digitList;
+
+skip Newline  		:= "\n";
+skip CarrReturn 	:= "\r";
+skip Space 			:= " ";
+skip Tab 			:= "\t";
+skip VerticalSpace 	:= "\v";
+skip FThing 		:= "\f";
+
+OpenBrace			:= "{";
+CloseBrace 			:= "}";
+Comma 				:= ",";
+
+
+Digit 				:= Real | Int;
+Int 				:= "[0-9]+";
+Real 				:= "[0-9]*\\.[0-9]+";
+
+
+list 		:= OpenBrace elements CloseBrace;
+
+elements 	:= element Comma elements
+			| element
+			;
+
+element 	:= Digit;
+
+ct_start 	:= list;

@@ -17,7 +17,7 @@ project "Compiler-Test"
 
 	links {"Compiler-Tools"}
 
-	configuration {"linux", "gmake"}
+	configuration {"gmake", "linux"}
 		buildoptions{"-std=c++11"}
 
 	filter "configurations:DebugShared"
@@ -54,7 +54,7 @@ project "Chalcedony"
 
 	links {"Compiler-Tools"}
 
-	configuration {"linux", "gmake"}
+	configuration {"gmake", "linux"}
 		buildoptions{"-std=c++11"}
 
 	filter "configurations:DebugShared"
@@ -89,7 +89,7 @@ project "Compiler-Tools"
 
 	includedirs {"Compiler-Tools/inc/", "deps/cereal-1.2.1/include/"}
 
-	configuration {"linux", "gmake"}
+	configuration {"gmake", "linux"}
 		buildoptions{"-std=c++11"}
 
 	filter "configurations:DebugShared"

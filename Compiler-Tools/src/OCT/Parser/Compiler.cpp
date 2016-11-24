@@ -5,7 +5,56 @@ using namespace OCT::Parser;
 
 void OCT::Parser::Compiler::generateRuleByteCode(std::shared_ptr<OCT::Parser::GParseRulesTreeNode> rule_tree_node, CartridgePtr cartridge)
 {
-	//do nothing
+	//check if rule is null
+	if(!rule_tree_node)
+		return;
+
+	//check if root or normal
+	if(rule_tree_node->isRoot)
+	{
+		//this is root node just iterate over children and generate code
+		for(auto child: rule_tree_node->next)
+		{
+			//generate the rule body for this child
+			generateRuleByteCode(child, cartridge);
+		}
+
+		//halt the program
+		cartridge->pushCode(Parser::Instruction::Halt);
+	}
+	else
+	{
+		//check if the node is lex token
+		if(rule_tree_node->token.tag == "lex_id")
+		{
+			if (!rule_tree_node->next.empty())
+			{
+				cartridge->pushCode(Parser::Instruction::Split);
+				cartridge->pushCode(1);
+				cartridge->pushCode(2);
+			}
+			cartridge->pushCode(Parser::Instruction::Match);
+			cartridge->pushCode(m_store.findLexRuleID(rule_tree_node->token.literal.getString()));
+		}
+		//check if the node is parse node
+		else if(rule_tree_node->token.tag == "parse_id")
+		{
+			if (!rule_tree_node->next.empty())
+			{
+				cartridge->pushCode(Parser::Instruction::Split);
+				cartridge->pushCode(1);
+				cartridge->pushCode(2);
+			}
+			cartridge->pushCode(Parser::Instruction::Call);
+			cartridge->pushCode(m_store.findParseRuleID(rule_tree_node->token.literal.getString()));
+		}
+
+		//generate code for children tree nodes
+		for(auto child: rule_tree_node->next)
+		{
+			generateRuleByteCode(child, cartridge);
+		}
+	}
 }
 
 CartridgePtr OCT::Parser::Compiler::compile(std::shared_ptr<OCT::Parser::GParseRulesTreeNode> rule_tree_node)

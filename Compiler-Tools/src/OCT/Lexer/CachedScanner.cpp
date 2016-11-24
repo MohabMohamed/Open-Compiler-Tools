@@ -1,5 +1,4 @@
 #include "OCT/Lexer/CachedScanner.h"
-#include <iostream>
 using namespace OCT::Lexer;
 
 bool OCT::Lexer::CachedScanner::hasCachedTokens()
@@ -25,7 +24,6 @@ Token OCT::Lexer::CachedScanner::scan(InputStreamPtr input)
 	if (!hasCachedTokens())
 	{
 		auto token = Scanner::scan(input);
-		std::cout << token.tag << "<" << token.literal.getString() << ">" << std::endl;
 		m_cache.push_back(token);
 		m_index = m_cache.size();
 		return token;
@@ -49,4 +47,19 @@ void OCT::Lexer::CachedScanner::clear()
 {
 	m_cache.clear();
 	m_index = m_cache.size();
+}
+
+OCT::u64 OCT::Lexer::CachedScanner::getIndex()
+{
+	return m_index;
+}
+
+void OCT::Lexer::CachedScanner::move(OCT::s64 offset)
+{
+	m_index -= offset;
+}
+
+void OCT::Lexer::CachedScanner::moveTo(OCT::u64 index)
+{
+	m_index = index;
 }

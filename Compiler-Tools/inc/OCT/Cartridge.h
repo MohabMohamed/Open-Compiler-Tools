@@ -71,14 +71,14 @@ namespace OCT
         template<typename dataType>
         dataType popCode()
         {
-            if(m_codePtr < m_code.size())
+            if(this->codePtr < m_code.size())
             {
-                auto raw_data = m_code[m_codePtr++];
+                auto raw_data = m_code[this->codePtr++];
                 if(isConst(raw_data))
                 {
                     return static_cast<dataType>(raw_data);
                 }
-                throw std::logical_error("[Cartridge::popCode]: code data is not a constant");
+                throw std::logic_error("[Cartridge::popCode]: code data is not a constant");
             }
             throw std::out_of_range("[Cartridge::popCode]: codePtr out of range");
         }
@@ -86,9 +86,9 @@ namespace OCT
         template<>
 		OCT::Regex::Instruction popCode<OCT::Regex::Instruction>()
         {
-            if(m_codePtr < m_code.size())
+            if(this->codePtr < m_code.size())
             {
-                auto value =  static_cast<u64>(m_code[m_codePtr++]);
+                auto value =  static_cast<u64>(m_code[this->codePtr++]);
                 if(isInstruction(value))
                 {
                     return static_cast<OCT::Regex::Instruction>(value);
@@ -101,9 +101,9 @@ namespace OCT
         template<>
 		OCT::Parser::Instruction popCode<OCT::Parser::Instruction>()
         {
-            if(m_codePtr < m_code.size())
+            if(this->codePtr < m_code.size())
             {
-                auto value =  static_cast<u64>(m_code[m_codePtr++]);
+                auto value =  static_cast<u64>(m_code[this->codePtr++]);
                 if(isInstruction(value))
                 {
                     return static_cast<OCT::Parser::Instruction>(value);
