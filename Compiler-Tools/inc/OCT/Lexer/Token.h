@@ -17,6 +17,7 @@ namespace OCT
 		struct API Token;
 
 		API Token eof_token();
+		API Token skip_token();
 		API Token invalid_token();
 		API bool operator==(const Token& a, const Token& b);
 		API bool operator!=(const Token& a, const Token& b);

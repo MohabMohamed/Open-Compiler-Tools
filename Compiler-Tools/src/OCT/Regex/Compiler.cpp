@@ -3,6 +3,16 @@
 #include <sstream>
 using namespace OCT;
 
+constexpr s8 OCT::Regex::Compiler::OR;
+constexpr s8 OCT::Regex::Compiler::CONCAT;
+constexpr s8 OCT::Regex::Compiler::PLUS;
+constexpr s8 OCT::Regex::Compiler::STAR;
+constexpr s8 OCT::Regex::Compiler::OPTIONAL;
+constexpr s8 OCT::Regex::Compiler::LEFTPARAN;
+constexpr s8 OCT::Regex::Compiler::RIGHTPARAN;
+constexpr s8 OCT::Regex::Compiler::LEFTBRACKET;
+constexpr s8 OCT::Regex::Compiler::RIGHTBRACKET;
+constexpr s8 OCT::Regex::Compiler::RANGE;
 
 void Regex::Compiler::resetStacks()
 {

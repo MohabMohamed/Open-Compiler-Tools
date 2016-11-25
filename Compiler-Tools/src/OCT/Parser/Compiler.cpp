@@ -27,26 +27,22 @@ void OCT::Parser::Compiler::generateRuleByteCode(std::shared_ptr<OCT::Parser::GP
 		//check if the node is lex token
 		if(rule_tree_node->token.tag == "lex_id")
 		{
-			if (!rule_tree_node->next.empty())
-			{
-				cartridge->pushCode(Parser::Instruction::Split);
-				cartridge->pushCode(1);
-				cartridge->pushCode(2);
-			}
 			cartridge->pushCode(Parser::Instruction::Match);
 			cartridge->pushCode(m_store.findLexRuleID(rule_tree_node->token.literal.getString()));
 		}
 		//check if the node is parse node
 		else if(rule_tree_node->token.tag == "parse_id")
 		{
-			if (!rule_tree_node->next.empty())
-			{
-				cartridge->pushCode(Parser::Instruction::Split);
-				cartridge->pushCode(1);
-				cartridge->pushCode(2);
-			}
 			cartridge->pushCode(Parser::Instruction::Call);
 			cartridge->pushCode(m_store.findParseRuleID(rule_tree_node->token.literal.getString()));
+		}
+
+		if(rule_tree_node->isLeaf && !rule_tree_node->next.empty())
+		{
+			cartridge->pushCode(Parser::Instruction::Split);
+			cartridge->pushCode(2);
+			cartridge->pushCode(1);
+			cartridge->pushCode(Parser::Instruction::Halt);
 		}
 
 		//generate code for children tree nodes

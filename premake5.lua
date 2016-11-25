@@ -17,12 +17,12 @@ project "Compiler-Test"
 
 	links {"Compiler-Tools"}
 
-	configuration {"gmake", "linux"}
+	filter "action:gmake"
 		buildoptions{"-std=c++11"}
 
 	filter "configurations:DebugShared"
 		defines {"DEBUG"}
-		flags {"Symbols"}
+		symbols "On"
 
 	filter "configurations:ReleaseShared"
 		defines {"NDEBUG"}
@@ -30,7 +30,7 @@ project "Compiler-Test"
 
 	filter "configurations:DebugStatic"
 		defines {"DEBUG", "STATIC_LIB"}
-		flags {"Symbols"}
+		symbols "On"
 
 	filter "configurations:ReleaseStatic"
 		defines {"NDEBUG", "STATIC_LIB"}
@@ -54,12 +54,12 @@ project "Chalcedony"
 
 	links {"Compiler-Tools"}
 
-	configuration {"gmake", "linux"}
+	filter "action:gmake"
 		buildoptions{"-std=c++11"}
 
 	filter "configurations:DebugShared"
 		defines {"DEBUG"}
-		flags {"Symbols"}
+		symbols "On"
 
 	filter "configurations:ReleaseShared"
 		defines {"NDEBUG"}
@@ -67,7 +67,7 @@ project "Chalcedony"
 
 	filter "configurations:DebugStatic"
 		defines {"DEBUG", "STATIC_LIB"}
-		flags {"Symbols"}
+		symbols "On"
 
 	filter "configurations:ReleaseStatic"
 		defines {"NDEBUG", "STATIC_LIB"}
@@ -89,13 +89,13 @@ project "Compiler-Tools"
 
 	includedirs {"Compiler-Tools/inc/", "deps/cereal-1.2.1/include/"}
 
-	configuration {"gmake", "linux"}
+	filter "action:gmake"
 		buildoptions{"-std=c++11"}
 
 	filter "configurations:DebugShared"
 		kind "SharedLib"
 		defines {"DEBUG", "COMPILE_DYNAMIC_LIB"}
-		flags {"Symbols"}
+		symbols "On"
 
 	filter "configurations:ReleaseShared"
 		kind "SharedLib"
@@ -105,7 +105,7 @@ project "Compiler-Tools"
 	filter "configurations:DebugStatic"
 		kind "StaticLib"
 		defines {"DEBUG", "STATIC_LIB"}
-		flags {"Symbols"}
+		symbols "On"
 
 	filter "configurations:ReleaseStatic"
 		kind "StaticLib"
