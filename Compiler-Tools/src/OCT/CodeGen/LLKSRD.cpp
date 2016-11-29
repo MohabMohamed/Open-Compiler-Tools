@@ -116,7 +116,7 @@ CodeGenOutput LLKSRD::generate(GParseNodePtr program)
 	 mod->filename = name_directive + "Parser";
 
 	 //generate the parser program
-	 GParserGenerator parser_generator;
+	 GParserGenerator parser_generator(name_directive);
 	 parser_generator.generate(program->children, *mod);
 
 	 result.modules.push_back(mod);

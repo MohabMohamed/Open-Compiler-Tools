@@ -54,7 +54,7 @@ namespace OCT
 
             void reset();
 
-            IParserPtr exec(Lexer::IScannerPtr scanner, InputStreamPtr input);
+            IParseNodePtr exec(Lexer::IScannerPtr scanner, InputStreamPtr input);
 
 			static void printProgram(CartridgePtr program, std::ostream& out);
         private:

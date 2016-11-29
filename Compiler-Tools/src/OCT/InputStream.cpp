@@ -209,6 +209,8 @@ std::string::const_iterator OCT::InputStream::cbegin() const
 API InputStreamPtr OCT::open_file(const std::string& filename)
 {
 	std::ifstream file(filename, std::ios_base::in | std::ios_base::ate);
+	if (!file.is_open())
+		return nullptr;
 	auto size = file.tellg();
 	file.seekg(0, std::ios_base::beg);
 	file.clear();

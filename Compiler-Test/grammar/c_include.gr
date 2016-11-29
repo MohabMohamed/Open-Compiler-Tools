@@ -1,0 +1,16 @@
+#name includePrint;
+
+skip Newline  		:= "\n";
+skip CarrReturn 	:= "\r";
+skip Space 			:= " ";
+skip Tab 			:= "\t";
+skip VerticalSpace 	:= "\v";
+skip FThing 		:= "\f";
+
+Unidentified := ".";
+
+start 		:= ct_any start
+			| ct_any
+			;
+			
+ct_start 	:= start;

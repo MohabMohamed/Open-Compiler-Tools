@@ -16,6 +16,8 @@ namespace OCT
 
 		Cartridge();
 
+		Cartridge(OCT::u64* instructions, OCT::u64 size);
+
 		Cartridge(const Cartridge& other);
 
 		Cartridge(Cartridge&& other);

@@ -5,15 +5,15 @@
 #include <OCT/Lexer/CachedScanner.h>
 #include <OCT/InputStream.h>
 #include <OCT/Parser/VM.h>
-namespace digitList
+namespace includePrint
 {
-	class digitListParser: public OCT::Parser::IParser 
+	class includePrintParser: public OCT::Parser::IParser 
 	{
 		OCT::Parser::VM m_parserVM;
 		void initStore();
 		void init();
 	public:
-		digitListParser();
+		includePrintParser();
 		OCT::Parser::IParseNodePtr parse(OCT::Lexer::IScannerPtr ct_scanner, OCT::InputStreamPtr ct_input) override;
 	};
 }

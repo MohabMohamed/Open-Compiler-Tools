@@ -1,13 +1,13 @@
 #pragma once
 #include <OCT/Defines.h>
 #include <OCT/Lexer/CachedScanner.h>
-namespace digitList
+namespace includePrint
 {
-	class digitListLexer: public OCT::Lexer::CachedScanner 
+	class includePrintLexer: public OCT::Lexer::CachedScanner 
 {
 	protected:
 		void init();
 	public:
-		digitListLexer();
+		includePrintLexer();
 	};
 }

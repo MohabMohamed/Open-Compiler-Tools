@@ -60,11 +60,11 @@ bool VM::call(const std::string& name)
 	return true;
 }
 
-IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
+IParseNodePtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 {
 	m_callRegister = CallStatus::None;
 
-	IParserPtr parse_tree = nullptr;
+	IParseNodePtr parse_tree = nullptr;
 	
 	//assign the member objects
 	m_scanner = scanner;
@@ -104,8 +104,16 @@ IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 		//program execution loop
 		while(true)
 		{
+			if(m_callRegister == CallStatus::Fail)
+			{
+				m_callRegister = CallStatus::None;
+				break;
+			}
+
 			//bool indicator to kill the current thread
 			bool kill_thread = false;
+			//bool indicator to return from the current thread successfully
+			bool ret = false;
 			//fetch
 			auto ins = m_loadedCode->popCode<Parser::Instruction>();
 
@@ -127,9 +135,17 @@ IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 				break;
 			case OCT::Parser::VMStatus::Halt:
 				//this thing done success
-				std::cout<<"halt"<<std::endl;
+				//std::cout<<"halt"<<std::endl;
 				m_callRegister = CallStatus::Success;
-				return nullptr;
+				if (m_callStack.empty()) {
+					std::cout << "success" << std::endl;
+					return nullptr;
+				}
+				else
+				{
+					ret = true;
+				}
+				break;
 			default:
 				kill_thread = true;
 				break;
@@ -138,8 +154,14 @@ IParserPtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 			if(kill_thread)
 			{
 				//before killing the thread we must rewind the scanner to reparse this input
+				std::cout << cached_scanner->getIndex() << std::endl;
 				cached_scanner->moveTo(scanner_position);
 				m_callRegister = CallStatus::Fail;
+				break;
+			}
+			if(ret)
+			{
+				m_callRegister = CallStatus::Success;
 				break;
 			}
 		}
@@ -162,10 +184,19 @@ VMStatus VM::decode(Parser::Instruction ins)
 		{
 			//get the token
 			auto token = m_scanner->scan(m_input);
+			if (token == Lexer::Token::invalid || token == Lexer::Token::eof)
+				return VMStatus::CodeFail;
+			
 			auto match_token_id = m_store.findLexRuleID(token.tag);
-			auto code_token_id = m_loadedCode->popCode<OCT::u32>();
+			auto rawins = m_loadedCode->popRawIns();
+			//match any
+			if(isInstruction(rawins) && rawins == static_cast<u64>(Parser::Instruction::Any))
+				return VMStatus::CodeSuccess;
+
+			//match token
+			u32 code_token_id = static_cast<OCT::u32>(rawins);
 			//compare the two ids
-			if(match_token_id == code_token_id)
+			if (match_token_id == code_token_id)
 				return VMStatus::CodeSuccess;
 			return VMStatus::CodeFail;
 		}
@@ -197,6 +228,7 @@ VMStatus VM::decode(Parser::Instruction ins)
 
 			//jmp to the first offset
 			m_loadedCode->codePtr += first_offset;
+			return VMStatus::CodeSuccess;
 		}
 		break;
 

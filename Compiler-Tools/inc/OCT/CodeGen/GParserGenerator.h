@@ -16,6 +16,7 @@ namespace OCT
 		{
 			CodeGen::Store m_store;
 			std::string m_parserName;
+			std::string m_startRule;
 			void generateHeader(const std::vector<std::shared_ptr<OCT::Parser::GParseRule>>& parse_rules, OutputModule& out);
 			void generateCPP(const std::vector<std::shared_ptr<OCT::Parser::GParseRule>>& parse_rules, OutputModule& out);
 		public:

@@ -35,13 +35,17 @@ void OCT::Parser::Compiler::generateRuleByteCode(std::shared_ptr<OCT::Parser::GP
 		{
 			cartridge->pushCode(Parser::Instruction::Call);
 			cartridge->pushCode(m_store.findParseRuleID(rule_tree_node->token.literal.getString()));
+		}else if(rule_tree_node->token.tag == "any_token")
+		{
+			cartridge->pushCode(Parser::Instruction::Match);
+			cartridge->pushCode(Parser::Instruction::Any);
 		}
 
 		if(rule_tree_node->isLeaf && !rule_tree_node->next.empty())
 		{
 			cartridge->pushCode(Parser::Instruction::Split);
-			cartridge->pushCode(2);
 			cartridge->pushCode(1);
+			cartridge->pushCode(0);
 			cartridge->pushCode(Parser::Instruction::Halt);
 		}
 

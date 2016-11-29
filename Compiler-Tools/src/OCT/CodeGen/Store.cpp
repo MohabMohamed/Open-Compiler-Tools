@@ -34,6 +34,15 @@ OCT::u32 Store::findLexRuleID(const std::string& name)
 	return 0;
 }
 
+bool Store::insertLexRule(const std::string& name, u32 key)
+{
+	auto lex_it = m_lexRules.find(key);
+	if(lex_it != m_lexRules.end())
+		return false;
+	m_lexRules[key] = name;
+	return true;
+}
+
 OCT::u32 Store::addParseRule(const std::string& name)
 {
 	m_counter++;
@@ -60,6 +69,15 @@ OCT::u32 Store::findParseRuleID(const std::string& name)
 			return parse_rule.first;
 	}
 	return 0;
+}
+
+bool Store::insertParseRule(const std::string& name, u32 key)
+{
+	auto parse_it = m_parseRules.find(key);
+	if(parse_it != m_parseRules.end())
+		return false;
+	m_parseRules[key] = name;
+	return true;
 }
 
 void Store::listLexRules(std::vector<std::tuple<OCT::u32, std::string>>& rules)

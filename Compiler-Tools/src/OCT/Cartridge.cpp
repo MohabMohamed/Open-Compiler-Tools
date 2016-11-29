@@ -6,6 +6,12 @@ OCT::Cartridge::Cartridge()
 	reset();
 }
 
+OCT::Cartridge::Cartridge(OCT::u64* instructions, OCT::u64 size)
+{
+	m_code = CodeType(instructions, instructions+size);
+	reset();
+}
+
 OCT::Cartridge::Cartridge(const Cartridge & other)
 {
 	this->codePtr = other.codePtr;

@@ -103,7 +103,7 @@ VMStatus VM::decode(Instruction ins)
 		m_currentThread.pc++;
 		if (raw_ins == static_cast<u64>(Instruction::Any))
 		{
-			matchAny();
+			return matchAny() ? VMStatus::CodeSuccess : VMStatus::CodeFail;
 		}
 		else 
 		{

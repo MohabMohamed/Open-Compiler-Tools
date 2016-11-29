@@ -10,8 +10,9 @@
 #include <OCT/Fluorine/Renderer.h>
 #include <chrono>
 #include "digitListLexer.h"
-//#include "CLexer.h"
-//#include "CParser.h"
+#include "digitListParser.h"
+#include "includePrintLexer.h"
+#include "includePrintParser.h"
 
 using namespace std;
 class InputParser {
@@ -47,10 +48,24 @@ int main(int argc, char* argv[]) {
 	if (input_filename.empty())
 		input_filename = "test/c_test_02.c";
 
-	
+	//include example
+	OCT::InputStreamPtr file_input = OCT::open_file(input_filename);
+	if (file_input == nullptr) {
+		std::cout << "error didn't find the file" << std::endl;
+		return 0;
+	}
+
+	std::shared_ptr<includePrint::includePrintLexer> scanner = std::make_shared<includePrint::includePrintLexer>();
+	std::shared_ptr<includePrint::includePrintParser> parser = std::make_shared<includePrint::includePrintParser>();
+	auto result = parser->parse(scanner, file_input);
+	std::cout << scanner->getIndex() << std::endl;
+	return 0;
 	//test VM Parser
 	//OCT::InputStreamPtr file_input = OCT::open_file("test/list_test01.list");
 	//std::shared_ptr<digitList::digitListLexer> scanner = std::make_shared<digitList::digitListLexer>();
+	//std::shared_ptr<digitList::digitListParser> parser = std::make_shared<digitList::digitListParser>();
+	//auto result = parser->parse(scanner, file_input);
+	//return 0;
 	//auto token = scanner->scan(file_input);
 	//while(token != OCT::Lexer::Token::invalid && token != OCT::Lexer::Token::eof)
 	//{
@@ -60,13 +75,13 @@ int main(int argc, char* argv[]) {
 
 	//test code
 
-	OCT::InputStreamPtr file_input = OCT::open_file("grammar/digit_list.gr");
-	auto grammar_scanner = std::make_shared<OCT::Lexer::GLexer>();
-	OCT::Parser::GParser grammar_parser;
-	auto koko = grammar_parser.parse(grammar_scanner, file_input);
-	OCT::CodeGen::LLKSRD code_generator;
-	code_generator.generate(std::dynamic_pointer_cast<OCT::Parser::GParseNode>(koko));
-	std::cout << OCT::Log::filterLog(OCT::LOG_LEVEL::ERROR) << std::endl;
+	//OCT::InputStreamPtr file_input = OCT::open_file("grammar/digit_list.gr");
+	//auto grammar_scanner = std::make_shared<OCT::Lexer::GLexer>();
+	//OCT::Parser::GParser grammar_parser;
+	//auto koko = grammar_parser.parse(grammar_scanner, file_input);
+	//OCT::CodeGen::LLKSRD code_generator;
+	//code_generator.generate(std::dynamic_pointer_cast<OCT::Parser::GParseNode>(koko));
+	//std::cout << OCT::Log::filterLog(OCT::LOG_LEVEL::ERROR) << std::endl;
 	//test grammar
 
 	//OCT::InputStreamPtr file_input = OCT::open_file("grammar/c.gr");

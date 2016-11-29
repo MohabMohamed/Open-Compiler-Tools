@@ -31,12 +31,13 @@ namespace OCT
 			std::string getLexRuleName(u32 id);
 			u32 findLexRuleID(const std::string& name);
 			void listLexRules(std::vector<std::tuple<u32, std::string>>& rules);
+			bool insertLexRule(const std::string& name, u32 key);
 
 			u32 addParseRule(const std::string& name);
 			std::string getParseRuleName(u32 id);
 			u32 findParseRuleID(const std::string& name);
 			void listParseRules(std::vector<std::tuple<u32, std::string>>& rules);
-
+			bool insertParseRule(const std::string& name, u32 key);
 		};
 	}
 }
