@@ -39,6 +39,125 @@ private:
 	std::vector <std::string> tokens;
 };
 
+
+namespace my
+{
+	template<typename T>
+	class stack{
+	public:
+		T* m_memory;
+		std::size_t m_capacity;
+		OCT::s64 m_size;
+
+		stack()
+		{
+			m_capacity = 128;
+			m_size = -1;
+			m_memory = new T[m_capacity];
+		}
+
+		stack(std::size_t capacity)
+		{
+			m_capacity = capacity;
+			m_size = -1;
+			m_memory = new T[m_capacity];
+		}
+
+		~stack()
+		{
+			delete[] m_memory;
+			m_capacity = 0;
+			m_size = -1;
+		}
+
+		void reserve(std::size_t capacity)
+		{
+			if(m_size < 0)
+			{
+				m_capacity = capacity;
+				delete[] m_memory;
+				m_memory = new T[m_capacity];
+			}
+			else
+			{
+				T* newMemory = new T[capacity];
+				std::memcpy(newMemory, m_memory, m_capacity*sizeof(T));;
+				delete[] m_memory;
+				m_memory = newMemory;
+				m_capacity = capacity;
+			}
+		}
+
+		std::size_t size() const
+		{
+			return m_size+1;
+		}
+
+		std::size_t capacity() const
+		{
+			return m_capacity;
+		}
+
+		bool empty() const
+		{
+			return m_size < 0;
+		}
+
+		bool push(const T& element)
+		{
+			m_size++;
+
+			if(m_size >= m_capacity)
+			{
+				reserve(m_capacity*2);
+				m_memory[m_size] = element;
+			}else{
+				m_memory[m_size] = element;
+			}
+			return true;
+		}
+
+		bool push(T&& element)
+		{
+			m_size++;
+
+			if(m_size >= m_capacity)
+			{
+				reserve(m_capacity*2);
+				m_memory[m_size] = element;
+			}else{
+				m_memory[m_size] = element;
+			}
+			return true;
+		}
+
+		T pop()
+		{
+			if(m_size >= 0)
+			{
+				return m_memory[m_size--];
+			}else{
+				throw std::out_of_range("[stack<T>::pop]: index out of range");
+			}
+		}
+
+		T top() const
+		{
+			if(m_size >= 0)
+			{
+				return m_memory[m_size];
+			}else{
+				throw std::out_of_range("[stack<T>::pop]: index out of range");
+			}
+		}
+
+		void clear()
+		{
+			m_size = -1;
+		}
+	};
+}
+
 int main(int argc, char* argv[]) {
 	InputParser input(argc, argv);
 	std::string input_filename = "";
@@ -50,10 +169,30 @@ int main(int argc, char* argv[]) {
 
 	//include example
 	OCT::InputStreamPtr file_input = OCT::open_file(input_filename);
-	if (file_input == nullptr) {
+	/*if (file_input == nullptr) {
 		std::cout << "error didn't find the file" << std::endl;
 		return 0;
+	}*/
+
+	std::stack<int> std_stack;
+	for (int i = 0; i<100000000; i++)
+	{
+		if (i % 2 == 0 && !std_stack.empty())
+			std_stack.pop();
+		std_stack.push(i);
 	}
+	
+	
+	//my::stack<int> mine_stack;
+	//for(int i=0;i<100000000;i++)
+	//{
+	//	if(i%2==0 && !mine_stack.empty())
+	//		mine_stack.pop();
+	//	mine_stack.push(i);
+	//}
+	//mine_stack.clear();
+	
+	return 0;
 
 	std::shared_ptr<includePrint::includePrintLexer> scanner = std::make_shared<includePrint::includePrintLexer>();
 	std::shared_ptr<includePrint::includePrintParser> parser = std::make_shared<includePrint::includePrintParser>();
