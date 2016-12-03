@@ -71,16 +71,25 @@ bool Regex::Compiler::Or()
 	if (!popOperand(B) || !popOperand(A))
 		return false;
 	
-	Cartridge result;
-	result.pushCode(Instruction::Split);
-	result.pushCode<u32>(0);
-	result.pushCode<u32>(A.size() + 2);
-	result.appendCode(A);
-	result.pushCode(Instruction::JMP);
-	result.pushCode<u32>(B.size());
-	result.appendCode(B);
+	
+	//Cartridge result;
+	auto A_size = A.size();
+	A.pushCodeFront<u32>(A_size + 2);
+	A.pushCodeFront<u32>(0);
+	A.pushCodeFront(Instruction::Split);
+	A.pushCode(Instruction::JMP);
+	A.pushCode<u32>(B.size());
+	A.appendCode(B);
 
-	m_operands.push_back(result);
+	//result.pushCode(Instruction::Split);
+	//result.pushCode<u32>(0);
+	//result.pushCode<u32>(A.size() + 2);
+	//result.appendCode(A);
+	//result.pushCode(Instruction::JMP);
+	//result.pushCode<u32>(B.size());
+	//result.appendCode(B);
+
+	m_operands.push_back(A);
 	return true;
 }
 

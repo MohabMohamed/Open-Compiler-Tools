@@ -17,10 +17,9 @@ void VM::setStartProgram(const std::string& programName)
 void VM::reset()
 {
 	m_loadedCode = nullptr;
-	while(!m_callStack.empty())
-	{
+
+	while (!m_callStack.empty())
 		m_callStack.pop();
-	}
 }
 
 bool VM::loadProgram(const std::string& name)
@@ -51,7 +50,7 @@ bool VM::call(const std::string& name)
 		return false;
 	
 	details::CallStackFrame call_frame;
-	call_frame.code = m_loadedCode;
+	call_frame.code = m_loadedCode.get();
 	call_frame.codePtr = m_loadedCode->codePtr;
 	m_callStack.push(call_frame);
 
@@ -78,7 +77,7 @@ IParseNodePtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 
 	//add the main thread to the callstack
 	details::CallStackFrame main_frame;
-	main_frame.code = m_loadedCode;
+	main_frame.code = m_loadedCode.get();
 	main_frame.codePtr = m_loadedCode->codePtr;
 	m_callStack.push(main_frame);
 
@@ -95,7 +94,7 @@ IParseNodePtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 		m_callStack.pop();
 
 		//sets the program to the current call stack frame
-		m_loadedCode = current_frame.code;
+		m_loadedCode = current_frame.code->shared_from_this();
 		m_loadedCode->codePtr = current_frame.codePtr;
 
 		auto scanner_position = cached_scanner->getIndex();
@@ -104,7 +103,7 @@ IParseNodePtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 		//program execution loop
 		while(true)
 		{
-			if(m_callRegister == CallStatus::Fail)
+			if(m_callRegister == CallStatus::Fail && current_frame.onCall)
 			{
 				m_callRegister = CallStatus::None;
 				break;
@@ -128,6 +127,13 @@ IParseNodePtr VM::exec(Lexer::IScannerPtr scanner, InputStreamPtr input)
 				break;
 			case OCT::Parser::VMStatus::CodeSuccess:
 				//instruction executed successfuly do nothing
+
+				//set the call flag in the frame
+				if (ins == Parser::Instruction::Call)
+				{
+					m_callStack.top().onCall = true;
+				}
+
 				break;
 			case OCT::Parser::VMStatus::CodeFail:
 				//instruction failed kill it, kill it with fire
@@ -222,7 +228,7 @@ VMStatus VM::decode(Parser::Instruction ins)
 
 			//call stack frame input
 			details::CallStackFrame call_frame;
-			call_frame.code = m_loadedCode;
+			call_frame.code = m_loadedCode.get();
 			call_frame.codePtr = m_loadedCode->codePtr + second_offset;
 			m_callStack.push(call_frame);
 
@@ -320,4 +326,54 @@ void VM::printProgram(CartridgePtr program, std::ostream& out)
 			out << std::setfill('0') << std::setw(3) << i << ": Const[0x" << std::hex << static_cast<u32>(rawIns) << "]" << std::endl;
 		}
 	}
+}
+
+details::CallStackFrame::CallStackFrame()
+{
+	this->code = nullptr;
+	this->codePtr = 0;
+	this->onCall = false;
+}
+
+details::CallStackFrame::CallStackFrame(const CallStackFrame& other)
+{
+	this->code = other.code;
+	this->codePtr = other.codePtr;
+	this->onCall = other.onCall;
+}
+
+details::CallStackFrame::CallStackFrame(CallStackFrame&& other)
+{
+	this->code = other.code;
+	this->codePtr = other.codePtr;
+	this->onCall = other.onCall;
+	other.code = nullptr;
+	other.codePtr = 0;
+	other.onCall = false;
+}
+
+details::CallStackFrame::~CallStackFrame()
+{
+	this->code = nullptr;
+	this->codePtr = 0;
+	this->onCall = false;
+}
+
+details::CallStackFrame& details::CallStackFrame::operator=(const CallStackFrame& other)
+{
+	this->code = other.code;
+	this->codePtr = other.codePtr;
+	this->onCall = other.onCall;
+	return *this;
+}
+
+details::CallStackFrame& details::CallStackFrame::operator=(CallStackFrame&& other)
+{
+	this->code = other.code;
+	this->codePtr = other.codePtr;
+	this->onCall = other.onCall;
+	other.code = nullptr;
+	other.codePtr = 0;
+	other.onCall = false;
+	return *this;
 }

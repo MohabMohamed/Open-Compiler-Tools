@@ -2,6 +2,7 @@
 
 #include "OCT/Defines.h"
 #include "OCT/Lexer/Scanner.h"
+#include "OCT/Containers.h"
 #include <vector>
 #include <memory>
 
@@ -11,8 +12,7 @@ namespace OCT
 	{
 		class API CachedScanner : public Scanner {
 		protected:
-			std::vector<Token> m_cache;
-			u64 m_index;
+			OCT::Containers::ring<Token, 8192> m_cache;
 
 			bool hasCachedTokens();
 		public:
@@ -22,9 +22,8 @@ namespace OCT
 			virtual Token scan(InputStreamPtr input) override;
 			virtual Token rewindToken();
 
-			u64 getIndex();
-			void move(s64 offset);
-			void moveTo(u64 index);
+			s64 getIndex();
+			void moveTo(s64 index);
 
 			void clear();
 		};

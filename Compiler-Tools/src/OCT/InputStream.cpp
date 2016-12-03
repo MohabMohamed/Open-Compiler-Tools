@@ -3,7 +3,7 @@
 using namespace OCT;
 
 InputStream::InputStream(const std::string& input)
-:m_input(input), m_index(0), m_lastLineCount(0)
+:m_input(input), stringPtr(0), m_lastLineCount(0)
 {}
 
 std::string InputStream::getString() const
@@ -16,23 +16,18 @@ std::size_t OCT::InputStream::size() const
 	return m_input.size();
 }
 
-std::size_t OCT::InputStream::index() const
-{
-	return m_index;
-}
-
 char InputStream::popLetter()
 {
-	if(m_index >= m_input.size())
+	if(stringPtr >= m_input.size())
 		return '\0';
-	if(m_input[m_index] == '\n'){
+	if(m_input[stringPtr] == '\n'){
 		m_position.row++;
 		m_lastLineCount = m_position.col;
 		m_position.col = 0;
 	}else{
 		m_position.col++;
 	}
-	return m_input[m_index++];
+	return m_input[stringPtr++];
 }
 
 void OCT::InputStream::advance(u64 value)
@@ -43,26 +38,26 @@ void OCT::InputStream::advance(u64 value)
 
 char InputStream::peek()
 {
-	if(m_index >= m_input.size())
+	if(stringPtr >= m_input.size())
 		return '\0';
-	return m_input[m_index];
+	return m_input[stringPtr];
 }
 
 void InputStream::rewindLetter(){
-	if(m_index > 0){
-		if(m_input[m_index] == '\n')
+	if(stringPtr > 0){
+		if(m_input[stringPtr] == '\n')
 		{
 			m_position.row--;
 			m_position.col = m_lastLineCount;
 		}else{
 			m_position.col--;
 		}
-		m_index--;
+		stringPtr--;
 	}
 }
 
 void InputStream::reset(){
-	m_index=0;
+	stringPtr =0;
 	m_position = FilePosition();
 	m_lastLineCount = 0;
 	while (!m_markerStack.empty())
@@ -76,7 +71,7 @@ void OCT::InputStream::clear()
 }
 
 bool InputStream::eof(){
-	return m_index >= m_input.size();
+	return stringPtr >= m_input.size();
 }
 
 bool InputStream::empty()
@@ -91,7 +86,7 @@ void InputStream::append(const std::string& str)
 
 void InputStream::push(const std::string& str)
 {
-	m_input.insert(m_index,str);
+	m_input.insert(stringPtr,str);
 }
 
 FilePosition InputStream::getPosition() const{
@@ -102,7 +97,7 @@ void OCT::InputStream::pushMarker(StringMarker marker)
 {
 	if (marker == StringMarker::invalid) {
 		marker.inputStream = shared_from_this();
-		marker.start = m_index;
+		marker.start = stringPtr;
 		marker.end = -1;
 		m_markerStack.push(marker);
 	}
@@ -115,7 +110,7 @@ void OCT::InputStream::pushMarker(StringMarker marker)
 StringMarker OCT::InputStream::popMarker()
 {
 	auto marker = m_markerStack.top();
-	marker.end = m_index;
+	marker.end = stringPtr;
 	m_markerStack.pop();
 	return marker;
 }
@@ -123,7 +118,7 @@ StringMarker OCT::InputStream::popMarker()
 StringMarker OCT::InputStream::topMarker()
 {
 	auto marker = m_markerStack.top();
-	marker.end = m_index;
+	marker.end = stringPtr;
 	return marker;
 }
 
@@ -132,15 +127,15 @@ bool OCT::InputStream::moveToMarkerEnd(const StringMarker & marker)
 	if (marker == StringMarker::invalid)
 		return false;
 
-	if (m_index > marker.end)
+	if (stringPtr > marker.end)
 	{
-		while (m_index > marker.end)
+		while (stringPtr > marker.end)
 			rewindLetter();
 		return true;
 	}
-	else if (m_index < marker.end)
+	else if (stringPtr < marker.end)
 	{
-		while (m_index < marker.end)
+		while (stringPtr < marker.end)
 			popLetter();
 		return true;
 	}
@@ -152,15 +147,15 @@ bool OCT::InputStream::moveToMarkerStart(const StringMarker & marker)
 	if (marker == StringMarker::invalid)
 		return false;
 
-	if (m_index > marker.start)
+	if (stringPtr > marker.start)
 	{
-		while (m_index > marker.start)
+		while (stringPtr > marker.start)
 			rewindLetter();
 		return true;
 	}
-	else if (m_index < marker.start)
+	else if (stringPtr < marker.start)
 	{
-		while (m_index < marker.start)
+		while (stringPtr < marker.start)
 			popLetter();
 		return true;
 	}
@@ -178,7 +173,7 @@ std::string OCT::InputStream::requestString(StringMarker marker)
 
 std::string::iterator OCT::InputStream::currentPositionIt()
 {
-	return m_input.begin()+m_index;
+	return m_input.begin()+ stringPtr;
 }
 
 std::string::iterator OCT::InputStream::end()
@@ -193,7 +188,7 @@ std::string::iterator OCT::InputStream::begin()
 
 std::string::const_iterator OCT::InputStream::currentPositionConstIt() const
 {
-	return m_input.begin() + m_index;
+	return m_input.begin() + stringPtr;
 }
 
 std::string::const_iterator OCT::InputStream::cend() const

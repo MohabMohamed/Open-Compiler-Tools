@@ -6,24 +6,20 @@
 using namespace OCT::Regex;
 using namespace OCT;
 
-VM::VM():m_currentThread(-1,-1)
+VM::VM()
 {
 	m_status = VMStatus::None;
-	m_threadStack.reserve(256);
+	m_threadList.reserve(256);
 }
 
 VM::~VM()
 {
-	m_threadStack.clear();
-	m_currentThread = Thread(-1, -1);
 }
 
 void VM::reset()
 {
 	m_status = VMStatus::None;
-	m_threadStack.clear();
-	m_threadStack.reserve(256);
-	m_currentThread = Thread(-1, -1);
+	m_threadList.clear();
 }
 
 VMStatus VM::getVMStatus() const
@@ -38,30 +34,39 @@ StringMarker VM::exec(CartridgePtr program, InputStreamPtr input)
 	if (input->empty())
 		return StringMarker::invalid;
 
+
+	std::stack<StringMarker> match_results;
+
 	reset();
 	program->reset();
 	m_program = program;
 	m_input = input;
 	input->pushMarker();
 	
-	Thread main_thread(0, input->index());
-	m_threadStack.push_back(main_thread);
-	while (true)
-	{
-		if (m_threadStack.empty())
-			return StringMarker::invalid;
-		m_currentThread = m_threadStack.back();
-		m_threadStack.pop_back();
-		m_input->moveToMarkerStart(make_string_marker(m_currentThread.sp, 0, nullptr));
-		m_program->codePtr = m_currentThread.pc;
+	Thread main_thread(0, input->stringPtr);
+	m_threadList.push_back(main_thread);
 
-		while (true)
+	//new algorithm that goes O(n) where n is the number of characters in input
+	while(true)
+	{
+		m_threadPtr = 0;
+		//this is to keep track of the threads that started this loop and not to take the threads that will spawn in this loop into consideration
+		auto threadListSize = m_threadList.size();
+
+		while(m_threadPtr<threadListSize)
 		{
 			bool kill_thread = false;
+			//set the code pointer to the thread pc
+			m_program->codePtr = m_threadList[m_threadPtr].pc;
+			m_input->stringPtr = m_threadList[m_threadPtr].sp;
+
+			//pop an instruction
 			auto ins = m_program->popCode<Instruction>();
-			m_currentThread.pc++;
+			m_threadList[m_threadPtr].pc++;
+
+			//decode an ins
 			auto result = decode(ins);
-			
+
 			switch (result)
 			{
 			case OCT::Regex::VMStatus::None:
@@ -73,7 +78,14 @@ StringMarker VM::exec(CartridgePtr program, InputStreamPtr input)
 				kill_thread = true;
 				break;
 			case OCT::Regex::VMStatus::Halt:
-				return m_input->popMarker();
+				if (m_threadList.size() <= 1)
+				{
+					return m_input->popMarker();
+				}else
+				{
+					match_results.push(m_input->topMarker());
+					kill_thread = true;
+				}
 				break;
 			default:
 				kill_thread = true;
@@ -81,10 +93,26 @@ StringMarker VM::exec(CartridgePtr program, InputStreamPtr input)
 			}
 
 			if (kill_thread)
-				break;
-
+			{
+				//delete the current thread since it's died and don't increment the ptr
+				m_threadList.erase(m_threadList.begin() + m_threadPtr);
+				//decrement the size of the threads in the loop
+				threadListSize--;
+			}else
+			{
+				m_threadPtr++;
+			}
 		}
+
+		//if there're threads alive then consume this character
+		if (!m_threadList.empty())
+			m_input->popLetter();
+		else
+			break;
 	}
+
+	if(!match_results.empty())
+		return match_results.top();
 
 	m_input->moveToMarkerStart(m_input->popMarker());
 	return StringMarker::invalid;
@@ -94,13 +122,10 @@ VMStatus VM::decode(Instruction ins)
 {
 	switch (ins)
 	{
-	case OCT::Regex::Instruction::None:
-		return VMStatus::CodeFail;
-		break;
 	case OCT::Regex::Instruction::Match:
 	{
 		auto raw_ins = m_program->popRawIns();
-		m_currentThread.pc++;
+		m_threadList[m_threadPtr].pc++;
 		if (raw_ins == static_cast<u64>(Instruction::Any))
 		{
 			return matchAny() ? VMStatus::CodeSuccess : VMStatus::CodeFail;
@@ -111,24 +136,24 @@ VMStatus VM::decode(Instruction ins)
 		}
 	}
 		break;
-	case OCT::Regex::Instruction::JMP:
-	{
-		auto offset = m_program->popCode<s32>();
-		m_currentThread.pc++;
-		m_program->codePtr += offset;
-		m_currentThread.pc += offset;
-		return VMStatus::CodeSuccess;
-	}
-		break;
 	case OCT::Regex::Instruction::Split:
 	{
 		auto x = m_program->popCode<s32>();
-		m_currentThread.pc++;
+		m_threadList[m_threadPtr].pc++;
 		auto y = m_program->popCode<s32>();
-		m_currentThread.pc++;
-		Thread newThread(m_currentThread.pc + y, m_currentThread.sp);
-		m_currentThread.pc += x;
-		m_threadStack.push_back(newThread);
+		m_threadList[m_threadPtr].pc++;
+		Thread newThread(m_threadList[m_threadPtr].pc + y, m_threadList[m_threadPtr].sp);
+		m_threadList[m_threadPtr].pc += x;
+		m_threadList.push_back(newThread);
+		return VMStatus::CodeSuccess;
+	}
+		break;
+	case OCT::Regex::Instruction::JMP:
+	{
+		auto offset = m_program->popCode<s32>();
+		m_threadList[m_threadPtr].pc++;
+		m_program->codePtr += offset;
+		m_threadList[m_threadPtr].pc += offset;
 		return VMStatus::CodeSuccess;
 	}
 		break;
@@ -136,6 +161,9 @@ VMStatus VM::decode(Instruction ins)
 	{
 		return VMStatus::Halt;
 	}
+		break;
+	case OCT::Regex::Instruction::None:
+		return VMStatus::CodeFail;
 		break;
 	default:
 		return VMStatus::CodeFail;
@@ -145,12 +173,12 @@ VMStatus VM::decode(Instruction ins)
 
 bool VM::match(char letter)
 {
-	if(m_input)
+	if (m_input)
 	{
-		if(m_input->peek() == letter)
+		if (m_input->peek() == letter)
 		{
 			m_input->popLetter();
-			m_currentThread.sp++;
+			m_threadList[m_threadPtr].sp++;
 			return true;
 		}
 	}
@@ -162,7 +190,7 @@ bool OCT::Regex::VM::matchAny()
 	if (m_input && !m_input->eof())
 	{
 		m_input->popLetter();
-		m_currentThread.sp++;
+		m_threadList[m_threadPtr].sp++;
 		return true;
 	}
 	return false;
@@ -220,4 +248,30 @@ OCT::Regex::Thread::Thread(s64 _pc, s64 _sp)
 {
 	pc = _pc;
 	sp = _sp;
+}
+
+Thread::Thread(const Thread& other)
+{
+	this->pc = other.pc;
+	this->sp = other.sp;
+}
+
+Thread::Thread(Thread&& other)
+{
+	this->pc = other.pc;
+	this->sp = other.sp;
+}
+
+Thread& Thread::operator=(const Thread& other)
+{
+	this->pc = other.pc;
+	this->sp = other.sp;
+	return *this;
+}
+
+Thread& Thread::operator=(Thread&& other)
+{
+	this->pc = other.pc;
+	this->sp = other.sp;
+	return *this;
 }

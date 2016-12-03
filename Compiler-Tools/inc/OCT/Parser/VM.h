@@ -5,6 +5,7 @@
 #include "OCT/InputStream.h"
 #include "OCT/Parser/IParser.h"
 #include "OCT/CodeGen/Store.h"
+#include "OCT/Containers.h"
 #include <vector>
 #include <stack>
 #include <string>
@@ -20,8 +21,17 @@ namespace OCT
         {
             struct API CallStackFrame
             {
-                CartridgePtr code;
+                Cartridge* code;
                 s64 codePtr;
+				bool onCall;
+
+				CallStackFrame();
+				CallStackFrame(const CallStackFrame& other);
+				CallStackFrame(CallStackFrame&& other);
+				~CallStackFrame();
+				CallStackFrame& operator=(const CallStackFrame& other);
+				CallStackFrame& operator=(CallStackFrame&& other);
+
             };
         }
 

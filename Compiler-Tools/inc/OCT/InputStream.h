@@ -2,6 +2,7 @@
 #include "OCT/Defines.h"
 #include "OCT/FilePosition.h"
 #include "OCT/StringMarker.h"
+#include "OCT/Containers.h"
 #include <string>
 #include <memory>
 #include <stack>
@@ -12,19 +13,18 @@ namespace OCT
 	{
 	public:
 		std::string m_input;
-		std::size_t m_index;
 		FilePosition m_position;
 		u64 m_lastLineCount;
 		std::stack<StringMarker> m_markerStack;
 
 	public:
+		std::size_t stringPtr;
+
 		InputStream(const std::string& input);
 
 		std::string getString() const;
 
 		std::size_t size() const;
-
-		std::size_t index() const;
 
 		char popLetter();
 

@@ -9,7 +9,7 @@
 
 namespace OCT
 {
-    class API Cartridge
+    class API Cartridge: public std::enable_shared_from_this<Cartridge>
     {
     public:
         using CodeType = std::vector<u64>;

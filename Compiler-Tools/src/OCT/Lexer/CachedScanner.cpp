@@ -3,20 +3,18 @@ using namespace OCT::Lexer;
 
 bool OCT::Lexer::CachedScanner::hasCachedTokens()
 {
-	if(m_index >= m_cache.size() || m_cache.empty())
+	return m_cache.canRead();
+	/*if(m_index >= m_cache.size() || m_cache.empty())
 		return false;
-	return true;
+	return true;*/
 }
 
 OCT::Lexer::CachedScanner::CachedScanner()
-	:m_index(m_cache.size())
 {
-	m_cache.reserve(500);
 }
 
 OCT::Lexer::CachedScanner::~CachedScanner()
 {
-	m_cache.clear();
 }
 
 Token OCT::Lexer::CachedScanner::scan(InputStreamPtr input)
@@ -24,42 +22,32 @@ Token OCT::Lexer::CachedScanner::scan(InputStreamPtr input)
 	if (!hasCachedTokens())
 	{
 		auto token = Scanner::scan(input);
-		m_cache.push_back(token);
-		m_index = m_cache.size();
+		m_cache.push(token);
+		if(m_cache.canRead())
+			m_cache.read();
 		return token;
 	}
 	else {
-		return m_cache[m_index++];
+		return m_cache.read();
 	}
 }
 
 Token OCT::Lexer::CachedScanner::rewindToken()
 {
-	if (m_index > 0)
-	{
-		m_index--;
-		return m_cache[m_index];
-	}
-	return Token::invalid;
+	return m_cache.rewind();
 }
 
 void OCT::Lexer::CachedScanner::clear()
 {
 	m_cache.clear();
-	m_index = m_cache.size();
 }
 
-OCT::u64 OCT::Lexer::CachedScanner::getIndex()
+OCT::s64 OCT::Lexer::CachedScanner::getIndex()
 {
-	return m_index;
+	return m_cache.getIndex();
 }
 
-void OCT::Lexer::CachedScanner::move(OCT::s64 offset)
+void OCT::Lexer::CachedScanner::moveTo(OCT::s64 index)
 {
-	m_index -= offset;
-}
-
-void OCT::Lexer::CachedScanner::moveTo(OCT::u64 index)
-{
-	m_index = index;
+	m_cache.moveTo(index);
 }

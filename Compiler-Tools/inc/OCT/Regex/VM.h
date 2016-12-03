@@ -17,6 +17,11 @@ namespace OCT
 		struct Thread {
 			s64 pc, sp;
 			Thread(s64, s64);
+
+			Thread(const Thread& other);
+			Thread(Thread&& other);
+			Thread& operator=(const Thread& other);
+			Thread& operator=(Thread&& other);
 		};
 
 		enum class VMStatus: u32{
@@ -60,9 +65,9 @@ namespace OCT
 			//input stream pointer
 			InputStreamPtr m_input;
 			//threadStack
-			std::vector<Thread> m_threadStack;
-			//current thread
-			Thread m_currentThread;
+			std::vector<Thread> m_threadList;
+			//currentThread pointer
+			u32 m_threadPtr;
 		};
 	}
 }

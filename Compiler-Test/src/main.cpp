@@ -9,6 +9,7 @@
 #include <OCT/Chalcedony.h>
 #include <OCT/Fluorine/Renderer.h>
 #include <chrono>
+#include <ratio>
 #include "digitListLexer.h"
 #include "digitListParser.h"
 #include "includePrintLexer.h"
@@ -42,120 +43,7 @@ private:
 
 namespace my
 {
-	template<typename T>
-	class stack{
-	public:
-		T* m_memory;
-		std::size_t m_capacity;
-		OCT::s64 m_size;
-
-		stack()
-		{
-			m_capacity = 128;
-			m_size = -1;
-			m_memory = new T[m_capacity];
-		}
-
-		stack(std::size_t capacity)
-		{
-			m_capacity = capacity;
-			m_size = -1;
-			m_memory = new T[m_capacity];
-		}
-
-		~stack()
-		{
-			delete[] m_memory;
-			m_capacity = 0;
-			m_size = -1;
-		}
-
-		void reserve(std::size_t capacity)
-		{
-			if(m_size < 0)
-			{
-				m_capacity = capacity;
-				delete[] m_memory;
-				m_memory = new T[m_capacity];
-			}
-			else
-			{
-				T* newMemory = new T[capacity];
-				std::memcpy(newMemory, m_memory, m_capacity*sizeof(T));;
-				delete[] m_memory;
-				m_memory = newMemory;
-				m_capacity = capacity;
-			}
-		}
-
-		std::size_t size() const
-		{
-			return m_size+1;
-		}
-
-		std::size_t capacity() const
-		{
-			return m_capacity;
-		}
-
-		bool empty() const
-		{
-			return m_size < 0;
-		}
-
-		bool push(const T& element)
-		{
-			m_size++;
-
-			if(m_size >= m_capacity)
-			{
-				reserve(m_capacity*2);
-				m_memory[m_size] = element;
-			}else{
-				m_memory[m_size] = element;
-			}
-			return true;
-		}
-
-		bool push(T&& element)
-		{
-			m_size++;
-
-			if(m_size >= m_capacity)
-			{
-				reserve(m_capacity*2);
-				m_memory[m_size] = element;
-			}else{
-				m_memory[m_size] = element;
-			}
-			return true;
-		}
-
-		T pop()
-		{
-			if(m_size >= 0)
-			{
-				return m_memory[m_size--];
-			}else{
-				throw std::out_of_range("[stack<T>::pop]: index out of range");
-			}
-		}
-
-		T top() const
-		{
-			if(m_size >= 0)
-			{
-				return m_memory[m_size];
-			}else{
-				throw std::out_of_range("[stack<T>::pop]: index out of range");
-			}
-		}
-
-		void clear()
-		{
-			m_size = -1;
-		}
-	};
+	
 }
 
 int main(int argc, char* argv[]) {
@@ -167,20 +55,59 @@ int main(int argc, char* argv[]) {
 	if (input_filename.empty())
 		input_filename = "test/c_test_02.c";
 
+	//testing the new vm execute algorithm
+	//std::chrono::duration<double, std::micro> mine_duration;
+	//for (int i = 0; i < 1; i++)
+	//{
+	//	auto start = std::chrono::high_resolution_clock::now();
+	//	OCT::InputStreamPtr regex_input = std::make_shared<OCT::InputStream>("MoustaphaSaad_343");
+	//	OCT::Regex::Compiler regex_compiler;
+	//	OCT::Regex::VM vm;
+	//	auto regex_result = vm.exec(regex_compiler.compile("[_a-zA-Z][_a-zA-Z0-9]*"), regex_input);
+	//	auto end = std::chrono::high_resolution_clock::now();
+	//	mine_duration += end - start;
+	//}
+	//std::cout << "avg mine: " << (mine_duration/1).count() << "ms" << std::endl;
+
+	//std::string inputstr;
+	//std::cin >> inputstr;
+	//std::chrono::duration<double, std::micro> std_duration;
+	//for (int i = 0; i < 1; i++)
+	//{
+	//	auto start = std::chrono::high_resolution_clock::now();
+
+	//	std::regex pattern("[_a-zA-Z][_a-zA-Z0-9]*");
+	//	std::smatch match_obj;
+	//	std::regex_search(inputstr, match_obj, pattern, regex_constants::match_continuous);
+	//	auto end = std::chrono::high_resolution_clock::now();
+	//	std_duration += end - start;
+	//}
+	//std::cout << "avg std: " << (std_duration/1).count() << "ms" << std::endl;
+
+	//if(mine_duration.count()>std_duration.count())
+	//{
+	//	std::cout << "you lose" << std::endl;
+	//}else
+	//{
+	//	std::cout << "you win" << std::endl;
+	//}
+	//return 0;
+
+	input_filename = "test/list_test01.list";
 	//include example
 	OCT::InputStreamPtr file_input = OCT::open_file(input_filename);
-	/*if (file_input == nullptr) {
+	if (file_input == nullptr) {
 		std::cout << "error didn't find the file" << std::endl;
 		return 0;
-	}*/
+	}
 
-	std::stack<int> std_stack;
+	/*std::stack<int> std_stack;
 	for (int i = 0; i<100000000; i++)
 	{
 		if (i % 2 == 0 && !std_stack.empty())
 			std_stack.pop();
 		std_stack.push(i);
-	}
+	}*/
 	
 	
 	//my::stack<int> mine_stack;
@@ -192,25 +119,27 @@ int main(int argc, char* argv[]) {
 	//}
 	//mine_stack.clear();
 	
-	return 0;
-
-	std::shared_ptr<includePrint::includePrintLexer> scanner = std::make_shared<includePrint::includePrintLexer>();
-	std::shared_ptr<includePrint::includePrintParser> parser = std::make_shared<includePrint::includePrintParser>();
-	auto result = parser->parse(scanner, file_input);
-	std::cout << scanner->getIndex() << std::endl;
-	return 0;
-	//test VM Parser
-	//OCT::InputStreamPtr file_input = OCT::open_file("test/list_test01.list");
-	//std::shared_ptr<digitList::digitListLexer> scanner = std::make_shared<digitList::digitListLexer>();
-	//std::shared_ptr<digitList::digitListParser> parser = std::make_shared<digitList::digitListParser>();
-	//auto result = parser->parse(scanner, file_input);
 	//return 0;
+
+	//std::shared_ptr<includePrint::includePrintLexer> scanner = std::make_shared<includePrint::includePrintLexer>();
 	//auto token = scanner->scan(file_input);
-	//while(token != OCT::Lexer::Token::invalid && token != OCT::Lexer::Token::eof)
+	//while(token != OCT::Lexer::Token::eof && token != OCT::Lexer::Token::invalid)
 	//{
-	//	std::cout << token.tag << "<" << token.literal.getString() << ">" << std::endl;
+	//	//std::cout << token.tag << "<" << token.literal.getString() << ">" << std::endl;
 	//	token = scanner->scan(file_input);
 	//}
+	//return 0;
+	/*std::shared_ptr<includePrint::includePrintParser> parser = std::make_shared<includePrint::includePrintParser>();
+	auto result = parser->parse(scanner, file_input);
+	std::cout << scanner->getIndex() << std::endl;*/
+	//return 0;
+
+	//test VM Parser
+	//OCT::InputStreamPtr file_input = OCT::open_file("test/list_test01.list");
+	std::shared_ptr<digitList::digitListLexer> scanner = std::make_shared<digitList::digitListLexer>();
+	std::shared_ptr<digitList::digitListParser> parser = std::make_shared<digitList::digitListParser>();
+	auto result = parser->parse(scanner, file_input);
+	return 0;
 
 	//test code
 
